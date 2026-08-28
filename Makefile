@@ -23,6 +23,9 @@ sigsearch: ## run the Phase-2 deterministic verifier baseline (structural bridge
 propose-verify: ## verify the frozen LLM proposal flood (firewall + selection-lift)
 	$(PY) -m homeostat.propose_verify
 
+panukbb: ## analyse a Pan-UKBB sumstats file, EUR vs CSA (PHENO=<path> optional)
+	$(PY) -m homeostat.panukbb $(PHENO)
+
 status:   ## pull progress (add JSON=1 for machine-readable)
 	$(PY) -m homeostat.status $(if $(JSON),--json,)
 
