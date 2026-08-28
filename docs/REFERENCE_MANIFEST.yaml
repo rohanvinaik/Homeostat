@@ -1,0 +1,65 @@
+# The canonical reference corpus for Homeostat, machine-checkable.
+# External files live in sibling projects (not bundled here); the sha256 pins the
+# version this design was derived against. Re-hash to detect drift:
+#   shasum -a 256 <path>   (compare to the value below)
+# Roles map each source to the checkpoint (§) or theory-doc part it grounds.
+
+- id: regulatory-deficit-program
+  path: docs/REGULATORY_DEFICIT_PROGRAM.md
+  role: THE FOUNDING CANON — self-contained reconstruction checkpoint (verbatim copy of the 2026-08 original; authoritative, do not edit)
+  sha256: bc7b44b4d4309b10c6ac7f377e0b98a141e6f2cf82dfce62ff1dc59a516f615d
+  cited_by: [docs/THEORY_OF_THE_CASE.md, AGENTS.md]
+
+- id: specification-complexity-paper
+  path: ~/resume/Specification_Complexity_Paper/specification_complexity_paper.md
+  role: formal substrate I — sigma, Blum axioms, Kolmogorov independence, five-field identification, composition gap (checkpoint SS4)
+  sha256: 64bdc521a17ad2b0835ff79e057a74d3bc5d8902fc292719a6234d3833aca694
+  cited_by: [docs/THEORY_OF_THE_CASE.md]
+
+- id: significance-weighting
+  path: ~/Projects/Regenesis/docs/SIGNIFICANCE_WEIGHTING.md
+  role: formal substrate II — kappa, the bracket, bridge crux (SS13), self-confirmation guard (SS14), safe forgetting (checkpoint SS5)
+  sha256: b3f5e0744f0e9a2b9fc21ddbbd58cb63b94a370a330ad072028893b943aa2502
+  cited_by: [docs/THEORY_OF_THE_CASE.md]
+
+- id: knowability-ieee
+  path: ~/tools/Detective/docs/theory/operator_completeness/submission/knowability_ieee.pdf
+  role: carving-audit discipline — footprint reduction, n=2 trap, oracle-relativity, pseudo-tested method (checkpoint SS6.12-6.16)
+  sha256: 5903b923b00497fb2381fd5f45bd33ae97d47f4a19971fe3e6b092f8e5ab53ef
+  cited_by: [docs/THEORY_OF_THE_CASE.md]
+
+- id: peitho
+  path: ~/Projects/Peitho
+  role: existence proof of the control structure — norms mined from data, signed axes with abstention, decision as what survives elimination (checkpoint Appendix B); repo pointer, not hashed
+  sha256: null
+  cited_by: [docs/THEORY_OF_THE_CASE.md]
+
+- id: gdiff-rationale
+  path: ~/Projects/genomevault/docs/GDIFF_RATIONALE.md
+  role: GenomeVault differential-encoding semantics — candidate substrate machinery for Part II; entry point into the genomevault fold-in
+  sha256: 074298e379840ca2aba8913b4b084ae096de3801045d04cf31297184788f0fbf
+  cited_by: [docs/THEORY_OF_THE_CASE.md, docs/SALVAGE_MANIFEST.md]
+
+- id: avs-formulas
+  path: ~/MentalAtlas/biodata/clinical/ayurveda/avs_formulas_2023.json
+  role: first enumerable oracle-carving source — 518 AVS products / 8,406 constituents, deterministically parsed from the AVS Therapeutic Index 2023 (checkpoint SS6.6)
+  sha256: 34444af2aea4f29854a3e7f3ded33f1a896d77a837bc2bb56c9412c72839dcb4
+  cited_by: [docs/THEORY_OF_THE_CASE.md]
+
+- id: ayurveda-interaction-model
+  path: ~/MentalAtlas/biodata/clinical/ayurveda/interaction_model.json
+  role: the control-system encoding pattern (typed logic gates over state variables) — prototype for the carving compiler (Part II.6)
+  sha256: 1ed858885bb79719a185d261b0ccdccfb0b2fae4aadd96b93a04d1749b180f6e
+  cited_by: [docs/THEORY_OF_THE_CASE.md]
+
+- id: index-genotype-r
+  path: ~/MentalAtlas/biodata/genetics/promethease_all_genotypes.json
+  role: index case R — SCREENING-GRADE consumer array (v5 GSA); sampling-frame specification, never evidence (checkpoint SS11, Law 3); tier report-layer claims below observed genotypes
+  sha256: 3c3912355bb4a0ccc8192345a6b2e6159683cfe0e74affc9b8e6d6a0788382e6
+  cited_by: [docs/THEORY_OF_THE_CASE.md]
+
+- id: audhd-correlation-study
+  path: ~/Projects/AuDHD_Correlation_Study
+  role: SUBSUMED predecessor — salvage governed exclusively by docs/SALVAGE_MANIFEST.md; repo pointer, not hashed
+  sha256: null
+  cited_by: [docs/SALVAGE_MANIFEST.md, AGENTS.md]

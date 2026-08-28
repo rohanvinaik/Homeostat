@@ -1,0 +1,18 @@
+# Data — never committed (population downloads are huge; personal genotype data stays out of git)
+data/
+*.vcf
+*.vcf.gz
+coverage.xml
+.coverage
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+.ruff_cache/
+.pytest_cache/
+
+# OS
+.DS_Store
+._*
