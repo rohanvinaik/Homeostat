@@ -9,10 +9,12 @@ Stages, each derived from filesystem artifacts, each safe to re-run:
   4. rank       — PBS + priority queue -> candidates.tsv.gz + summary.json
 """
 
+import gzip
 import hashlib
 import shutil
 import subprocess
 import sys
+import zlib
 
 from homeostat import genotype, rank, scan
 from homeostat.paths import (
@@ -49,6 +51,18 @@ def ensure_genotype() -> None:
     print(f"[genotype] copied raw export -> {GENOTYPE_RAW}")
 
 
+def _gzip_stream_ok(path) -> bool:
+    """Full decompression pass. Size match is NOT integrity: a resumed transfer
+    once delivered a size-exact file with corrupt bytes mid-stream (2026-08-28)."""
+    try:
+        with gzip.open(path, "rb") as g:
+            while g.read(1 << 22):
+                pass
+        return True
+    except (OSError, EOFError, zlib.error):
+        return False
+
+
 def ensure_reference() -> None:
     expected = int(SITES_VCF_EXPECTED.read_text().strip()) if SITES_VCF_EXPECTED.exists() else None
     if SITES_VCF.exists():
@@ -56,11 +70,20 @@ def ensure_reference() -> None:
             sys.exit(f"[reference] {SITES_VCF} size != expected {expected}; delete and re-run")
         return
     print("[reference] resuming download (curl -C -) ...")
-    subprocess.run(["curl", "-s", "-C", "-", "-o", str(SITES_VCF_PART), SITES_VCF_URL], check=True)
+    subprocess.run(
+        ["curl", "-s", "-C", "-", "--retry", "10", "-o", str(SITES_VCF_PART), SITES_VCF_URL],
+        check=True,
+    )
     if expected is not None and SITES_VCF_PART.stat().st_size != expected:
         sys.exit("[reference] download incomplete after curl; re-run to resume")
+    print("[reference] verifying gzip stream integrity (full decompression pass) ...")
+    if not _gzip_stream_ok(SITES_VCF_PART):
+        sys.exit(
+            "[reference] downloaded file is size-complete but the gzip stream is "
+            "CORRUPT; splice-repair by ranged re-fetch or delete the .part and re-run"
+        )
     SITES_VCF_PART.replace(SITES_VCF)
-    print(f"[reference] complete -> {SITES_VCF}")
+    print(f"[reference] complete and verified -> {SITES_VCF}")
 
 
 def main() -> None:
