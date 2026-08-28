@@ -1,0 +1,18 @@
+[project]
+name = "homeostat"
+version = "0.1.0"
+description = "Regulatory-deficit medicine: annotation-blind mechanism discovery under an oracle ensemble"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.ruff]
+line-length = 100
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM"]
+
+[tool.coverage.run]
+relative_files = true
+branch = true
+source = ["src/homeostat"]
