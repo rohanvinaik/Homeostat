@@ -11,6 +11,9 @@ enrich:   ## run the §13.2 selection-signature enrichment (idempotent)
 bridge:   ## run the §13.3 blind bridge recovery + preregistered LRRK2 control
 	$(PY) -m homeostat.bridge
 
+ensemble: ## run the §13.4 oracle-ensemble calibration (structure-derived slice)
+	$(PY) -m homeostat.ensemble
+
 status:   ## pull progress (add JSON=1 for machine-readable)
 	$(PY) -m homeostat.status $(if $(JSON),--json,)
 
