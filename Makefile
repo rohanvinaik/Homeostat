@@ -1,9 +1,12 @@
 PY := PYTHONPATH=src python3
 
-.PHONY: run status lint test
+.PHONY: run status lint test enrich
 
 run:      ## run/resume the §13.1 pipeline (idempotent; safe after any crash)
 	$(PY) -m homeostat.pipeline
+
+enrich:   ## run the §13.2 selection-signature enrichment (idempotent)
+	$(PY) -m homeostat.enrich
 
 status:   ## pull progress (add JSON=1 for machine-readable)
 	$(PY) -m homeostat.status $(if $(JSON),--json,)
