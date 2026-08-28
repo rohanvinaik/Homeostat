@@ -52,11 +52,23 @@
   sha256: 1ed858885bb79719a185d261b0ccdccfb0b2fae4aadd96b93a04d1749b180f6e
   cited_by: [docs/THEORY_OF_THE_CASE.md]
 
-- id: index-genotype-r
+- id: index-genotype-r-raw
+  path: ~/Desktop/Desktop/Genetics/genome_Rohan_Vinaik_v5_Full_20220112035411.txt
+  role: index case R, DIRECTLY-OBSERVED tier — raw 23andMe v5 export (643,501 SNPs, build 37, plus-strand). SCREENING-GRADE; sampling-frame specification, never evidence (checkpoint SS11, Law 3). The pipeline copies it to data/genotype/ (gitignored) and re-verifies this hash.
+  sha256: 825a77a42943c9198cc22143829566542951ebbc81f04e8d311726ca430900cb
+  cited_by: [docs/THEORY_OF_THE_CASE.md, src/homeostat/paths.py]
+
+- id: index-genotype-r-report-layer
   path: ~/MentalAtlas/biodata/genetics/promethease_all_genotypes.json
-  role: index case R — SCREENING-GRADE consumer array (v5 GSA); sampling-frame specification, never evidence (checkpoint SS11, Law 3); tier report-layer claims below observed genotypes
+  role: index case R, REPORT-LAYER tier (promethease/SNPedia subset, 23,982 entries) — NOT independently verifiable; tiered below observed genotypes (checkpoint SS11.5); never a pipeline input
   sha256: 3c3912355bb4a0ccc8192345a6b2e6159683cfe0e74affc9b8e6d6a0788382e6
   cited_by: [docs/THEORY_OF_THE_CASE.md]
+
+- id: 1000g-phase3-sites-v5c
+  path: data/reference/ALL.wgs.phase3_v5c.sites.vcf.gz
+  role: population-frequency substrate — 1000 Genomes phase 3 (GRCh37) sites-only VCF with per-superpop AFs (EUR/SAS/EAS/AFR/AMR); source URL in src/homeostat/paths.py; expected size 1458224240 bytes (gitignored, re-downloadable)
+  sha256: null
+  cited_by: [src/homeostat/paths.py]
 
 - id: audhd-correlation-study
   path: ~/Projects/AuDHD_Correlation_Study
