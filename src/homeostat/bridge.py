@@ -171,6 +171,7 @@ def evaluate_preregistered(
     comps: list[set[str]],
     adj: dict[str, set[str]],
     top_connectors: list[dict],
+    array_covered: dict[str, bool] | None = None,
 ) -> dict:
     lrrk2, nod2, ripk2 = "LRRK2", "NOD2", "RIPK2"
     comp_of = {gene: i for i, comp in enumerate(comps) for gene in comp}
@@ -204,10 +205,20 @@ def evaluate_preregistered(
         g in connector_names for g in (lrrk2, nod2, ripk2)
     )
 
+    # Post-hoc clarification (2026-08-28, after first run; STRICTER only):
+    # NOT-EVALUABLE is reserved for genuine array non-coverage, per the
+    # preregistration's own text. If the array covers an anchor's envelope
+    # (array_covered), absence from G is a derivation outcome and scores FAIL.
     if clause_a or clause_b:
         verdict = "PASS"
     elif not (present[lrrk2] or present[nod2]):
-        verdict = "NOT-EVALUABLE (neither anchor gene received a positional mapping)"
+        anchors_covered = (
+            array_covered is None or array_covered.get(lrrk2) or array_covered.get(nod2)
+        )
+        if anchors_covered and array_covered is not None:
+            verdict = "FAIL (anchors array-covered but not recovered)"
+        else:
+            verdict = "NOT-EVALUABLE (anchor gene envelopes not covered by the array)"
     else:
         verdict = "FAIL"
     return {
@@ -216,8 +227,26 @@ def evaluate_preregistered(
         "clause_a_detail": a_detail,
         "clause_b": clause_b,
         "presence_in_G": present,
+        "array_coverage": array_covered,
         "preregistration": "docs/runs/2026-08-28-lrrk2-control-PREREGISTRATION.md (commit ff8808e)",
     }
+
+
+def _array_coverage_of_controls(envelopes: dict[str, tuple[str, int, int]]) -> dict[str, bool]:
+    """Evaluation-side only: does the array (candidates file) cover each
+    control gene's envelope +/- flank? Uses control names — never feeds G."""
+    targets = {g: envelopes[g] for g in ("LRRK2", "NOD2", "RIPK2") if g in envelopes}
+    covered = dict.fromkeys(targets, False)
+    with gzip.open(paths.CANDIDATES, "rt", encoding="utf-8") as f:
+        header = f.readline().rstrip("\n").split("\t")
+        idx = {n: i for i, n in enumerate(header)}
+        for line in f:
+            fld = line.rstrip("\n").split("\t")
+            c, p = fld[idx["chrom"]], int(fld[idx["pos"]])
+            for g, (gc, gs, ge) in targets.items():
+                if not covered[g] and c == gc and gs - FLANK_BP <= p <= ge + FLANK_BP:
+                    covered[g] = True
+    return covered
 
 
 def main() -> None:
@@ -268,7 +297,9 @@ def main() -> None:
             "component_sizes_top10": sizes,
             "top_connectors": top,
         },
-        "evaluation": evaluate_preregistered(in_g, comps, adj, top),
+        "evaluation": evaluate_preregistered(
+            in_g, comps, adj, top, _array_coverage_of_controls(envelopes)
+        ),
     }
     atomic_write_json(BRIDGE_OUT, result)
     print(json.dumps(result["evaluation"], indent=2))

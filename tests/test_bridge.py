@@ -71,3 +71,26 @@ def test_evaluation_not_evaluable_when_anchors_missing():
 def test_evaluation_fail_when_present_but_disconnected():
     ev = evaluate_preregistered({"LRRK2", "NOD2"}, [{"LRRK2"}, {"NOD2"}], {}, [])
     assert ev["verdict"] == "FAIL"
+
+
+def test_evaluation_fail_when_covered_but_unrecovered():
+    # Anchors covered by the array but absent from G -> FAIL, not NOT-EVALUABLE.
+    ev = evaluate_preregistered(
+        {"OTHER"},
+        [{"OTHER"}],
+        {},
+        [],
+        array_covered={"LRRK2": True, "NOD2": True, "RIPK2": True},
+    )
+    assert ev["verdict"].startswith("FAIL")
+
+
+def test_evaluation_not_evaluable_when_truly_uncovered():
+    ev = evaluate_preregistered(
+        {"OTHER"},
+        [{"OTHER"}],
+        {},
+        [],
+        array_covered={"LRRK2": False, "NOD2": False, "RIPK2": False},
+    )
+    assert ev["verdict"].startswith("NOT-EVALUABLE")
