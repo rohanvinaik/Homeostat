@@ -17,6 +17,9 @@ gwas-extract: ## (re)build the §13.4 trait gene sets from the GWAS bulk file
 ensemble: ## run the §13.4 oracle-ensemble calibration (structure-derived slice)
 	$(PY) -m homeostat.ensemble
 
+sigsearch: ## run the Phase-2 deterministic verifier baseline (structural bridges)
+	$(PY) -m homeostat.sigsearch
+
 status:   ## pull progress (add JSON=1 for machine-readable)
 	$(PY) -m homeostat.status $(if $(JSON),--json,)
 
