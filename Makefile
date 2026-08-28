@@ -20,6 +20,9 @@ ensemble: ## run the §13.4 oracle-ensemble calibration (structure-derived slice
 sigsearch: ## run the Phase-2 deterministic verifier baseline (structural bridges)
 	$(PY) -m homeostat.sigsearch
 
+propose-verify: ## verify the frozen LLM proposal flood (firewall + selection-lift)
+	$(PY) -m homeostat.propose_verify
+
 status:   ## pull progress (add JSON=1 for machine-readable)
 	$(PY) -m homeostat.status $(if $(JSON),--json,)
 
