@@ -66,7 +66,8 @@
 
 - id: 1000g-phase3-sites-v5c
   path: data/reference/ALL.wgs.phase3_v5c.sites.vcf.gz
-  role: population-frequency substrate — 1000 Genomes phase 3 (GRCh37) sites-only VCF with per-superpop AFs (EUR/SAS/EAS/AFR/AMR); source URL in src/homeostat/paths.py; expected size 1458224240 bytes (gitignored, re-downloadable)
+  role: population-frequency substrate — 1000 Genomes phase 3 (GRCh37) sites-only VCF with per-superpop AFs (EUR/SAS/EAS/AFR/AMR); source URL in src/homeostat/paths.py; expected size 1458224240 bytes (gitignored, re-downloadable). Local copy verified byte-identical to the official release 2026-08-28.
+  md5_official: d9c22df30ea810d5c7d98391e482d1a3  # from ftp current.tree
   sha256: null
   cited_by: [src/homeostat/paths.py]
 
