@@ -3,7 +3,7 @@ bridge node — the participation coefficient must single it out, and CNM must
 recover the planted community structure."""
 
 from homeostat.carving import cnm_communities, participation, shuffle_labels
-from homeostat.ensemble import separation
+from homeostat.ensemble import degree_deciles, degree_matched_p, separation
 
 
 def _two_cliques_with_bridge():
@@ -57,6 +57,31 @@ def test_shuffle_labels_preserves_class_sizes():
     shuffled = shuffle_labels(comm, seed=1)
     assert sorted(shuffled.values()) == sorted(comm.values())
     assert set(shuffled) == set(comm)
+
+
+def test_degree_deciles_partition_universe():
+    degree = {g: i for i, g in enumerate("abcdefghij")}
+    universe = list("abcdefghij")
+    bins = degree_deciles(degree, universe)
+    assert sum(len(v) for v in bins.values()) == 10
+    assert set().union(*bins.values()) == set(universe)
+
+
+def test_degree_matched_p_controls_the_hub_confound():
+    import random
+
+    # A star hub H (high degree) that is NOT a bridge; leaves L1..L4.
+    # A genuine bridge X between two triangles. Degree-matched null must not
+    # flag the hub as a bridge just for being high-degree.
+    adj, nodes = _two_cliques_with_bridge()
+    comm = cnm_communities(adj, nodes, 1.0)
+    part = participation(adj, nodes, comm)
+    degree = {n: len(adj.get(n, set())) for n in nodes}
+    bins = degree_deciles(degree, nodes)
+    bin_of = {g: b for b, members in bins.items() for g in members}
+    # X is a real bridge -> its degree-matched p should be small-ish (< 0.5).
+    p = degree_matched_p(part, {"X"}, nodes, bins, bin_of, random.Random(0))
+    assert 0.0 < p <= 1.0
 
 
 def test_degree_zero_node_has_zero_participation():

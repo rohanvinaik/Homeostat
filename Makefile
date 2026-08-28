@@ -11,6 +11,9 @@ enrich:   ## run the §13.2 selection-signature enrichment (idempotent)
 bridge:   ## run the §13.3 blind bridge recovery + preregistered LRRK2 control
 	$(PY) -m homeostat.bridge
 
+gwas-extract: ## (re)build the §13.4 trait gene sets from the GWAS bulk file
+	$(PY) -m homeostat.gwas_extract data/network/gwas-catalog-download-associations-alt-full.tsv
+
 ensemble: ## run the §13.4 oracle-ensemble calibration (structure-derived slice)
 	$(PY) -m homeostat.ensemble
 
