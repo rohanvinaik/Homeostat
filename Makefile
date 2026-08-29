@@ -23,8 +23,11 @@ sigsearch: ## run the Phase-2 deterministic verifier baseline (structural bridge
 propose-verify: ## verify the frozen LLM proposal flood (firewall + selection-lift)
 	$(PY) -m homeostat.propose_verify
 
-panukbb: ## analyse a Pan-UKBB sumstats file, EUR vs CSA (PHENO=<path> optional)
-	$(PY) -m homeostat.panukbb $(PHENO)
+eir-pile: ## build the cohort-scale E/I/R PBS pile from Pan-UKBB allele frequencies (§7)
+	$(PY) -m homeostat.eir_cohort
+
+eir-enrich: ## selection-signature enrichment on the PBS pile, MAF-matched (§8.4)
+	$(PY) -m homeostat.eir_enrich
 
 status:   ## pull progress (add JSON=1 for machine-readable)
 	$(PY) -m homeostat.status $(if $(JSON),--json,)
