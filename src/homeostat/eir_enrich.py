@@ -94,28 +94,35 @@ def main() -> None:
     observed = statistics.fmean(pile_ihs) if pile_ihs else 0.0
 
     # MAF-matched control draws: same per-bin counts as the pile, from the
-    # reservoir minus the pile itself.
+    # reservoir minus the pile itself. Each control's iHS is computed ONCE
+    # (below), so the permutation is an average over cached values — the loop
+    # must not re-query the bigwigs (~10^8 lookups otherwise).
+    print("[eir-enrich] precomputing control iHS ...")
     need: dict[int, int] = {}
     for _c, _p, b in pile:
         need[b] = need.get(b, 0) + 1
-    control_pools = {
-        b: [(c, p) for (c, p) in reservoir.get(b, []) if (c, p) not in pile_set] for b in need
-    }
-    missing = [b for b, k in need.items() if len(control_pools[b]) < k]
+    control_ihs: dict[int, list[float]] = {}
+    for b in need:
+        vals = []
+        for c, p in reservoir.get(b, []):
+            if (c, p) in pile_set:
+                continue
+            v = ihs(c, p)
+            if v is not None:
+                vals.append(v)
+        control_ihs[b] = vals
+    missing = [b for b, k in need.items() if len(control_ihs[b]) < k]
 
+    print(f"[eir-enrich] permuting ({N_PERM}) ...")
     rng = random.Random(SEED + 1)
     ge = 0
     n_used = 0
     for _ in range(N_PERM):
         vals = []
         for b, k in need.items():
-            pool = control_pools[b]
-            if not pool:
-                continue
-            for c, p in rng.sample(pool, min(k, len(pool))):
-                v = ihs(c, p)
-                if v is not None:
-                    vals.append(v)
+            pool = control_ihs[b]
+            if pool:
+                vals.extend(rng.sample(pool, min(k, len(pool))))
         if vals:
             n_used += 1
             if statistics.fmean(vals) >= observed:
