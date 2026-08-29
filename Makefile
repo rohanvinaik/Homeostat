@@ -29,6 +29,9 @@ eir-pile: ## build the cohort-scale E/I/R PBS pile from Pan-UKBB allele frequenc
 eir-enrich: ## selection-signature enrichment on the PBS pile, MAF-matched (§8.4)
 	$(PY) -m homeostat.eir_enrich
 
+lrrk2-gate: ## §13.3 LRRK2 bridge recovery on the PBS pile, function-blind (Law 3)
+	$(PY) -m homeostat.lrrk2_gate
+
 status:   ## pull progress (add JSON=1 for machine-readable)
 	$(PY) -m homeostat.status $(if $(JSON),--json,)
 
