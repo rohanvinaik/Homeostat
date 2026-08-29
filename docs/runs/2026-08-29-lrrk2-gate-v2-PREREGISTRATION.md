@@ -48,3 +48,15 @@ anchor loci (it does — verified structurally at v1).
   its direction (adds edges only where STRING already couples) is recorded.
 - The participation + degree-matched machinery is the §13.4 method, which there
   overturned a naive positive result — so it is a genuine test, not a rigged one.
+
+## AMENDMENT (2026-08-29, before the run completed — tractability, transparent)
+`carving.cnm_communities` (greedy modularity) is intractable on the ~14.9k-node /
+~881k-edge coupling graph (its per-merge rebuild is O(merges·edges); measured: did
+not finish in >500s). The shared module is NOT touched (it carries committed §13.4
+results). The community method is therefore **deterministic label propagation**
+(near-linear, sorted-order tie-break) — a standard community algorithm. The
+bridge CONCEPT is unchanged: participation coefficient (fraction of edges leaving
+own community), degree-matched, one-sided p < 0.05. Direction: label propagation
+yields different (often coarser) communities than modularity; the degree-matched
+participation test is the load-bearing comparison and is unaffected by the label
+of the community. Recorded, not tuned.
