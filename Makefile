@@ -32,6 +32,9 @@ eir-enrich: ## selection-signature enrichment on the PBS pile, MAF-matched (§8.
 lrrk2-gate: ## §13.3 LRRK2 bridge recovery on the PBS pile, function-blind (Law 3)
 	$(PY) -m homeostat.lrrk2_gate
 
+bridge-discovery: ## §3.3 annotation-blind candidate-bridge discovery (hypotheses)
+	$(PY) -m homeostat.bridge_discovery
+
 status:   ## pull progress (add JSON=1 for machine-readable)
 	$(PY) -m homeostat.status $(if $(JSON),--json,)
 
