@@ -1,71 +1,62 @@
 # Homeostat — project laws (auto-loaded; these bind every session)
 
-These laws exist because an agent (me) repeatedly installed **statistics** where the
-design calls for **data-geometry / classical-AI coherence** — and an earlier version of
-these laws *enshrined* that mistake (they named "the PBS-ranked pile" as the object and
-"selection-signature enrichment" as the validator). Both are statistics; both failed,
-exhaustively, on 2026-08-30 (`docs/REGULATORY_DEFICIT_PROGRAM.md` §15;
-`docs/THEORY_OF_THE_CASE.md` Part V). "Not ML" was necessary but not sufficient. The real
-drift is **statistics-as-method**, and it is subtle because it wears the costume of rigor.
-Read the full theory before any analysis: `docs/THEORY_OF_THE_CASE.md` (derived design) and
-`docs/REGULATORY_DEFICIT_PROGRAM.md` (canon).
+These laws exist because an agent (me) repeatedly installed **statistics** where the design calls
+for **data-geometry / classical-AI coherence** — and an earlier version of these laws *enshrined*
+that mistake. The method is now CONFIRMED (2026-08-30, with the founder): **Homeostat is Peitho
+with automated node birth/death — a σ-trajectory search for the most parsimonious mechanism that
+resolves a symptom presentation.** Read the full theory before any analysis:
+`docs/THEORY_OF_THE_CASE.md` Part II (the confirmed architecture) and
+`docs/REGULATORY_DEFICIT_PROGRAM.md` (canon: σ §4, κ §5, the falsifiability guard §5.9).
 
-**LAW 1 — DATA-GEOMETRY + CLASSICAL AI, NOT STATISTICS. This is the load-bearing law.**
-Statistics is **priorless, and priorless is honest** — it is not the villain and it is not
-biased. It is simply **too weak** for this problem: a phenotype produced by many weak,
-*fungible* (interchangeable), sub-threshold signals holding a collective coherent state is
-invisible to element-by-element association at any sample size (§2.4). The method that
-replaces it is **coherence detection** — finding the combinations that hang together — not a
-better test. A statistic (PBS, a selection scan, a frequency) is at most **one cheap
-search-order prior**; it is NEVER the method, the significance, or the object. Alarm words:
-not only "model" but **"significant / enriched / associated / frequency / hub / participation
-/ p-value."**
+**LAW 1 — DATA-GEOMETRY + CLASSICAL AI, NOT STATISTICS.** Statistics is priorless and honest but
+**too weak** for this problem: a phenotype from many weak, *fungible* (interchangeable),
+sub-threshold signals holding a meta-stable collective state is invisible to element-by-element
+association at any sample size (§2.4). A statistic (PBS, a frequency, an enrichment) is at most one
+cheap **search-order prior** — never the method, the significance, or the object. Alarm words:
+"significant / enriched / associated / frequency / hub / participation / p-value."
 
-**LAW 2 — The signal is a COHERENT COMBINATION locking into a meta-stable state — not
-frequency.** The phenotype's contributing elements are only weakly associated and are
-fungible; the mechanism lives **one level up**, in the collective state they hold together (a
-Kuramoto-shaped, meta-stable coherence — canon §2.2, §2.4). The loud statistical hits (the
-obvious GWAS genes) DROWN OUT the quiet etiologies that exist only in composition (the prior work).
-Statistics can see "gene X in 87% of cases"; it structurally cannot see a coherent
-combination of quiet, interchangeable parts. There is **no privileged axis** (no
-"initiation vs. resolution" carving — the founder never held it; canon §1.3).
+**LAW 2 — THE METHOD IS A σ-TRAJECTORY SEARCH; THE COHERENCE MEASURE IS σ (a Blum measure), NOT a
+statistic.** Drive **H = log₂(surviving candidate mechanisms) → 0** by candidate-elimination. Each
+"test" is a **data-geometry constraint**: a population **co-variation** (signals that lock together
+across genomes) or a symptom **co-presentation** (symptoms that cluster across people) — the
+mechanism is where the two geometries lock. **σ = the minimum constraints to pin a unique mechanism
+(SC=1)**; it equals the teaching dimension (Five-Field Identification), NOT a frequency. The
+**bulk/tail phase transition** is the collective-state / parsimony signal (structure resolves rivals
+in clusters, then the tail is PAC-limited). Primary sources: the founder's **SSL paper** + κ
+(`SIGNIFICANCE_WEIGHTING.md`).
 
-**LAW 3 — The coherence detector is CONSTRAINT-ELIMINATION over a domain-knowledge graph,
-with honest abstention — read it off the built code, not imagined.** Across every place this
-is actually built (canon §3.4, Appendix B): harmonizing's constraint propagation over a
-domain-physics fact table (on biological data), genomevault's committee with all-zero-margin
-abstention, Peitho's signed-ternary elimination off a mined zero. It is **NOT** a frequency,
-**NOT** a bare Kuramoto order parameter (that is the conceptual *shape*, not the instrument),
-and **NOT** participation/κ over a *generic* network. κ is a coherence measure **only over the
-mechanism-derivation graph**; over a generic interactome it is a topology statistic in
-disguise (canon §5.12 — this was Act 2 of the death).
+**LAW 3 — THE OBJECT (the mechanism graph) IS GROWN, NEVER AUTHORED.** The one piece beyond Peitho
+is **automated node birth/death**: **birth** = induction on a residual (a recurring cross-population
+dyad posits a mechanism node); **death** = negative learning on a near-miss (a population/presentation
+that breaks the coupling — withdraw before it fires); **consolidation** = safe-forget a κ=0 node.
+The graph is *computed by the search from the data geometry* — NEVER a hand-written edge list, and
+NEVER seeded from guesses, **including SDIS's**. Guessing the object (the PBS pile, the generic
+interactome, SDIS's edges) is the recorded death (§15, §12.14).
 
-**LAW 4 — Per-individual baseline first; diagnosis is a story; the population signal is a
-PRIOR.** Mine the person's own setpoint (the mined zero = prakriti/vikriti, canon §6.7) and
-read deviation from *it*, never a population reference (§1.1). The allopathic diagnosis is a
-post-hoc Winston *story*, not ground truth. Ayurveda (and every tradition) is a **causally
-independent source of candidate constraints** on which sub-threshold things lock together —
-never an authority (§6.6). The E/I/R population-differential (PBS) is a **search-order prior
-that bounds *d*** (§7) — one input, never the object, never the significance.
+**LAW 4 — THE FALSIFIABILITY GUARD: σ_sem MUST STAY > 0.** A frame that makes every observation
+*confirm* it reports **σ_sem = 0** — zero information, Quixote's windmills, **memorization not
+resolution** (`self_confirming_cannot_certify`). **SDIS's "31/31 symptoms, 100% accuracy" is σ_sem=0
+by construction.** So: NEVER collapse to a single self-confirming mechanism; keep plurality
+(regime-multiplicity, H3); and **learn at the residual** — the informative constraint KILLS a rival,
+never confirms the leader (a confirming constraint has value zero, Howard).
 
-**LAW 5 — The intelligence is in the CONSTRAINT GRAPH — and that object is DEFERRED; do not
-invent it.** The instrument is only as good as the mechanistic structure that says which
-sub-threshold signals lock together (Homeostat's analogue of harmonizing's ATCC fact table).
-That object is **not specified** and must not be fabricated to make a pipeline runnable —
-guessing it (the PBS pile, the generic interactome) is the root of the 2026-08-30 death
-(§12.14, §15). It is the design conversation, seeded by the founder's **SDIS** document. An
-over-firing constraint that collapses real distinctions is **removed, not tuned**;
-discrimination is a **new orthogonal dimension**, never a tuned threshold.
+**LAW 5 — EARLY STOPPING AT THE κ-KNEE IS THE PARSIMONY HALT.** Grow nodes while the bulk amplifies
+(κ high); **stop at κ → 0** (§5.5, §10.4). Past the knee, each node resolves only one tail rival —
+the search is *memorizing the presentation*, i.e. becoming SDIS. Judge the **process**, not the
+endpoint (pabkit — the search's trajectory tells you structured coherence vs. overfit). This is the
+overfitting guard for small-n.
 
-**LAW 6 — Coherence is not automatically signal; measure it, and abstain honestly.** In the
-one place a "coherence" layer was built and honestly ablated (TriageGeist) it was inert on the
-metric — so build the detector on the right object and *measure* it, never assume it (canon
-§3.4 cautions). Abstention (the informational zero) is load-bearing (§5.4, §6.7). Confirmation
-must be independent of derivation (§5.9). No ML as the method; a bounded model is at most a
-founder-placed tail. Without dynamic / state-resolved data, every output is a hypothesis, not
-mechanism (§12.4).
+**LAW 6 — THE DECISION SHELL IS PEITHO; the oracle (μ) is diversified; no ML; the data gates the
+claim.** Signals enter as tiered, signed-ternary positions off a **per-individual mined zero**
+(= prakriti/vikriti, §6.7), the informational zero carrying honest abstention; decide by elimination;
+discriminate by a **new orthogonal dimension**, never a tuned threshold (built: `otp.py`,
+`signal.py`). σ is only as good as **μ** — the alternative-mechanism space — so the Ayurvedic /
+cross-tradition ensemble enters as **μ-diversification** (independent ways to enumerate "what else
+could this be"), NOT as edges to seed (§6.4, §6.9). Diagnosis is a Winston *story*; the
+population/E-I-R signal is a search-order prior. No ML as the method (a bounded model is at most a
+founder-placed tail). Without co-variation / co-presentation / dynamic data, outputs are hypotheses
+(§12.4).
 
-The recurring failure has one root: reaching for a statistic because it feels rigorous, or
-imagining the coherence detector as a graph score, instead of building the constraint-driven
-data geometry the design specifies — over an object designed with the founder. No further law
-fixes that; recognizing the reflex and refusing it does.
+The recurring failure has one root: reaching for a statistic, or authoring/seeding the object,
+because it feels like progress — instead of running the σ-trajectory search that grows the object
+from the data geometry. Recognizing the reflex and refusing it is the only fix.

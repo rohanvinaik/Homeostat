@@ -117,16 +117,17 @@ Once mechanism is recovered independently of annotation:
 2. **Sub-threshold functional clusters become visible.** Gene groups whose contribution exists only in composition — and therefore never clears single-variant significance in isolation — appear as coherence.
 3. **Purposivistic role assignment is dropped as a premise.** Treating annotation as ground truth requires genetics to be a closed system that is knowably complete and correct. It is neither. §9 gives the existence proof.
 
-### 3.4 What the coherence detector actually is (grounded in built code, not imagined)
+### 3.4 The method: a σ-trajectory search with node birth/death (confirmed architecture, 2026-08-30)
 
-The signal is the **coherence of a combination**: sub-threshold elements locked together by the mechanism's structure, so that observing part of the pattern lets you impute the coherent whole, and *the coherence itself is the evidence of mechanism* — improbable-and-coherent, never frequent.
+The signal is the **coherence of a combination**: sub-threshold elements locked together by the mechanism's structure, so that observing part of the pattern lets you impute the coherent whole, and *the coherence itself is the evidence of mechanism* — improbable-and-coherent, never frequent. The confirmed instantiation of that:
 
-The important discipline: read the coherence detector off the systems where it is actually built and measured, not off an analogy. In every such system, the working instrument is **constraint elimination over a domain-knowledge structure, with honest abstention** — not a frequency, and not a bare synchronization order parameter. Kuramoto/metastability (§2.4) is the correct *conceptual shape* of the target — a collectively-locked state — but the running instrument is constraint-propagation-and-elimination. The primary built references (Appendix B):
+**It is Peitho with automated node birth/death.** Peitho searches a limited state space for the most parsimonious configuration that reaches a defined goal state; here the goal state is *a parsimonious mechanistic etiology for a symptom presentation*. The **search is the σ-trajectory** (§4, §5): drive **H = log₂(surviving candidate mechanisms) → 0** by candidate-elimination, each "test" being a **data-geometry constraint** — a population **co-variation** (signals that lock together across genomes) or a symptom **co-presentation** (symptoms that cluster across people); the mechanism is where the two geometries lock. **The coherence measure is σ** (§4): the minimum constraints to pin a unique mechanism (SC=1), a Blum measure equal to the teaching dimension — *not a frequency*. The **bulk/tail phase transition** (§5.4) is the collective-state / parsimony signal Kuramoto/metastability (§2.4) names in shape.
 
-- **Constraint propagation over domain physics** (proteomics-metadata harmonization, `Kaggle_Killer/competitions/harmonizing/src/symbolic_healing.py`): knowing one thing confidently (a cell line) makes a whole coherent set of coupled facts fall out by domain physics; observing part of the pattern eliminates the incompatible options (the Monty-Hall move) and abstains where nothing coheres. This is the closest existing thing to the instrument this program needs, and it is on biological data.
-- **Committee collective-state with all-zero-margin abstention** (`genomevault` clinical committee, validated on 3.7M positions; `orthogonal-validators`, the domain-agnostic extraction): independent readers vote with a confidence margin; the signal is the *collective* state; where every reader has zero margin (nothing coheres) the system escalates/abstains rather than guessing. Fungibility-friendly by construction.
-- **Per-individual mined baseline + signed-ternary elimination** (`Peitho`): a norm mined from *this* data (the mined zero = §1.1's missing per-individual reference = prakiti/vikriti, §6.7), a signed-ternary position off it, an informational zero that is honest abstention, and a decision by elimination — a single confident exclusion removes more of the answer space than a confirmation adds — with discrimination fixed by adding a new orthogonal dimension, never a tuned threshold.
-- **κ as a coherence measure** (§5), with the standing caution that κ is coverage over a *graph* and is only data-geometry if that graph is the mechanism-derivation graph, never a generic network (§12.11-adjacent; the pathology in §15).
+**The one piece beyond Peitho is node birth/death** — because the mechanism's shape is unknown a priori, the search grows and prunes the state space: **birth** = induction on a residual (a recurring cross-population dyad posits a node); **death** = negative learning on a near-miss (a population/presentation that breaks the coupling — withdraw before it fires, §5.9-adjacent); **consolidation** = safe-forget a κ=0 node (§5.11). The object is therefore **grown by the search, never authored or seeded** (§12.14).
+
+**Two laws keep it honest.** The **σ_sem > 0 falsifiability guard** (§5.9): a frame that makes every observation confirm it reports σ_sem = 0 — memorization, not resolution (`self_confirming_cannot_certify`); never collapse to a self-confirming single mechanism, keep plurality, learn at the residual. And **early stopping at the κ-knee** (§5.5, §10.4; pabkit process-not-endpoint, Appendix B): grow while the bulk amplifies, stop at κ→0; past the knee is memorizing the presentation.
+
+The primary built substrate this assembles (Appendix B): **Peitho** (the mined-zero + signed-ternary elimination decision shell), **harmonizing** (constraint propagation over a domain structure), **genomevault/orthogonal-validators** (committee collective-state + all-zero-margin abstention), **κ** (§5, coverage over a graph — usable *only* over the mechanism-derivation graph, never a generic network, §12.13), and **gse/HDC** (the ternary substrate).
 
 ### 3.5 Existing tools in the same direction
 
@@ -650,9 +651,9 @@ Enumerated so they are not rediscovered.
 
 All runnable with no funding, no affiliation, and no data-access committee. Ordered so the object is built before the instrument runs over it.
 
-### 13.1 Specify the constraint object (WITH the author; SDIS-seeded)
+### 13.1 Specify the constraint object (WITH the author; SDIS-seeded, now in hand)
 
-The first work is not a run; it is the design conversation that specifies Homeostat's analogue of harmonizing's cell-line fact table — the mechanistic structure saying which sub-threshold signals must lock together. Seed it from the author's **SDIS** document and known biology; admit Ayurvedic/cross-tradition carvings as *candidate constraints* (§6.6). **Do not proceed to §13.3 with a guessed object (§12.14).**
+The first work is not a run; it is the design conversation that specifies Homeostat's analogue of harmonizing's cell-line fact table — the mechanistic structure saying which sub-threshold signals must lock together. **SDIS is now in hand** (Appendix B): its candidate constraint edges (the neuro↔immune coupling) enter as *hypotheses to confirm or eliminate by coherence*, never as the object; its **genetic summary is the concrete first signal input** (the index case's ✓/○-tiered sub-threshold set). Also admit Ayurvedic/cross-tradition carvings as *candidate constraints* (§6.6). Expect the computed coherence to differ from SDIS — likely with **no single driver** (§2.1) rather than SDIS's dopamine root. **Do not proceed to §13.3 with a guessed object (§12.14), and do not adopt SDIS as the object because it is convenient.**
 
 ### 13.2 The E/I/R filter — the search-order prior
 
@@ -752,9 +753,11 @@ Take a partition where the answer is known (the leprosy/Crohn's/T1R overlap). Ge
 
 ## Appendix B — Source documents
 
-**Formal substrate (the author's papers):**
-- `specification_complexity_paper.md` — σ, Blum axioms, Kolmogorov independence, five-field identification, composition gap, sheaf theory. ~10,000 lines Lean 4.
+**Formal substrate (the author's papers) — the σ-trajectory-search machinery (§3.4):**
+- `specification_complexity_paper.md` — σ, Blum axioms, Kolmogorov independence, five-field identification, composition gap, sheaf theory. ~10,000 lines Lean 4. **σ is the coherence measure.**
+- **Semantic Specification Learning** (`~/Projects/rohan-vinaik.github.io/papers/Core Documents/Semantic_Specification_Learning/` — `00_CONCEPTUAL_FRAMING`, `01_PAPER_SKELETON`, and the exact-learning sibling `06_EXACT_SPECIFICATION_LEARNING`) — understanding as the σ-trajectory (drive conceptual entropy to zero by candidate-elimination); the completeness equation and the bulk/tail transition; **the σ_sem>0 falsifiability guard** (`self_confirming_cannot_certify`); node birth = induction, node death = negative-learning withdrawal. **The primary source for §3.4's architecture.**
 - `SIGNIFICANCE_WEIGHTING.md` — κ, the bracket, the §5.7 bridge crux, the §5.9 guard, N_ind, safe forgetting. Part I built; Part II design.
+- **pabkit** (`~/Projects/pabkit` — `docs/process_makes_perfect.md`, `docs/mathematical_formalism.md`) — Process-Aware Benchmarking: judge the learning *trajectory*, not the endpoint; **early stopping** at the loss minimum. The source for §3.4's κ-knee parsimony halt and the small-n overfitting guard (structured rule-formation vs. memorization).
 - `knowability_ieee.pdf` — *What a Mutation Regime Can Know About a Function*. Footprint reduction, sufficiency, value-guard basis, ceiling, decidability spectrum, oracle-relativity, pseudo-tested method. Machine-checked Lean 4/Mathlib. **The auditing discipline for every carving in §6.**
 
 **The coherence instrument (built, in other domains — read these as the primary sources for §3.4, not this summary):**
@@ -764,8 +767,24 @@ Take a partition where the answer is known (the leprosy/Crohn's/T1R overlap). Ge
 - **COEC** (`~/Projects/COEC-Framework`) — the theory/vocabulary: constraint-trajectory computation, metastable holding states, order parameter, residual-in-the-collective.
 - Portfolio reference: `~/Projects/Kaggle_Killer/DATA_GEOMETRY_ARCHITECTURE.md` (OTP, Informational Zero, COEC, GSE, HDC).
 
-**The deferred object:**
-- **SDIS grounding document** (the author's mechanism-with-a-prior sketch) — the seed for §13.1. Location to be supplied by the author; not yet in hand.
+**The deferred object (SDIS — now in hand, as a candidate carving):**
+- **SDIS** — the author's hand-built, intuited version of this program's information-theoretic
+  principle: a coherent multi-system mechanistic construction (the "Systemic Dopaminergic
+  Insufficiency Syndrome" model) assembled by vibes rather than computed. Two files: a
+  **genetic summary** (the more accurate version — the index case's sub-threshold signal set,
+  tiered ✓verified / ○reported, with the informational-zero discipline built in) and the fuller
+  **SDIS master report**. It is a **candidate carving and a characterization target, NOT the
+  object and NOT ground truth**: dopamine-centric (the loud-signal risk incarnate — §2.4), n=1
+  (a design-frame, §11), and written as a 100%-retrodiction story (the self-confirming pattern —
+  §5.9, §12.3), with its "central driver" variants (DRD2 A1, COMT Val/Val, BDNF Met) only
+  ○reported, not on the array. Its **value**: it is a specimen of the output type (what the
+  machine should *compute*), a source of candidate constraint edges (the neuro↔immune coupling:
+  D2-on-immune-cells → NF-κB, the vagal reflex, IL-23/Th17, BH4-depletion → less dopamine), and
+  the index-case signal set. The machine's job is to **recover its defensible core and correct
+  its over-reach** — likely finding a coherence with **no single driver** (§2.1: distributed
+  control → no king). *(Files currently at the session-upload path; a durable home is TBD — do
+  not copy personal genetic data into a pushable repo without the author placing it, per the
+  in-place / hash-pinned pattern in `docs/REFERENCE_MANIFEST.yaml`.)*
 
 **Data / index case:** index-case genetic material — see §11.5 for tiering discipline. **Screening-grade. Not evidence.**
 

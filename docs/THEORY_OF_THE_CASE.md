@@ -4,16 +4,17 @@
 mechanism from the coherence of many weak, fungible, sub-threshold signals — not from
 statistics.**
 
-**Status:** Canonical derived design, REWRITTEN 2026-08-30 after a working-through with the
-founder that corrected the conception a second time. The first rewrite (earlier the same day)
-established "data-geometry, not statistics." This one sharpens *what that actually means* — why
-statistics fails (power, not bias), what the coherence detector concretely IS (constraint
-elimination, not a frequency and not a bare order parameter), and where the one unbuilt piece
-sits. The founding canon is `docs/REGULATORY_DEFICIT_PROGRAM.md` (verbatim, authoritative, do
-not edit). This document is the *instantiation*: the corrected conception, the method's shape
-grounded in the founder's existing built code, the pathology record, and an explicitly DEFERRED
-object. The rebuild is post-this-document and is designed WITH the founder — do not build the
-method from this page as if it were fully specified.
+**Status:** Canonical derived design, REWRITTEN 2026-08-30 across a working-through with the founder.
+The arc of that day: rewrite 1 established "data-geometry, not statistics"; rewrite 2 sharpened *why*
+statistics fails (power, not bias — a fungible, sub-threshold, coherence-borne etiology); and this
+final pass encodes the **confirmed method architecture** — Homeostat is **Peitho with automated node
+birth/death**, the search is the founder's **σ-trajectory** (Specification Complexity), the
+**coherence measure is σ** (a Blum measure, not a statistic), the **σ_sem > 0 falsifiability guard**
+is what keeps it from collapsing into SDIS-style memorization, and **early stopping at the κ-knee**
+(pabkit) is the parsimony halt. Part II is that architecture. The founding canon is
+`docs/REGULATORY_DEFICIT_PROGRAM.md` (authoritative). This document is the *instantiation*: the
+corrected conception, the confirmed method, the pathology record, and the two things still open (the
+object's computed content, and the data). The build proceeds from here WITH the founder.
 
 **Supremacy clause.** DERIVED. Where silent, ambiguous, or wrong, canon governs, in order:
 (1) the founder's statements; (2) `docs/REGULATORY_DEFICIT_PROGRAM.md`; (3) the sources pinned
@@ -22,13 +23,14 @@ in `docs/REFERENCE_MANIFEST.yaml`. The portfolio data-geometry reference is
 HDC). The mechanism this project reuses is spread across the founder's built projects — those
 are named in Part II and are primary sources, not this summary.
 
-**The one deferred thing, named up front so it is not quietly filled in.** The concrete
-**object** — the mechanistic constraint structure that says *which sub-threshold signals must
-lock together* (Homeostat's equivalent of harmonizing's ATCC/Cellosaurus cell-line fact table)
-— is NOT specified in this document and must not be invented from it. It is the design
-conversation with the founder, and the founder's **SDIS grounding document** (their own attempt
-to sketch the mechanism-with-a-prior) is where it starts. Every "what is the object" question
-below is deliberately left open.
+**What is confirmed, and what is still open — named up front so it is not blurred.** The *method
+architecture* is confirmed (Part II): a σ-trajectory search over an automatically-grown mechanism
+graph, driven by data-geometry constraints, guarded by σ_sem > 0, halted at the κ-knee. What remains
+open is (a) the object's **content** — the mechanism graph is *computed by the search*, not authored,
+so it is grown, not written, and seeding it from guesses (including SDIS's) is the drift the founder
+corrected; and (b) the **data** — the population co-variation and symptom co-presentation geometries
+the search runs over (§12.4). The founder's **SDIS** document is now in hand as a *characterization
+target* (recover its defensible core, reject its overfit — from the data), never as the object.
 
 ---
 
@@ -92,78 +94,123 @@ across lineages that never touched is signal; convergence within a lineage is sh
 
 ---
 
-## Part II — The Method: shape and grounding (the concrete OBJECT is DEFERRED)
+## Part II — The Method: the confirmed architecture (σ-trajectory search with node birth/death)
 
-> This part says what the instrument IS, grounded in the founder's *existing built and measured*
-> code, and what it is NOT. It does **not** specify the object it runs over — that is the design
-> conversation (see the callout at the top). Do not build from this part as if the object were
-> given.
+> Confirmed with the founder 2026-08-30. The *architecture* is settled and encoded below. Two things
+> remain genuinely open and are marked as such: the object's **content** (which is computed by the
+> search, not authored — that is the whole point) and the **data** that feeds it (§12.4). Build the
+> architecture; do not fabricate the object content and do not assume the data exists.
 
-### What the coherence detector concretely is — read off the built portfolio, not imagined
+### It is Peitho, with one addition
 
-The signal is the **coherence of a combination**: the sub-threshold elements are not independently
-significant — they are locked together by the mechanism's structure, so observing part of the
-pattern lets you impute the coherent whole, and *the coherence itself is the evidence of
-mechanism*. Improbable-and-coherent, never frequent.
+Peitho searches a *limited state space* for the most parsimonious configuration that reaches a
+defined goal state, and reads it with a signed-ternary decision core (mined zero, informational-zero
+abstention, elimination, discrimination by a new orthogonal dimension). Homeostat is the same
+machine, with the goal state being **a parsimonious mechanistic etiology for a complex symptom
+presentation**. The one piece Peitho did not need is **automated node birth and death**: Peitho
+knows its state space ahead of time (its stores and SKUs); Homeostat does not know the shape of the
+mechanism, so the search must *grow and prune the state space itself*.
 
-The important correction, from reading every place this is actually built in the portfolio: the
-working coherence detector is **constraint elimination over a domain-knowledge graph, with honest
-abstention** — NOT a frequency, and NOT a bare synchronization order parameter. Kuramoto /
-metastability is the right *conceptual shape* for the target (a collectively locked state), but in
-every instantiation that has actually been built and measured, the running instrument is
-constraint-propagation-and-elimination. The primary sources:
+### The search is the σ-trajectory (SSL / Specification Complexity — the founder's own theory)
 
-- **harmonizing** (`~/Projects/Kaggle_Killer/competitions/harmonizing/src/symbolic_healing.py`) —
-  the mechanism run on *biological* data. Know one thing confidently (a cell line, MCF-7) and a
-  whole coherent set of coupled facts falls out by domain physics: human, female, breast
-  adenocarcinoma, breast, cell-line material. The constraints come from ATCC/Cellosaurus fact
-  tables, not from any statistic; observing part of the pattern eliminates the incompatible options
-  and concentrates the rest (the Monty-Hall move). It fills only what nothing else has spoken to,
-  and abstains otherwise. **This is the closest existing thing to the Homeostat instrument.**
-- **genomevault clinical committee** (validated on 3.7M positions) and its domain-agnostic
-  extraction **orthogonal-validators** — independent readers each vote with a confidence margin;
-  the signal is the *collective* state, and where every reader has zero margin (nothing coheres)
-  the decision **escalates/abstains rather than guessing**. Fungibility-friendly: no single reader
-  must fire; you read the whole.
-- **Peitho** (`~/Projects/Peitho`) — the per-individual baseline + decision half, built and
-  mutation-pinned: a **mined zero** (a norm mined from *this* data, robust to non-signal), a
-  **signed-ternary position** off it, an **informational zero** that is honest abstention, and a
-  decision by **elimination/interference** — a single confident exclusion removes more of the
-  answer space than a confirmation adds — with discrimination fixed by **adding a new orthogonal
-  dimension, never tuning a threshold**. The mined zero is, structurally, canon §1.1's missing
-  per-individual reference step (= prakriti/vikriti, §6.7).
-- **Regenesis κ** (`SIGNIFICANCE_WEIGHTING.md`) — a math measure of *coherent-and-improbable* vs.
-  elaborate coincidence. Usable, with one standing caution: κ is coverage/PageRank over a *graph*,
-  so it is only data-geometry if that graph is the **mechanism-derivation graph**, never a generic
-  network. Pointed at a generic interactome it silently becomes a topology statistic — which is
-  precisely Act 2 of the pathology below.
-- **gse / HDC OTP** — the ternary substrate where "0 = orthogonal / abstain" is exact.
-- **COEC** (`~/Projects/COEC-Framework`) — the theory/vocabulary: computation as a trajectory under
-  many simultaneous constraints, **metastable** configurations as holding states, an order
-  parameter, and the residual that "emerges from their collective interaction" and cannot be
-  attributed to any single component. This is the conception, stated formally. Vocabulary, not code
-  to lift.
+Understanding a presentation is driving its conceptual entropy to zero under constraint:
+- Let **H = log₂(number of candidate mechanisms still consistent with the evidence)**. A *surviving
+  candidate* is a mechanism the evidence has not yet ruled out — an unresolved degree of freedom
+  (a "surviving mutant").
+- Each constraint from the **data geometry** is a *test* that kills candidate mechanisms: a
+  **population co-variation** (sub-threshold signals that lock together across genomes) and a
+  **symptom co-presentation** (symptoms that cluster together across people). The mechanism is where
+  the two geometries *lock*. This is candidate-elimination — the constraints come from the data,
+  never from a hand-authored edge list.
+- The etiology is the *terminus* of the trajectory: the mechanism reading left standing once the
+  constraints have peeled the rivals off.
 
-### The two halves of the instrument (both grounded in built code)
+### The coherence measure is σ — a Blum measure, not a statistic (the load-bearing resolution)
 
-1. **State estimator + decision** — per-individual mined baseline, signed-ternary axes,
-   informational-zero abstention, decision by elimination, discrimination by new orthogonal
-   dimension. Built in **Peitho**.
-2. **Coherence of the combination** — constraint propagation over a domain-knowledge graph
-   (**harmonizing**), plus committee-collective-state / all-zero-margin abstention (**genomevault**,
-   **orthogonal-validators**), with **κ** available as the coherence measure and **OTP/HDC** as the
-   ternary substrate. Kuramoto/COEC is the conceptual shape of the locked state; the running
-   instrument is constraint-elimination.
+σ = the minimum number of data-geometry constraints needed to pin a *unique* mechanism (SC = 1). It
+is the founder's specification complexity: a Blum measure, provably equal to the teaching dimension
+and four further studied quantities (the Five-Field Identification), and **independent of frequency
+by construction**. It is the opposite of "gene X in 87% of cases." The **bulk/tail phase transition
+is the collective-state signal** earlier gestured at as an "order parameter": candidate mechanisms
+die in correlated clusters (the *bulk* — structure resolving many at once) until each remaining rival
+needs its own targeted constraint (the *tail* — PAC-limited, must be taught). A *parsimonious,
+coherent* mechanism is one that reaches SC = 1 in the bulk. That is the coherence: minimum-σ,
+structure-resolved.
 
-### The DEFERRED object — the one thing that is not specified here
+### Node birth and death — the novel piece — is induction + negative learning (already built: SSL, Regenesis IV-G)
 
-The instrument is only as good as the **constraint graph it runs over** — Homeostat's equivalent of
-harmonizing's ATCC fact table: the mechanistic structure that says *which sub-threshold variants
-must lock together in a coherent mechanism*. This is **not** specified in this document, must not be
-invented from it, and is the design conversation with the founder. It is where known biology and the
-Ayurvedic/cross-tradition carvings enter as candidate constraints, and it is where the founder's
-**SDIS** document was headed. Naming a concrete graph here — or substituting a statistic for it —
-is the recurring drift (Part V).
+- **Birth (induction).** A residual — co-variation or symptom co-presentation the current mechanism
+  graph does not account for — *births* a node: a recurring cross-population dyad posits a mechanism
+  component (SSL induction / the m2 confidence-accrual mechanism).
+- **Death (negative learning).** A candidate node that meets a **near-miss** — a population where the
+  coupling fails, a presentation that breaks it — is *withdrawn before it fires*
+  (withdraw-on-"does-not"). You learn at the **residual**: the informative constraint is the one that
+  KILLS a rival, never the one that confirms the leader (Winston's near-miss).
+- **Consolidation (safe forgetting).** A node banking zero marginal coverage (κ = 0) is redundant and
+  can be forgotten *with proof* it changed no significance-weighted survivor (canon §5.11).
+
+### The one law that keeps this from becoming SDIS — the falsifiability guard
+
+A frame that makes every observation *confirm* it reports **σ_sem = 0**: zero information, Quixote
+seeing giants — *memorization, not resolution* (canon §5.9; machine-checked as
+`self_confirming_cannot_certify`). **SDIS's "31/31 symptoms predicted, 100% accuracy" is σ_sem = 0
+by construction** — the dopamine frame was allowed to overwrite every reading rather than be
+breakable by one. So the search's binding law is:
+- **σ_sem must stay > 0.** The search may NOT collapse to a single self-confirming mechanism; more
+  than one lawful mechanism-reading must survive the leading frame (plurality = regime-multiplicity,
+  H3 — plural but not mushy).
+- **Learn at the residual, never at the confirmation.** A constraint whose every outcome leaves the
+  leading mechanism unchanged has value zero by construction (Howard's value-of-information).
+
+This is the exact, formal statement of *why SDIS is wrong* and *what the machine must do
+differently*.
+
+### Early stopping is the parsimony halt (pabkit — Process-Aware Benchmarking)
+
+Judge the *process*, not the endpoint. Grow the node graph while κ is high (the bulk is still
+amplifying — structure resolving rivals for free); **stop at the knee where κ → 0.** Past the knee,
+each new node resolves only one tail rival — the search is *memorizing the presentation*, i.e.
+becoming SDIS. pabkit's "halt at the test-loss minimum" is that knee, and it is the overfitting guard
+for small-n: the search's own trajectory (structured, stable rule-formation vs. abrupt memorization)
+tells you which regime you are in. κ → 0 is the stopping rule (canon §5.5, §10.4).
+
+### The decision shell is Peitho, and it is built
+
+Signals reach the search as tiered, signed-ternary positions off a per-individual mined zero, the
+informational zero carrying honest abstention. Built and Detective-pinned this session: `otp.py`
+(the ternary / informational-zero projection) and `signal.py` (the ✓/○/absent tiering). Decisions
+are elimination over those axes; discrimination is a new orthogonal dimension, never a tuned
+threshold. The mined zero is canon §1.1's missing per-individual reference step (= prakriti/vikriti,
+§6.7).
+
+### Primary sources (read these, not this summary)
+
+The σ / trajectory / bulk-tail / σ_sem-guard machinery — the founder's **SSL paper**
+(`Semantic_Specification_Learning/00_CONCEPTUAL_FRAMING`, `01_PAPER_SKELETON`) and its exact-learning
+sibling (`06_EXACT_SPECIFICATION_LEARNING`), plus `SIGNIFICANCE_WEIGHTING.md` (κ). Early stopping /
+process-not-endpoint — **pabkit** (`~/Projects/pabkit`, `docs/process_makes_perfect.md`,
+`docs/mathematical_formalism.md`). The decision shell — **Peitho**. The constraint-elimination +
+committee + OTP substrate — harmonizing, genomevault / orthogonal-validators, gse / HDC. The
+constraint-trajectory vocabulary — **COEC**.
+
+### What is STILL open (marked, so it is not quietly filled in)
+
+1. **The object's CONTENT is computed, not authored — and it is not built yet.** The mechanism graph
+   is *grown by the search* (node birth/death) from the data geometry; it is NOT a hand-written edge
+   list, and seeding it from SDIS's guesses is the error the founder corrected. **SDIS is a
+   characterization target** (can the search recover SDIS's defensible core and reject its overfit,
+   from the data?), never the object.
+2. **The data gates everything (§12.4).** σ is computed over the mechanism kill-matrix, whose "tests"
+   are the data-geometry constraints — population **co-variation** (LD / haplotype / co-occurrence
+   structure, NOT the marginal allele frequencies that are all most free sources give) and symptom
+   **co-presentation** (comorbidity structure across people). In hand: population *summary stats* + the
+   n=1 index case. Whether the co-variation and co-presentation geometries are reachable for free is
+   the open, binding data question.
+3. **σ depends on μ — the oracle.** σ is only as good as the space of *alternative* mechanisms it is
+   measured against (the mutation policy). This is canon §4.3 / §6, the oracle problem — and it is
+   where the Ayurvedic / cross-tradition ensemble re-enters, NOT as edges to seed but as
+   **μ-diversification**: independent ways of enumerating "what else could this mechanism be," so σ is
+   not measured against a consensus-collapsed alternative set (§6.4, §6.9).
 
 ### The honest cautions (each measured on real data, not asserted)
 
@@ -215,25 +262,32 @@ post-this-document work.
 ## Part IV — The Laws (mirror of the auto-loaded CLAUDE.md)
 
 1. **Data-geometry + classical AI, NOT statistics.** Statistics is priorless and honest but too weak
-   for a fungible, sub-threshold, multi-variant etiology; it is at most a cheap search-order prior,
+   for a fungible, sub-threshold, coherence-borne etiology; it is at most a cheap search-order prior,
    never the method, the significance, or the object.
-2. **The signal is a coherent combination locking into a meta-stable state** — not any element's
-   frequency or association. The elements are weakly-associated and fungible; the mechanism lives one
-   level up, in the collective locked state.
-3. **The coherence detector is constraint-elimination over a domain-knowledge graph, with honest
-   abstention** — not a frequency, not a bare order parameter, and not participation/coverage over a
-   generic network. Kuramoto/metastability is the conceptual shape; the working instrument is
-   constraint-elimination. (κ is allowed only over the mechanism-derivation graph.)
-4. **Per-individual baseline first.** Mine the person's own setpoint (the mined zero =
-   prakriti/vikriti) and read deviation from it — never a population reference.
-5. **The intelligence is in the constraint graph.** An over-firing constraint that collapses real
-   distinctions is *removed, not tuned*; a missed discrimination is a *missing orthogonal dimension*,
-   never a mis-set threshold. Domain knowledge is the algorithm.
-6. **Diagnosis is a story; the traditions are decorrelated candidate-constraint sources; the
-   population/E-I-R signal is a search-order prior** — none is the method or an authority.
-7. **Coherence is not automatically signal — measure it on the right object.** Abstention (the
-   informational zero) is load-bearing. No ML as the method; a bounded model is at most a founder-placed
-   tail. Without dynamic data, outputs are hypotheses (canon §12.4).
+2. **The method is a σ-trajectory search; the coherence measure is σ, a Blum measure — not a
+   statistic.** Drive H = log₂(surviving candidate mechanisms) → 0 by candidate-elimination, the
+   "tests" being data-geometry constraints: population **co-variation** + symptom **co-presentation**.
+   σ = min constraints to a unique mechanism (SC = 1); it equals the teaching dimension, not a
+   frequency. The **bulk/tail phase transition** is the collective-state / parsimony signal.
+3. **The object (the mechanism graph) is GROWN, never authored.** Node **birth** = induction on a
+   residual; node **death** = negative learning on a near-miss (kill rivals, learn at the residual);
+   **consolidation** = safe-forget a κ = 0 node. Never a hand-written edge list, never seeded from
+   guesses — including SDIS's. This is the one piece beyond Peitho.
+4. **The falsifiability guard: σ_sem must stay > 0.** Never collapse to a single self-confirming
+   mechanism — that IS SDIS (σ_sem = 0, 100% retrodiction, *memorization not resolution*). Keep
+   plurality (regime-multiplicity, H3); a constraint that confirms the leader has value zero.
+5. **Early stopping at the κ-knee is the parsimony halt.** Grow nodes while the bulk amplifies (κ
+   high); stop at κ → 0. Past the knee is memorizing the presentation. Judge the *process*, not the
+   endpoint (pabkit). This is the overfitting guard for small-n.
+6. **Per-individual baseline first; the decision shell is Peitho.** Mine the person's own setpoint
+   (mined zero = prakriti/vikriti), read signed-ternary deviation, abstain via the informational
+   zero, decide by elimination, discriminate by a *new orthogonal dimension* — never a tuned threshold.
+7. **Diagnosis is a story; the traditions are μ-diversification (the oracle), not edges to seed; the
+   population/E-I-R signal is a search-order prior** — none is the method or an authority. σ is only as
+   good as μ (the alternative-mechanism space); diversify the oracle (§6.4, §6.9).
+8. **Abstention is load-bearing; no ML as the method; the data gates the claim.** The informational
+   zero and σ_sem > 0 are load-bearing. A bounded model is at most a founder-placed tail. Without
+   dynamic / co-variation / co-presentation data, outputs are hypotheses (canon §12.4).
 
 ---
 

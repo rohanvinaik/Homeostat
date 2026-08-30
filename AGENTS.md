@@ -2,13 +2,15 @@
 
 ## ⛔ THE LOAD-BEARING LAW: DATA-GEOMETRY + CLASSICAL AI, NOT STATISTICS
 
-Homeostat is a **classical-AI data-geometry** project. Its method is **coherence detection** —
-finding the combinations of weak, sub-threshold signals that *hang together* in a collective,
-meta-stable state — realized as **constraint elimination over a domain-knowledge structure,
-with honest abstention.** It is **NOT statistics.** A statistical test (a frequency, an
-association, an enrichment, a population-differentiation score, a network hub/participation
-score) is at most **one cheap search-order prior**; it is **NEVER the method, the significance,
-or the object of study.**
+Homeostat is a **classical-AI data-geometry** project. Its method is CONFIRMED (2026-08-30):
+**Peitho with automated node birth/death — a σ-trajectory search for the most parsimonious
+mechanism that resolves a symptom presentation**, driving H = log₂(surviving candidate mechanisms)
+→ 0 by candidate-elimination, the "tests" being **data-geometry constraints** (population
+co-variation + symptom co-presentation). The **coherence measure is σ** — a Blum measure equal to
+the teaching dimension, NOT a frequency (`docs/THEORY_OF_THE_CASE.md` Part II). It is **NOT
+statistics.** A statistical test (a frequency, an enrichment, a population-differentiation score, a
+network hub/participation score) is at most **one cheap search-order prior**; it is **NEVER the
+method, the significance, or the object of study.**
 
 **Statistics is not the villain — that framing is itself a mistake to avoid.** Statistics is
 **priorless, and priorless is honest.** Its problem here is not bias; it is **power**: an
@@ -32,14 +34,20 @@ it tips. Statistics tests the element; the mechanism is the collective state. So
 **data geometry**: read the coherence of the combination *itself* as the evidence of mechanism.
 **Improbable-AND-coherent, not frequent.** (Canon §2, §3.4, §5; the informational zero §5.4.)
 
-**The coherence detector, concretely — read it off the built code, never imagined.** In every
-place this is actually built (canon §3.4, Appendix B): **harmonizing** propagates constraints
-over a domain-physics fact table on biological metadata; **genomevault**'s committee reads the
-collective state and abstains on all-zero-margin; **Peitho** places each axis at +1/−1/0 off a
-mined zero and decides by elimination. The detector is **constraint elimination with
-abstention** — NOT a frequency, NOT a bare Kuramoto order parameter (that is the *shape*), and
-NOT κ/participation over a *generic* network (that is a topology statistic in disguise —
-canon §5.12, and it was Act 2 of the death).
+**The architecture, concretely (confirmed; grounded in built code).** The search runs the founder's
+**σ-trajectory** (Specification Complexity, the SSL paper): candidate mechanisms are eliminated by
+data-geometry constraints until a unique, parsimonious reading survives; σ (min constraints to
+SC=1, a Blum measure) is the coherence measure, and the **bulk/tail phase transition** is the
+collective-state signal. The **object is GROWN, not authored** — the one piece beyond Peitho:
+**node birth** (induction on a residual), **node death** (negative learning on a near-miss),
+**consolidation** (safe-forget a κ=0 node). Two laws keep it honest: the **σ_sem > 0
+falsifiability guard** (never collapse to a self-confirming single mechanism — that IS SDIS,
+σ_sem=0, *memorization*; `self_confirming_cannot_certify`), and **early stopping at the κ-knee**
+(pabkit — grow while the bulk amplifies, stop at κ→0, judge the *process* not the endpoint). The
+decision shell is built: **Peitho**-style signed-ternary off a mined zero, informational-zero
+abstention (`otp.py`, `signal.py`). It is **NOT** a frequency, **NOT** κ/participation over a
+*generic* network (a topology statistic in disguise — canon §5.12, Act 2 of the death), and **NOT**
+a hand-authored or SDIS-seeded edge list (§12.14).
 
 **Four different things, never collapsed:**
 - **AI** — the genus (reasoning, representation, symbolic and vector-symbolic computation).
@@ -86,17 +94,17 @@ call, named as a bounded utility, never your default, never the method, never "t
 1. Read this file → `docs/THEORY_OF_THE_CASE.md` (the derived design + the Part V pathology
    record) → `docs/REGULATORY_DEFICIT_PROGRAM.md` (founding canon, authoritative; its Appendix C
    is the cold-pickup anti-pattern list).
-2. **Restate the mechanism in your own words** and have the founder confirm it — and the test is
-   not a fluent paraphrase, it is: *where in what I am about to build does the
-   coherence-of-a-combination live; where have I substituted a statistic for it; and have I
-   imagined the coherence as a score over a generic graph instead of constraint-elimination over
-   the mechanism structure?* If you cannot point at the constraint-driven coherence, you have not
-   understood it yet.
-3. **The constraint object is DEFERRED — do not invent it.** The mechanistic structure saying
-   which sub-threshold signals lock together (Homeostat's analogue of harmonizing's ATCC fact
-   table) is not specified and must not be fabricated to make a pipeline runnable. Guessing it
-   (a PBS pile, a generic interactome) is the root of the 2026-08-30 death (canon §12.14, §15).
-   It is the design conversation, seeded by the founder's **SDIS** document.
+2. **Restate the mechanism in your own words** and have the founder confirm it — the test is not a
+   fluent paraphrase, it is: *is the coherence measure σ (a Blum measure) and not a statistic; is
+   the object GROWN by the search (node birth/death) and not authored/seeded; does the σ_sem > 0
+   guard hold so it cannot collapse into SDIS-style self-confirmation; and does it stop at the
+   κ-knee?* If you cannot point at those, you have not understood it yet.
+3. **The object is GROWN by the search, NEVER authored or seeded.** The mechanism graph is computed
+   by node birth/death from the data geometry (LAW 3) — it is not a hand-written edge list, and
+   seeding it (a PBS pile, a generic interactome, **SDIS's edges**) is the root of the 2026-08-30
+   death (canon §12.14, §15). SDIS is a *characterization target*, never the object. What is still
+   open is the object's **content** (grown, once the data is in hand) and the **data** itself
+   (co-variation + co-presentation, §12.4) — not the architecture, which is confirmed (Part II).
 4. Never reframe the coherence design as statistics-with-extra-steps. Never rank by a
    frequency/association/differentiation/participation score as the answer. Iterate the
    **constraint graph / the coherence object / the encoder**, never "a better statistic."
