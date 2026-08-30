@@ -16,3 +16,6 @@ __pycache__/
 # OS
 .DS_Store
 ._*
+
+# Detective mutation-testing reports (build artifacts)
+.detective/
