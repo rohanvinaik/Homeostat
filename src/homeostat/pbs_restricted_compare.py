@@ -79,7 +79,7 @@ def main() -> None:
     for r in rows:
         print(
             f"{r['mode']:<8}{r['k']:>6}{r['seed_jaccard']:>8}"
-            f"{r['lrrk2_verdict_pk'][:4] + '/' + r['lrrk2_verdict_gn'][:4]:>16}"
+            f"{str(r['lrrk2_verdict_pk'])[:4] + '/' + str(r['lrrk2_verdict_gn'])[:4]:>16}"
             f"{str(r['s32_p_pk']) + '/' + str(r['s32_p_gn']):>18}"
             f"{str(r['s32_obs_pk']) + '/' + str(r['s32_obs_gn']):>16}"
         )
