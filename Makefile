@@ -32,6 +32,9 @@ eir-enrich: ## selection-signature enrichment on the PBS pile, MAF-matched (§8.
 eir-enrich-block: ## §8.4 LD-block-corrected re-test (1Mb block bootstrap, preregistered)
 	$(PY) -m homeostat.eir_enrich_block
 
+eir-enrich-thin: ## §8.4 LD-thinned re-test (1 variant/1Mb window, preregistered)
+	$(PY) -m homeostat.eir_enrich_ldthin
+
 lrrk2-gate: ## §13.3 LRRK2 bridge recovery on the PBS pile, function-blind (Law 3)
 	$(PY) -m homeostat.lrrk2_gate
 
