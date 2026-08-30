@@ -44,6 +44,9 @@ bridge-discovery: ## §3.3 annotation-blind candidate-bridge discovery (hypothes
 annotation-recovery: ## §3.2 annotation-recovery validator (pleiotropy on the 628, preregistered)
 	$(PY) -m homeostat.annotation_recovery
 
+annotation-recovery-studybias: ## §3.2 study-bias control (add pubmed-tertile matching, preregistered)
+	$(PY) -m homeostat.annotation_recovery_studybias
+
 status:   ## pull progress (add JSON=1 for machine-readable)
 	$(PY) -m homeostat.status $(if $(JSON),--json,)
 
