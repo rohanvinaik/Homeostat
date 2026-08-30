@@ -27,7 +27,7 @@ from homeostat.util import atomic_write_json
 
 DEGREE_BAND = 0.20
 PBS_TOL = 0.02
-OUT = paths.EIR / "annotation_recovery_studybias.json"
+OUT = paths.tagged("annotation_recovery_studybias.json")
 
 
 def tertiles(values: list[int]) -> tuple[int, int]:

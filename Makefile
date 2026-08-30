@@ -26,6 +26,9 @@ propose-verify: ## verify the frozen LLM proposal flood (firewall + selection-li
 eir-pile: ## build the cohort-scale E/I/R PBS pile from Pan-UKBB allele frequencies (§7)
 	$(PY) -m homeostat.eir_cohort
 
+gnomad-pile: ## build the E/I/R PBS pile from gnomAD v2.1.1 SAS exomes (run with HOMEOSTAT_TAG=_gnomad)
+	$(PY) -m homeostat.gnomad_pile
+
 eir-enrich: ## selection-signature enrichment on the PBS pile, MAF-matched (§8.4)
 	$(PY) -m homeostat.eir_enrich
 

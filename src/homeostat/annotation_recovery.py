@@ -22,7 +22,7 @@ from homeostat.bridge_discovery import SCORES_FULL
 from homeostat.util import atomic_write_json
 
 GWAS = paths.DATA / "network" / "gwas-catalog-download-associations-alt-full.tsv"
-OUT = paths.EIR / "annotation_recovery.json"
+OUT = paths.tagged("annotation_recovery.json")
 
 # Dials — fixed by the preregistration; do not tune after.
 P_CANDIDATE = 0.05  # candidate = degree_matched_p < this (the frozen 628)

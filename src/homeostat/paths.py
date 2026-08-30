@@ -1,9 +1,27 @@
 """Canonical repo-relative paths. Everything under data/ is gitignored."""
 
+import os
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 DATA = REPO / "data"
+
+# Optional output namespace: HOMEOSTAT_TAG=_gnomad writes side-by-side variants of
+# the pile + gate outputs (e.g. eir_pbs_pile_gnomad.tsv.gz) without clobbering the
+# default (Pan-UKBB) results. Empty tag -> original filenames (backward compatible).
+TAG = os.environ.get("HOMEOSTAT_TAG", "")
+
+
+def tagged(name: str) -> Path:
+    """EIR / name, with TAG inserted before the extension when set.
+
+    'eir_pbs_pile.tsv.gz' -> 'eir_pbs_pile_gnomad.tsv.gz' when TAG='_gnomad'.
+    """
+    if not TAG:
+        return EIR / name
+    base, _dot, ext = name.partition(".")
+    return EIR / f"{base}{TAG}.{ext}"
+
 
 # Index genotype R (directly-observed tier — the raw array export, copied local)
 GENOTYPE_DIR = DATA / "genotype"
