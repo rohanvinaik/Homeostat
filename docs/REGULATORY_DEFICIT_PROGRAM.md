@@ -137,6 +137,21 @@ Not equivalent to the program, but the nearest existing machinery, and worth usi
 - **Transfer entropy**: the information-theoretic formulation of directed coupling.
 - **Latent factor decomposition** (ICA/NMF) over multi-omic data: annotation-blind module recovery. Inspecting what loads on each factor *afterward* is the §3.2 validation step, subject to the contamination caveat in §10.
 
+### 3.6 Where the constraints come from — multi-lens triangulation (the co-occurrence geometry)
+
+The kill-matrix (§3.4) is **not read off any single source**, and never off a fixed pre-drawn map: STRING participation over the generic interactome was the Act-2 death (§15) — a network with no person and no phenotype in it, whose *shape* is invariant to the data, so its hubs report the drawing, not the biology. The gold — one dataset holding each individual's genotype AND phenotype, where the presentation visibly moves with the combination — is gated (§12.4). It is not bought; it is **triangulated from free, partially-orthogonal lenses**, each a lossy shadow of that lock:
+
+- variants that **co-travel across populations** (gnomAD / 1000G);
+- each **wiring to the presentation's traits** (the GWAS catalog);
+- genes that **co-move in expression** across people (GTEx);
+- and — admitted but demoted to one vote — physical/functional interaction (STRING).
+
+A candidate survives only where **independent lenses converge**; disagreement kills it (the near-miss — learn at the residual). This is §6.9 at the data-lens level: convergence across sources that never touched is signal; one source alone is not. STRING cannot dominate — a hub only it supports is outvoted and eliminated.
+
+**Why imperfect orthogonality is admissible — because the program GENERATES, it does not CALCULATE.** The lenses need not be independent, only *somewhat* orthogonal. For a statistical stack this is fatal (correlated inputs → correlated errors → a precise-looking, systematically-wrong estimate — the §15 death). But the search estimates no quantity; it **eliminates rivals**. A lens is a kill-opportunity, not an estimator, so overlap is *redundant*, never *wrong* — there is no estimate to bias. Two partly-orthogonal n-bit lenses yield **strictly between n and 2n bits** (non-inclusive): always net-additive. This is the founder's holographic-lens principle (many lossy projections combine into a truth no single lens holds), and it is admissible here for the exact reason it is inadmissible in §6.4's consensus-collapsed statistical ensemble.
+
+**The engine embodies it.** κ (§5.5) is *marginal* coverage — overlap between lenses shows up as κ = 0 (a redundant, ignored kill), never as inflated confidence — and greedy max-κ selects the most orthogonal next lens by construction (§5.4). The one discipline: do not deliberately assemble heavily-overlapping lenses (low marginal orthogonality is merely wasteful), and never read a single lens's *shape* as significance.
+
 ---
 
 ## 4. Formal substrate I — σ, specification complexity
@@ -662,6 +677,8 @@ The first work is not a run; it is the design conversation that specifies Homeos
 ### 13.3 LRRK2 as positive control, read through coherence
 
 Run the coherence instrument (§3.4) blind and check whether the LRRK2–NOD2–RIPK2 combination is recovered as a *coherent combination* without annotation input. **If it is not, the method is not working.** Do this before trusting any novel output — and verify it is recovered as coherence, not as participation in a generic graph (§15, Act 2).
+
+**Measured 2026-08-30 (the finding that defines the test).** On the actual GWAS-catalog data for leprosy + Crohn's + IBD, **every single-locus statistic MISSES the LRRK2 mechanism**: pleiotropy count ("shared across all three traits") recovers the generic immune hubs — HLA-DRB1/DQA1, IL12B, TNFSF15 — because LRRK2/NOD2/RIPK2 are *not* in the 3-way overlap (leprosy carries RIPK2; Crohn's/IBD carry LRRK2/NOD2). And inverse-specificity does not rescue it either — LRRK2's own hub-count is **36 distinct traits** (more pleiotropic than NOD2 = 14, IL12B = 6, TNFSF15 = 10), the very antagonistic pleiotropy that got it misfiled as a Parkinson's gene (§9). So no per-gene number — frequency, count, or specificity — recovers it; the mechanism is **compositional** (the RIPK2–NOD2–LRRK2 signaling bridge spanning the two disease clusters), invisible to single loci (§2.4). This is the thesis on real data, and it is exactly why the recovery must be **multi-lens triangulation** (§3.6), not any single measure.
 
 ### 13.4 Oracle-ensemble σ-variance on a known partition
 

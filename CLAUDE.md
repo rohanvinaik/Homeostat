@@ -57,6 +57,21 @@ population/E-I-R signal is a search-order prior. No ML as the method (a bounded 
 founder-placed tail). Without co-variation / co-presentation / dynamic data, outputs are hypotheses
 (§12.4).
 
-The recurring failure has one root: reaching for a statistic, or authoring/seeding the object,
-because it feels like progress — instead of running the σ-trajectory search that grows the object
-from the data geometry. Recognizing the reflex and refusing it is the only fix.
+**LAW 7 — CONSTRAINTS ARE TRIANGULATED ACROSS PARTLY-ORTHOGONAL LENSES; WE GENERATE, NOT CALCULATE.**
+The kill-matrix is never read off one source — a fixed pre-drawn map (STRING participation over the
+generic interactome) was the Act-2 death: no person, no phenotype, the same shape whatever you feed
+it. Each constraint is **triangulated across several partly-orthogonal free lenses** — variants
+co-travel (gnomAD/1000G), each wires to the traits (GWAS), genes co-express (GTEx), STRING as ONE
+demoted vote — and a candidate survives only where independent lenses **converge**, killed the moment
+they **disagree** (§6.9, the holographic principle). **Imperfect orthogonality is fine because we
+GENERATE (eliminate rivals), not CALCULATE (estimate a number):** correlated-errors → false-confidence
+is a *statistics-stack* disease; a lens is a kill-opportunity, so overlap is redundant, never wrong
+(partial orthogonality → between n and 2n bits, non-inclusive — always net-additive). The engine
+already embodies it: κ is **marginal** coverage (overlap → κ = 0, ignored, never inflated), and greedy
+max-κ reaches for the most-orthogonal next lens by construction. Never read a single source's *shape*
+(hubs/participation) as significance; triangulate.
+
+The recurring failure has one root: reaching for a statistic, authoring/seeding the object, or reading
+one map's shape as the answer — because it feels like progress — instead of running the σ-trajectory
+search that grows the object by triangulating the data geometry. Recognizing the reflex and refusing
+it is the only fix.

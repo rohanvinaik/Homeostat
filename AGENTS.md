@@ -96,9 +96,10 @@ call, named as a bounded utility, never your default, never the method, never "t
    is the cold-pickup anti-pattern list).
 2. **Restate the mechanism in your own words** and have the founder confirm it — the test is not a
    fluent paraphrase, it is: *is the coherence measure σ (a Blum measure) and not a statistic; is
-   the object GROWN by the search (node birth/death) and not authored/seeded; does the σ_sem > 0
-   guard hold so it cannot collapse into SDIS-style self-confirmation; and does it stop at the
-   κ-knee?* If you cannot point at those, you have not understood it yet.
+   the object GROWN by the search (node birth/death) and not authored/seeded; are the constraints
+   TRIANGULATED across several partly-orthogonal lenses (generate-not-calculate), never read off one
+   map's shape; does the σ_sem > 0 guard hold so it cannot collapse into SDIS-style self-confirmation;
+   and does it stop at the κ-knee?* If you cannot point at those, you have not understood it yet.
 3. **The object is GROWN by the search, NEVER authored or seeded.** The mechanism graph is computed
    by node birth/death from the data geometry (LAW 3) — it is not a hand-written edge list, and
    seeding it (a PBS pile, a generic interactome, **SDIS's edges**) is the root of the 2026-08-30
