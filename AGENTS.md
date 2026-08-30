@@ -1,6 +1,15 @@
 # For agents (and humans) arriving fresh — read before proposing anything
 
-## ⛔ THE LOAD-BEARING LAW: DATA-GEOMETRY + CLASSICAL AI, NOT STATISTICS
+## ⛔ WHAT HOMEOSTAT IS — A MECHANISM-UNEARTHING ENGINE (and the law that protects it)
+
+**The build, first.** Homeostat imputes the causal mechanism under a symptom presentation — the
+combination of weak, fungible, sub-threshold signals holding a coherent state — by a **Peitho-style
+parsimony search that grows its own mechanism graph (node birth/death) and reads candidates by
+convergence across many lossy lenses (a holographic projection)**. It is a *positive* construction
+(unearth mechanism), not a critique of medicine. The medicine critique is motivation; the σ/κ
+formalism is scaffolding; the build is the search.
+
+**THE LOAD-BEARING LAW that protects the build: DATA-GEOMETRY + CLASSICAL AI, NOT STATISTICS.**
 
 Homeostat is a **classical-AI data-geometry** project. Its method is CONFIRMED (2026-08-30):
 **Peitho with automated node birth/death — a σ-trajectory search for the most parsimonious

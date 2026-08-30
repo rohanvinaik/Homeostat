@@ -1,8 +1,11 @@
 # Theory of the Case — Homeostat
 
-**Regulatory-deficit medicine as a data-geometry / classical-AI problem: imputing a
-mechanism from the coherence of many weak, fungible, sub-threshold signals — not from
-statistics.**
+**Homeostat is a mechanism-unearthing engine: it imputes the causal mechanism under a symptom
+presentation — the combination of weak, fungible, sub-threshold signals holding a coherent state —
+by a Peitho-style parsimony search that grows its own mechanism graph (node birth/death) and reads
+candidates by convergence across many lossy lenses (a holographic projection). Data geometry and
+classical AI, not statistics.** (The medicine critique below and the σ/κ formalism are the
+motivation and the scaffolding; the build is the search.)
 
 **Status:** Canonical derived design, REWRITTEN 2026-08-30 across a working-through with the founder.
 The arc of that day: rewrite 1 established "data-geometry, not statistics"; rewrite 2 sharpened *why*
