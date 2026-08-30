@@ -1,10 +1,14 @@
 # Homeostat — project laws (auto-loaded; these bind every session)
 
-These laws exist because an agent (me) repeatedly installed **statistics** where the design calls
-for **data-geometry / classical-AI coherence** — and an earlier version of these laws *enshrined*
-that mistake. The method is now CONFIRMED (2026-08-30, with the founder): **Homeostat is Peitho
-with automated node birth/death — a σ-trajectory search for the most parsimonious mechanism that
-resolves a symptom presentation.** Read the full theory before any analysis:
+**Homeostat is a mechanism-unearthing engine: it imputes the causal mechanism under a symptom
+presentation — the combination of weak, fungible, sub-threshold signals holding a coherent state —
+by a Peitho-style parsimony search that grows its own mechanism graph (node birth/death) and reads
+candidates by convergence across many lossy lenses (a holographic projection). Data geometry, not
+statistics.** These laws exist because an agent (me) repeatedly installed **statistics** where that
+coherence search belongs — and an earlier version of these laws *enshrined* the mistake. The method
+is CONFIRMED (2026-08-30, with the founder): it is Peitho with automated node birth/death, a
+σ-trajectory search for the most parsimonious mechanism that resolves a presentation. Read the full
+theory before any analysis:
 `docs/THEORY_OF_THE_CASE.md` Part II (the confirmed architecture) and
 `docs/REGULATORY_DEFICIT_PROGRAM.md` (canon: σ §4, κ §5, the falsifiability guard §5.9).
 
