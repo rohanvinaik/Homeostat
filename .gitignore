@@ -19,3 +19,4 @@ __pycache__/
 
 # Detective mutation-testing reports (build artifacts)
 .detective/
+.wesker/
