@@ -1,0 +1,185 @@
+"""homeostat.search — the σ-trajectory search: candidate-elimination to a parsimonious mechanism.
+
+The confirmed core (`docs/THEORY_OF_THE_CASE.md` Part II): drive **H = log₂(surviving candidate
+mechanisms) → 0** by candidate-elimination, each "test" a **data-geometry constraint** that kills
+a subset of candidates. **σ = the minimum constraints to pin a UNIQUE mechanism (SC=1)** — the
+teaching dimension, a Blum measure, NOT a frequency. This module is the **object-agnostic engine**:
+the candidates and their kill-sets are DATA plugged in; nothing here is a statistic and nothing
+here authors the object.
+
+The only interface is the **kill-matrix**: a constraint is the set of candidate-ids it KILLS. So
+the data geometry (population co-variation + symptom co-presentation) enters *solely* as "which
+candidate mechanisms does this constraint eliminate" — never as a frequency, an association, or a
+hand-written edge.
+
+Two of the founder's laws are enforced here:
+- **The σ_sem > 0 falsifiability guard** (`falsifiable`): a resolution reached without genuine
+  plurality to start, or without every step killing a rival (κ > 0), is the self-confirming
+  degenerate case — the SDIS failure (100% retrodiction = memorization). Learn at the residual,
+  never at the confirmation.
+- **Early stopping at the κ-knee** (`knee_index`): κ is antitone under greedy selection; the bulk
+  (κ > 1, clusters die at once) gives way to the tail (κ = 1, one rival at a time). The knee is the
+  parsimony halt — past it, the search is memorizing the presentation.
+"""
+
+from __future__ import annotations
+
+import math
+from dataclasses import dataclass
+
+# ---- the atomic pure decisions (Detective-pinnable) --------------------------------------
+
+
+def survivors(candidates: list[str], applied_kills: list[list[str]]) -> list[str]:
+    """The candidate mechanisms not eliminated by any applied constraint.
+
+    `applied_kills` is the list of kill-sets (one per applied constraint); a candidate survives iff
+    it appears in `candidates` and in none of the kill-sets. Order-preserving over `candidates`,
+    with duplicate candidate-ids collapsed to their first occurrence. Pure over
+    `(list[str], list[list[str]])`.
+    """
+    killed: set[str] = set()
+    for ks in applied_kills:
+        killed.update(ks)
+    seen: set[str] = set()
+    out: list[str] = []
+    for c in candidates:
+        if c not in killed and c not in seen:
+            seen.add(c)
+            out.append(c)
+    return out
+
+
+def entropy_bits(n_survivors: int) -> float:
+    """Conceptual entropy H = log₂(n_survivors) over the surviving candidate mechanisms.
+
+    H = 0 when a unique mechanism remains (n = 1, SC=1 — resolution) and, degenerately, when none
+    does (n ≤ 0 — nothing coheres, the abstention case; kept 0.0 rather than undefined). H > 0
+    exactly while plural candidates survive. Pure over `int`.
+    """
+    if n_survivors <= 1:
+        return 0.0
+    return math.log2(n_survivors)
+
+
+def resolved(n_survivors: int) -> bool:
+    """True iff exactly one candidate mechanism survives — SC=1, a unique reading. n = 0 (nothing
+    coheres) is NOT resolution; it is abstention. Pure over `int`."""
+    return n_survivors == 1
+
+
+def marginal_kill(kill_set: list[str], already_killed: list[str]) -> int:
+    """κ — the marginal coverage of a constraint: how many NEW candidates it eliminates beyond those
+    already killed. A constraint with κ = 0 *confirms* rather than *resolves* (value zero, Howard)
+    and must never count toward a resolution (the σ_sem guard). Pure over `(list[str], list[str])`.
+    """
+    seen = set(already_killed)
+    new: set[str] = set()
+    for c in kill_set:
+        if c not in seen:
+            new.add(c)
+    return len(new)
+
+
+def falsifiable(n_candidates_start: int, kappas: list[int]) -> bool:
+    """The σ_sem > 0 guard, as a decision over a completed trajectory.
+
+    True iff (a) there was **genuine plurality** to resolve at the start (`n_candidates_start > 1`)
+    and (b) **every step learned at the residual** — each chosen constraint had κ > 0, actually
+    killing a surviving rival. A resolution reached from no plurality, or via any κ ≤ 0 (confirming)
+    step, is the self-confirming degenerate frame (σ_sem = 0) — the SDIS failure. An empty
+    trajectory is not falsifiable (nothing resolved). Pure over `(int, list[int])`.
+    """
+    if n_candidates_start <= 1:
+        return False
+    if not kappas:
+        return False
+    return all(k > 0 for k in kappas)
+
+
+def knee_index(kappas: list[int]) -> int:
+    """The κ-knee: the index of the first step whose marginal coverage has fallen into the **tail**
+    (κ ≤ 1 — the constraint resolves only a single rival). Under greedy selection κ is antitone, so
+    this is the bulk→tail transition and the parsimony halt: grow while in the bulk (before the
+    knee), stop here. Returns `len(kappas)` if the whole trajectory stayed in the bulk (κ > 1
+    throughout). Pure over `list[int]`.
+    """
+    for i, k in enumerate(kappas):
+        if k <= 1:
+            return i
+    return len(kappas)
+
+
+# ---- the trajectory (orchestration over the pure decisions) --------------------------------
+
+
+@dataclass(frozen=True)
+class Step:
+    """One step of the σ-trajectory: the chosen constraint and its marginal coverage κ."""
+
+    constraint: str
+    kappa: int
+
+
+@dataclass(frozen=True)
+class Trajectory:
+    """The result of a σ-trajectory search.
+
+    `steps` is the ordered greedy sequence (each carrying its κ). `sigma` = len(steps) when the
+    search resolved `target` to the sole survivor, else `None` — a **STUCK** residual no available
+    constraint can resolve, which is where **node birth** is called for (a new candidate/constraint
+    must be grown). `survivors_left` is what remains. `falsifiable` is the σ_sem > 0 guard evaluated
+    over the run.
+    """
+
+    steps: list[Step]
+    sigma: int | None
+    survivors_left: list[str]
+    falsifiable: bool
+
+
+def sigma_trajectory(
+    candidates: list[str], constraints: dict[str, list[str]], target: str
+) -> Trajectory:
+    """Greedy σ-trajectory: apply max-κ constraints until `target` uniquely survives.
+
+    `constraints` maps a constraint-id to its kill-set. At each step the admissible constraint with
+    the greatest marginal coverage κ is chosen — *admissible* means κ > 0 (it kills a surviving
+    rival: learn at the residual) AND it does not kill `target` (never eliminate the reading being
+    pinned); ties break by constraint-id for determinism. The run ends when `target` is the sole
+    survivor (`sigma` = number of steps) or no admissible constraint remains (`sigma` = None — a
+    STUCK residual for node birth). The σ_sem > 0 guard is evaluated via `falsifiable`. I/O-free
+    orchestration over the pinned pure decisions; validated by hand-authored intent tests.
+    """
+    n_start = len(set(candidates))
+    remaining = dict(constraints)
+    applied: list[list[str]] = []
+    killed_flat: list[str] = []
+    steps: list[Step] = []
+
+    while True:
+        alive = survivors(candidates, applied)
+        if resolved(len(alive)):
+            break
+        # score the admissible constraints by marginal coverage κ
+        best_id: str | None = None
+        best_kappa = 0
+        for cid in sorted(remaining):
+            kset = remaining[cid]
+            if target in kset:  # never eliminate the reading we are pinning
+                continue
+            k = marginal_kill(kset, killed_flat)
+            if k > best_kappa:
+                best_kappa = k
+                best_id = cid
+        if best_id is None:  # no admissible κ>0 constraint — STUCK; node birth is needed
+            alive = survivors(candidates, applied)
+            return Trajectory(steps, None, alive, False)
+        kset = remaining.pop(best_id)
+        applied.append(kset)
+        killed_flat.extend(kset)
+        steps.append(Step(best_id, best_kappa))
+
+    alive = survivors(candidates, applied)
+    kappas = [s.kappa for s in steps]
+    return Trajectory(steps, len(steps), alive, falsifiable(n_start, kappas))
