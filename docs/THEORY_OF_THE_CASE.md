@@ -183,6 +183,43 @@ are elimination over those axes; discrimination is a new orthogonal dimension, n
 threshold. The mined zero is canon §1.1's missing per-individual reference step (= prakriti/vikriti,
 §6.7).
 
+### Where the constraints come from — multi-lens triangulation (the co-occurrence geometry)
+
+The kill-matrix the search runs over is **not read off any single source** — least of all a fixed,
+pre-drawn network. (STRING participation over the generic interactome was the Act-2 death: a map with
+no person and no phenotype in it, whose *shape* is the same whatever data you feed it, so reading its
+hubs told you about the drawing, not the biology.) Instead each data-geometry constraint is
+**triangulated across several partially-orthogonal free lenses**, each a lossy shadow of the lock we
+cannot buy (the gated genotype×phenotype cohort):
+
+- variants that **co-travel across populations** (gnomAD / 1000G),
+- each **wiring to the presentation's traits** (the GWAS catalog),
+- genes that **co-move in expression** across people (GTEx),
+- and — allowed but demoted to one vote among many — physical/functional interaction (STRING).
+
+A candidate mechanism survives only where **independent lenses converge**, and is killed the moment
+they disagree (the near-miss — learn at the residual). This is the founder's holographic principle and
+canon §6.9: convergence across sources that never touched is signal; one source alone is not. STRING
+is not banned — it is one lossy witness that cannot drown anything, because a hub only it likes gets
+outvoted and eliminated.
+
+**Why imperfect orthogonality is fine — the load-bearing distinction: we GENERATE, not CALCULATE.**
+The lenses need not be independent, only *somewhat* orthogonal. In a statistical stack this would be
+fatal — correlated inputs → correlated errors → false confidence (a tight estimate that is
+systematically wrong; how the old arc died). But the search computes no number to trust; it
+**eliminates rivals**. A lens is a *kill-opportunity*, not an estimator. Two partly-overlapping lenses
+sometimes kill the same rival — *redundant*, never *wrong*; there is no estimate to bias.
+Information-theoretically, partial orthogonality yields **between n and 2n bits (non-inclusive)** —
+strictly more than any one lens, always net-additive. So imperfect orthogonality is fine here and
+fatal in a stat stack, and that difference *is* generate-vs-calculate.
+
+**The engine already embodies this.** κ (`search.marginal_kill`) is *marginal* coverage — it counts
+only the rivals a lens kills that were not already dead — so overlapping lenses do not double-count;
+redundancy shows up as κ = 0 (a wasted, ignored kill), never as inflated confidence. And greedy max-κ
+selection reaches for the **most orthogonal** next lens each step (the one that kills the most *new*
+rivals). "Don't pick heavily-overlapping lenses" is therefore not a rule to enforce by hand — the
+search prefers orthogonal lenses by construction and shrugs off the overlap.
+
 ### Primary sources (read these, not this summary)
 
 The σ / trajectory / bulk-tail / σ_sem-guard machinery — the founder's **SSL paper**
@@ -200,12 +237,17 @@ constraint-trajectory vocabulary — **COEC**.
    list, and seeding it from SDIS's guesses is the error the founder corrected. **SDIS is a
    characterization target** (can the search recover SDIS's defensible core and reject its overfit,
    from the data?), never the object.
-2. **The data gates everything (§12.4).** σ is computed over the mechanism kill-matrix, whose "tests"
-   are the data-geometry constraints — population **co-variation** (LD / haplotype / co-occurrence
-   structure, NOT the marginal allele frequencies that are all most free sources give) and symptom
-   **co-presentation** (comorbidity structure across people). In hand: population *summary stats* + the
-   n=1 index case. Whether the co-variation and co-presentation geometries are reachable for free is
-   the open, binding data question.
+2. **The data — resolved in principle, not yet built.** The gold (one dataset with each person's genes
+   AND symptoms, so the phenotype visibly moves with the combination) is gated (§12.4). But we do NOT
+   buy it: the kill-matrix is **triangulated from free shadows** (the multi-lens section above), and
+   the `propose` hook is an **active-learning probe** — the search's own residual says *which* discriminating
+   constraint to go fetch (argmax expected-information-gain, per the SSL active-learning frame), so
+   acquisition is residual-driven, not a bulk download. What remains is to *build the lenses* (gnomAD
+   co-travel, GWAS trait-wiring, GTEx co-expression, STRING-as-one-vote) and run them. First target: the
+   LRRK2 positive control (§13.3) — where, measured 2026-08-30, every single-locus statistic (frequency,
+   pleiotropy count, specificity) MISSES the mechanism (recovers HLA hubs, or demotes LRRK2 at hub-count
+   36), because the mechanism is compositional. That is the thesis on real data, and the real test the
+   multi-lens engine must pass.
 3. **σ depends on μ — the oracle.** σ is only as good as the space of *alternative* mechanisms it is
    measured against (the mutation policy). This is canon §4.3 / §6, the oracle problem — and it is
    where the Ayurvedic / cross-tradition ensemble re-enters, NOT as edges to seed but as
