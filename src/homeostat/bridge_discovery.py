@@ -31,8 +31,8 @@ from homeostat.util import atomic_write_json
 
 DEGREE_BAND = 0.20  # ±20% degree, the LRRK2-gate null
 TOP_N = 60
-OUT = paths.EIR / "bridge_discovery.json"
-SCORES_FULL = paths.EIR / "bridge_scores_full.tsv.gz"
+OUT = paths.tagged("bridge_discovery.json")
+SCORES_FULL = paths.tagged("bridge_scores_full.tsv.gz")
 
 
 def write_full_scores(

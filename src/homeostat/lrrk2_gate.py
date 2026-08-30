@@ -34,7 +34,7 @@ COEXPR_TAU = 0.7
 N_PERM = 5000
 SEED = 20260829
 CONTROLS = ("LRRK2", "NOD2", "RIPK2")
-OUT = paths.EIR / "lrrk2_gate.json"
+OUT = paths.tagged("lrrk2_gate.json")
 
 
 def gene_pbs_weights(pile_path, envelopes) -> dict[str, float]:

@@ -29,8 +29,8 @@ from homeostat.util import atomic_write_json
 HAP_N = {"EUR": 838000, "CSA": 17400, "EAS": 5000}
 PBS_OUTGROUP = "EAS"
 
-PILE = paths.EIR / "eir_pbs_pile.tsv.gz"
-SUMMARY = paths.EIR / "eir_pbs_pile_summary.json"
+PILE = paths.tagged("eir_pbs_pile.tsv.gz")
+SUMMARY = paths.tagged("eir_pbs_pile_summary.json")
 DEFAULT_SRC = paths.DATA / "panukbb" / "eos_30150.tsv.bgz"
 
 PILE_HEADER = "chrom\tpos\tref\talt\taf_csa\taf_eur\taf_eas\tmaf_csa\tfst_csa_eur\tpbs_csa\n"
