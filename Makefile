@@ -50,6 +50,12 @@ annotation-recovery: ## §3.2 annotation-recovery validator (pleiotropy on the 6
 annotation-recovery-studybias: ## §3.2 study-bias control (add pubmed-tertile matching, preregistered)
 	$(PY) -m homeostat.annotation_recovery_studybias
 
+pbs-restricted: ## §7 PBS-restricted candidate set sweep (run per cohort; HOMEOSTAT_TAG=_gnomad for gnomAD)
+	$(PY) -m homeostat.pbs_restricted
+
+pbs-restricted-compare: ## cross-cohort comparison — is PBS now load-bearing?
+	$(PY) -m homeostat.pbs_restricted_compare
+
 status:   ## pull progress (add JSON=1 for machine-readable)
 	$(PY) -m homeostat.status $(if $(JSON),--json,)
 
