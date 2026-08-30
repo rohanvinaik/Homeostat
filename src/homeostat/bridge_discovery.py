@@ -12,6 +12,7 @@ matches its gate result. Run: make bridge-discovery.
 """
 
 import datetime
+import gzip
 import json
 import sys
 from bisect import bisect_left, bisect_right
@@ -31,6 +32,27 @@ from homeostat.util import atomic_write_json
 DEGREE_BAND = 0.20  # ±20% degree, the LRRK2-gate null
 TOP_N = 60
 OUT = paths.EIR / "bridge_discovery.json"
+SCORES_FULL = paths.EIR / "bridge_scores_full.tsv.gz"
+
+
+def write_full_scores(
+    path,
+    scorable: list[str],
+    deg: dict[str, int],
+    part: dict[str, float],
+    weights: dict[str, float],
+    p: dict[str, float],
+) -> None:
+    """Persist the FULL per-gene score table (all scorable genes), p-sorted — so
+    the §3.2 validator draws candidates AND a degree+PBS-matched background from
+    one auditable artifact instead of recomputing the graph. Same ranking key as
+    the top-N table (p asc, participation desc, gene) for a stable order.
+    """
+    ranked = sorted(scorable, key=lambda g: (p[g], -part[g], g))
+    with gzip.open(path, "wt", encoding="utf-8") as f:
+        f.write("gene\tdegree\tparticipation\tpbs_weight\tdegree_matched_p\n")
+        for g in ranked:
+            f.write(f"{g}\t{deg[g]}\t{part[g]:.6f}\t{weights.get(g, 0.0):.6f}\t{p[g]:.6f}\n")
 
 
 def degree_matched_p(
@@ -86,6 +108,8 @@ def main() -> None:
     # only score genes with degree >= 2 (a participation of a leaf is trivial)
     scorable = [g for g in nodes if deg[g] >= 2]
     p = degree_matched_p(part, deg, scorable)
+
+    write_full_scores(SCORES_FULL, scorable, deg, part, weights, p)
 
     ranked = sorted(scorable, key=lambda g: (p[g], -part[g], g))
     top = [

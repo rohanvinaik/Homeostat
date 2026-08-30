@@ -35,6 +35,9 @@ lrrk2-gate: ## §13.3 LRRK2 bridge recovery on the PBS pile, function-blind (Law
 bridge-discovery: ## §3.3 annotation-blind candidate-bridge discovery (hypotheses)
 	$(PY) -m homeostat.bridge_discovery
 
+annotation-recovery: ## §3.2 annotation-recovery validator (pleiotropy on the 628, preregistered)
+	$(PY) -m homeostat.annotation_recovery
+
 status:   ## pull progress (add JSON=1 for machine-readable)
 	$(PY) -m homeostat.status $(if $(JSON),--json,)
 
