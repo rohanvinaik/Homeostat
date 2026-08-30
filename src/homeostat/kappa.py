@@ -124,6 +124,57 @@ def pagerank(
     return rank
 
 
+def personalized_pagerank(
+    adj: dict[str, set[str]],
+    prior: dict[str, float],
+    damping: float = 0.85,
+    iters: int = 100,
+    tol: float = 1e-9,
+) -> dict[str, float]:
+    """κ with a non-uniform teleportation prior — the §10.3 selection-weighted κ.
+
+    Identical to `pagerank` except the restart/dangling mass lands on nodes in
+    proportion to `prior` (normalized over the node set) instead of uniformly. So
+    genes under strong differential selection (high PBS) get higher PRIOR
+    participation, and that prior DIFFUSES through the structure (a gene coupled to
+    high-prior genes is lifted too — the coherence math, not a per-node multiply).
+    Genes absent from `prior` get weight 0; if the prior sums to 0 it falls back to
+    uniform (i.e. plain PageRank). Deterministic (sorted node order, fixed iters).
+    """
+    undirected: dict[str, set[str]] = {}
+    nodes = sorted(set(adj) | {t for outs in adj.values() for t in outs})
+    for u in nodes:
+        undirected.setdefault(u, set())
+    for u, outs in adj.items():
+        for v in outs:
+            undirected[u].add(v)
+            undirected[v].add(u)
+    n = len(nodes)
+    if n == 0:
+        return {}
+    total = sum(max(prior.get(x, 0.0), 0.0) for x in nodes)
+    if total <= 0.0:
+        p = dict.fromkeys(nodes, 1.0 / n)
+    else:
+        p = {x: max(prior.get(x, 0.0), 0.0) / total for x in nodes}
+    rank = dict(p)
+    for _ in range(iters):
+        dangling = sum(rank[x] for x in nodes if not undirected[x])
+        new = {}
+        for node in nodes:
+            s = 0.0
+            for nb in undirected[node]:
+                deg = len(undirected[nb])
+                if deg:
+                    s += rank[nb] / deg
+            new[node] = (1.0 - damping) * p[node] + damping * (s + dangling * p[node])
+        if max(abs(new[x] - rank[x]) for x in nodes) < tol:
+            rank = new
+            break
+        rank = new
+    return rank
+
+
 def components_joined(candidate_edges: set[str], base_components: list[set[str]]) -> int:
     """coverage_delta as bridge strength: how many DISTINCT base components a
     candidate's structural edges touch. >=2 => the candidate is a bridge."""
