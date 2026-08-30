@@ -56,6 +56,12 @@ pbs-restricted: ## §7 PBS-restricted candidate set sweep (run per cohort; HOMEO
 pbs-restricted-compare: ## cross-cohort comparison — is PBS now load-bearing?
 	$(PY) -m homeostat.pbs_restricted_compare
 
+sig-descent: ## §III selection-weighted κ (PBS as §10.3 prior); run per cohort (HOMEOSTAT_TAG=_gnomad)
+	$(PY) -m homeostat.sig_descent
+
+sig-descent-compare: ## §III cross-cohort coherence test (does the lift replicate?)
+	$(PY) -m homeostat.sig_descent_compare
+
 status:   ## pull progress (add JSON=1 for machine-readable)
 	$(PY) -m homeostat.status $(if $(JSON),--json,)
 
