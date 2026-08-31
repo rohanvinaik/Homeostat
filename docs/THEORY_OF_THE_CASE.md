@@ -19,6 +19,12 @@ is what keeps it from collapsing into SDIS-style memorization, and **early stopp
 corrected conception, the confirmed method, the pathology record, and the two things still open (the
 object's computed content, and the data). The build proceeds from here WITH the founder.
 
+**The role-recognition BUILD (the confirmed answer to fungibility) is designed self-contained in
+`docs/ETIOLOGY_ENGINE.md`** — Regenesis as the role engine, the L2 encoder over real data, GSE-native
+graded intensity, evidence-derived thresholds, and the no-hard-coding law. Live experiment state:
+`docs/PROBE_STATE.md`. As of 2026-08-31 the full stack computes mechanism from data convergence
+end-to-end (78 pinned tests) with no purposivistic hard-coding.
+
 **Supremacy clause.** DERIVED. Where silent, ambiguous, or wrong, canon governs, in order:
 (1) the founder's statements; (2) `docs/REGULATORY_DEFICIT_PROGRAM.md`; (3) the sources pinned
 in `docs/REFERENCE_MANIFEST.yaml`. The portfolio data-geometry reference is
