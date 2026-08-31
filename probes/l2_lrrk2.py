@@ -11,6 +11,7 @@ understand(universe_root=universes/mechanism). Prereq cache: /tmp/1000g_5pop_af.
 
 from __future__ import annotations
 
+import random
 import sys
 from pathlib import Path
 
@@ -22,9 +23,25 @@ from lrrk2_slice5 import cloud_rsids  # noqa: E402
 
 from homeostat.l2_encoder import data_facts, diff_tier  # noqa: E402
 
-COEXPR_MIN = 0.5
+STRING_HI = 700  # STRING benchmark-calibrated high-confidence tier (evidence-derived, not a guess)
+NULL_PCT = 95  # evidence-derived co-expression cutoff = this percentile of the GTEx correlation null
+NULL_PERMS = 200
 TRIAD_ROLE = {"NOD2": "senses pathogen", "RIPK2": "relays signal", "LRRK2": "amplifies signal"}
 HUBS = ["HLA-DRB1", "HLA-DQA1", "IL18R1", "IL1RL1", "TNFSF15"]
+
+
+def gtex_null_cutoff(seed_vec: list[float], profiles: dict[str, list[float]]) -> float:
+    """Evidence-derived co-expression cutoff (founder: derive thresholds from recorded evidence, not a
+    default). The NULL_PCT-th percentile of |pearson| between a SHUFFLED seed profile and every real gene
+    profile — the correlation you would see by chance in THIS GTEx data. Deterministic (seeded)."""
+    rng = random.Random(0)
+    base = list(seed_vec)
+    null: list[float] = []
+    for _ in range(NULL_PERMS):
+        rng.shuffle(base)
+        null.extend(abs(pearson(base, vec)) for vec in profiles.values())
+    null.sort()
+    return null[min(len(null) - 1, len(null) * NULL_PCT // 100)]
 
 
 def main() -> None:
@@ -33,6 +50,9 @@ def main() -> None:
     prof = gtex_profiles(cloud)
     nod2 = prof.get("NOD2")
     gene_fst, _ = load_gene_diff(cloud_rsids(cloud))
+    binders = string_adjacency(STRING_HI).get(SEED, set())  # STRING high-conf physical partners of seed
+    coexpr_cut = gtex_null_cutoff(nod2, prof) if nod2 else 1.0
+
     scope = [g for g in list(TRIAD_ROLE) + HUBS if g in cloud]
     token = {g: f"gene{i + 1}" for i, g in enumerate(scope)}
 
@@ -41,19 +61,21 @@ def main() -> None:
         if g in token:
             facts.append(f"{token[g]} {role}")
     audit = []
-    for g in scope:  # L2 (§3b): ordinal differentiation tier (Fst magnitude) + GTEx co-expression
+    for g in scope:  # L2 (§3b): differentiation tier (Fst) + GTEx co-expression + STRING binding
         tier = diff_tier(gene_fst.get(g))
-        coexp = bool(nod2 and g in prof and pearson(prof[g], nod2) >= COEXPR_MIN)
-        facts.extend(data_facts(token[g], tier, coexp))
-        audit.append((token[g], g, gene_fst.get(g), tier, coexp))
+        coexp = bool(nod2 and g in prof and pearson(prof[g], nod2) >= coexpr_cut)
+        binds = g in binders and g != SEED
+        facts.extend(data_facts(token[g], tier, coexp, binds))
+        audit.append((token[g], g, gene_fst.get(g), tier, coexp, binds))
 
+    print(f"=== evidence-derived GTEx co-expression cutoff (p{NULL_PCT} of null): {coexpr_cut:.3f} ===")
     print("=== token -> gene ===")
     for g in scope:
         print(f"  {token[g]:<7} = {g}")
-    print("\n=== per-gene REAL signals (max-Fst, differentiation TIER, coexpresses) ===")
-    for t, g, fst, tier, c in audit:
+    print("\n=== per-gene REAL signals (Fst, tier, coexpr, binds-seed) ===")
+    for t, g, fst, tier, c, b in audit:
         fs = f"{fst:.3f}" if fst is not None else "  -  "
-        print(f"  {t:<7} {g:<10} Fst={fs:<7} tier={tier:<9} coexpresses={c}")
+        print(f"  {t:<7} {g:<10} Fst={fs:<7} tier={tier:<9} coexpr={c!s:<5} binds={b}")
     print("\n=== ASSEMBLED FACT TEXT (feed to understand) ===")
     print(". ".join(facts) + ".")
 

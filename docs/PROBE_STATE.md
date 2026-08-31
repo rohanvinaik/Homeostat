@@ -75,13 +75,24 @@ Detective-pinned (26/26). Honest caveats: intensity needs ABSOLUTE Fst bands (no
 which lands LRRK2 as a *moderate* (not core) component — the honest nuance, not tuning; and the
 co-expression lens is permissive (hubs reach moderate component but never core).
 
-## THE NEXT ACTION — populate the lenses (density) + more tiers
-The 2-tier stack (moderate/dominant) proves grading; extend toward the GSE 5-level ordinal (BARELY→
-EXTREMELY) and — the bigger lever — **populate MORE lenses** (STRING co-occurrence, trait-wiring,
-Reactome-directed roles, the measuring_agi perturbation panel) so a strongly-supported node accumulates
-converging facts across surfaces (density → κ). Ultimately a doctor/geneticist populates the full
-frame/rule/analytical-surface set with real graded data. Do NOT fake intensities or invent role-facts.
-The full design is recorded in **`docs/ETIOLOGY_ENGINE.md`** (self-contained
+## DENSITY + EVIDENCE-DERIVED THRESHOLDS — DONE (2026-08-31)
+Added the **STRING physical-binding lens** (`binds seed`, STRING ≥700 high-confidence — evidence-derived
+tier) and replaced the arbitrary co-expression `0.5` with a **GTEx-null-derived cutoff** (95th percentile
+of the |pearson| null between a shuffled seed and every gene = **0.266**; deterministic permutation).
+Result: density raised significance via κ (**core 2.996 → 3.178**, all weights up); RIPK2 is the richest
+node (4 surfaces: dominant-diff + co-expr + STRING-bind + known role) and the engine induced binding
+rules; the evidence cutoff grounds co-expression in GTEx's own null. `data_facts` re-pinned (29/29).
+**Honest limitation:** density lifts everything and gives RIPK2 more derivations, but NOD2 & RIPK2 both
+sit at core 3.178 per-fact — to RANK "3 lenses > 2 lenses" needs a lens-count STACK (`core ∧ binds ⇒
+deep-core`, the ordinal trick applied to convergence count). Not done.
+
+## THE NEXT ACTION — lens-count stack + more surfaces + a geneticist
+(1) The lens-count stack (deep-core) so more converging surfaces rank higher. (2) More lenses:
+trait-wiring (in hand), Reactome-directed roles (needs pull), the measuring_agi perturbation panel.
+(3) Derive the remaining thresholds from evidence (Fst tiers from the cloud's own distribution). (4) The
+real populate-the-surfaces work is a doctor/geneticist filling the frame/rule set with recorded evidence.
+Do NOT fake intensities, invent role-facts, or plug conventional-default thresholds (evidence-derived per
+lens). The full design is recorded in **`docs/ETIOLOGY_ENGINE.md`** (self-contained
 — thesis + two-layer architecture + the mechanism-universe design, distilled from the founder's working
 universes: ARC_AGI_3 L2/L3 render→speak split, MentalAtlas `zero_signal`/marker taxonomy, Regenesis
 `UNIVERSE_AUTHORING.md`). **Next = build the minimal proof (ETIOLOGY_ENGINE §8):** hand-render
