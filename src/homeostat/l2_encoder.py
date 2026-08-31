@@ -41,7 +41,12 @@ def diff_tier(fst: float | None) -> str:
 
 
 def data_facts(
-    token: str, tier: str, coexpresses_seed: bool, binds_seed: bool, wires_presentation: bool
+    token: str,
+    tier: str,
+    coexpresses_seed: bool,
+    binds_seed: bool,
+    wires_presentation: bool,
+    floods_traits: bool,
 ) -> list[str]:
     """The L3 facts a gene's binned data-signals license, as sentence strings.
 
@@ -69,4 +74,6 @@ def data_facts(
         facts.append(f"{token} binds seed")
     if wires_presentation:
         facts.append(f"{token} wires presentation")
+    if floods_traits:
+        facts.append(f"{token} floods traits")  # specificity CENSOR trigger (a promiscuous hub)
     return facts

@@ -1,0 +1,7 @@
+# The specificity CENSOR (near-miss / node-death). A gene that floods the catalog — associates with a huge
+# number of unrelated traits (a promiscuous hub, computed at the BOUNDARY from the GWAS catalog, like
+# CareerForge's _STRUCTURAL_FILLERS) — is generic structural noise, NOT a mechanism component. The censor
+# vetoes the false-positive component that permissive convergence (e.g. co-expression) would otherwise admit.
+# This is the native Regenesis `cannot` censor (load_library_censors); promiscuity is the open-class signal
+# the spine floor cannot attribute (SIGNIFICANCE_WEIGHTING §6.1), so it enters as a boundary-computed fact.
+if x floods trait then x cannot become component

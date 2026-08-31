@@ -73,7 +73,14 @@ lens does not discriminate.
   no-shift signal. It VETOES a false-positive role (`cannot become …`). **This is how you kill the generic
   hubs that convergence alone lets through** — the honest limitation that permissive co-expression admits
   immune hubs is fixed by a *specificity* censor computed from the promiscuity distribution, not by a
-  hand-drawn exclusion list.
+  hand-drawn exclusion list. *Worked (2026-08-31): promiscuity (`hub_counts` over the GWAS catalog) is
+  OPEN-CLASS genericness, so — per `SIGNIFICANCE_WEIGHTING §6.1` — it is computed at the BOUNDARY (a
+  consumer filter, like CareerForge's `_STRUCTURAL_FILLERS`; the intrinsic `_spine_noise` floor catches
+  only structural junk), emitted as `floods traits` at an evidence-derived top-decile cut, and vetoed by
+  the NATIVE Regenesis `cannot` censor (`rules/specificity.rules`, loaded via `load_library_censors`) —
+  removing HLA-DQA1 (1021 traits) from the components while sparing the triad. Reuse the native censor;
+  do not reinvent it. Gotcha: the censor's object must be the EMITTED lemma (`floods trait`, not `traits`)
+  or it silently no-ops.*
 
 ---
 
