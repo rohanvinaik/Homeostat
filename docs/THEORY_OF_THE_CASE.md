@@ -223,6 +223,87 @@ selection reaches for the **most orthogonal** next lens each step (the one that 
 rivals). "Don't pick heavily-overlapping lenses" is therefore not a rule to enforce by hand — the
 search prefers orthogonal lenses by construction and shrugs off the overlap.
 
+### The generalization (2026-08-31): the partition is a free variable, and the unit is the ROLE — not the gene
+
+Worked out with the founder 2026-08-31; the deepest statement of the design. The SA-vs-EUR contrast
+that seeded the population lens was **the coarsest, lowest-resolution filter available** — a motivating
+example (the founder's n=1 irritation), never the architecture. Two coupled generalizations replace it.
+
+**(1) The partition is searched, not fixed.** A population lens is not "South Asian vs European." It is
+*differentiation across **any legitimately-isolatable group*** — ancestry at any zoom (continent →
+sub-continent → a single founder/caste isolate), a phenotypic sub-section (has-the-presentation vs not,
+endemic-region vs not), an exposure — anything genuinely distinguishable. The read is **differentiation
+magnitude, direction-free** (e.g. max pairwise Fst across the groups), never a hardcoded axis or a
+`SAS>EUR` direction. The partition itself is a first-class *searched* dimension.
+
+- **Why this is the right level — measured 2026-08-31.** The bare `SAS>EUR` binary is ~a coin flip (44%
+  of variants "shift"), so it births junk (153/289 genes, 60% named-hub survival). Replacing it with
+  differentiation across the five 1000G superpopulations (top-decile max-Fst via `pbs.hudson_fst`)
+  restores specificity (86/289 born, 20% hub survival) and cleanly recovers **NOD2** (Fst 0.431, rank
+  29/242) and **RIPK2** (Fst 0.453, rank 22) as strongly population-structured. **LRRK2 falls to rank
+  143/242 (Fst 0.148) — robustly mid-pack, not a threshold casualty** — because its signal is *finer
+  than a continent*: the SAS superpopulation average washes out the specific South-Asian founder signal
+  the leprosy literature found in *Indian* cohorts. The lens is not failing LRRK2; it is correctly
+  reporting that LRRK2's signal lives at a **finer partition** (sub-continental founder/caste groups).
+  *The threshold was NOT lowered to force LRRK2 back — an honest mid-pack rank IS the finding.*
+- **The discipline, one level up.** If the partition is free, the space of partitions is nearly
+  unbounded (any subset of people is a "group"), and an engine allowed to carve any partition always
+  finds one that "explains" anything — σ_sem = 0 self-confirmation, one level up. A partition is
+  admissible only if **independently isolatable** (a real genetic cluster, a real phenotype, a real
+  exposure), never carved to fit the answer. This is the §6 oracle discipline and the σ_sem > 0 guard,
+  applied to the *partition*.
+
+**(2) The unit of recognition is the ROLE, not the gene — fungibility across populations.** A causative
+mechanism may be realized by gene-pool {X} in one population and a *different* pool {Y} in a founder/
+caste isolate, while the **mechanism is the same** — the genes are just whatever that population's deck
+had to fill the roles. A gene-identity lookup ("is *LRRK2* significant?") is a **token match** at the
+wrong level; it will always miss the sub-population that solved the same problem with a different token.
+The instrument must pull out **the genes filling each mechanistic *role*, whatever they are called
+here** — recognizing a candidate by the **role it plays**, never its name.
+
+- **This is semantic-class firing** (the Genesis/Regenesis cardinal rule) moved from verbs to genes: a
+  frame fires on `shun/dodge/sidestep` because they hit one **class centroid**, never because a token
+  matched; here LRRK2 and a different kinase in a founder isolate both fire the "amplify NOD2→RIP2
+  signaling" role-class. **Never the token, always the class.**
+- **A gene's "role" is its relational signature** — its position in the mechanism-derivation graph
+  (what it couples to / activates / inhibits / co-varies with), not its name. This re-homes STRING/GTEx
+  **correctly**: not the map whose hubs are the answer (the Act-2 death), but the **relational context
+  that defines the roles**. Two genes share a role when their relational signatures land in one centroid.
+- **The populations are the lossy lenses at the right level.** Each projects the mechanism onto *its*
+  filler-set; combine the projections and you recover the **role-structure** — the holographic truth no
+  single population's gene-list contains. The founder's "lossy lenses → holographic projection" now sits
+  at the role layer.
+
+**Regenesis IS the role engine — use it, do not rebuild it.** A pure-data-geometry role encoder is
+buildable (σ + learning theory + significance-weighting), but Regenesis (the founder's ported Winston
+Genesis, `mcp__Regenesis__*`) already does deterministic, provenance-carrying role recognition,
+plug-a-domain, today. Stand up a **mechanism universe** whose semantic classes are mechanistic roles,
+register the role-class anchors in the universe's `.index` trigger column (the one-step domain stand-up),
+and the native stack fires roles over genes by class. The cross-population holographic combine becomes
+Regenesis **deriving the role-structure** from the several lossy per-population filler-projections. σ
+specifies the role-structure; κ scores it over the relational graph; the nodes are roles. **Deterministic
+(GSE/HDC vector-symbolic binding), NEVER a learned embedding fit to the answer** — centroids come from
+real relational geometry, the way a Genesis universe registers class anchors, never hand-drawn to fit.
+
+**The meta-thesis (founder, 2026-08-31) — why the "woo-sounding" engine is the rigorous one.** Any
+statistical approach — or a high-level read of macronutrients/vitals that ignores the other available
+signals — is **inherently asserting an individual mechanism from population-scale statistics**. That
+substitution is the error the whole program refuses, and **differential outcomes for the same clinical
+presentation across populations are a clean ledger of its body count.** So the story-understanding engine
+that would make a twitchy reviewer uncomfortable is, in fact, the **most conceptually and mathematically
+rigorous, objective approach to medical practice, medical research, and individual/population
+bioinformatics** — the one that does *not* silently impute the individual from the population. Homeostat
+is the clean application domain demonstrating that "stories" are a **computable information-theoretic
+principle** — entropy reduction through applied intent, beyond what the static data alone indicates —
+not a very elaborate SparkNotes.
+
+**Communication (Winston, the thesis applied to itself).** Reception *is* the story you tell. Lead the
+paper in the vocabulary reviewers already trust — population differentiation, specification complexity,
+significance-weighting — and let the Genesis/Winston machinery live, fully disclosed, in a deep methods
+section. That is framing (ordering and emphasis), not hiding. The one guardrail: the narrative must be
+one the instrument actually **computes out to** — σ_sem > 0 at the meta-level; the framing may not
+retrodict a result the run did not produce.
+
 ### Primary sources (read these, not this summary)
 
 The σ / trajectory / bulk-tail / σ_sem-guard machinery — the founder's **SSL paper**
@@ -333,6 +414,23 @@ post-this-document work.
 8. **Abstention is load-bearing; no ML as the method; the data gates the claim.** The informational
    zero and σ_sem > 0 are load-bearing. A bounded model is at most a founder-placed tail. Without
    dynamic / co-variation / co-presentation data, outputs are hypotheses (canon §12.4).
+9. **The partition is a free variable, legitimately-isolatable — not a hardcoded axis.** A population/
+   phenotype lens is *differentiation across any independently-isolatable group* (ancestry at any
+   resolution, a phenotypic sub-section, an exposure), read **direction-free** (magnitude, e.g. max
+   pairwise Fst), never `SAS>EUR`. Partitions are *searched*; a partition carved to fit the answer is
+   σ_sem = 0 one level up. SA-vs-EUR was the coarsest instance, not the architecture (measured
+   2026-08-31: the bare binary is a 44% coin flip; differentiation restores specificity).
+10. **Recognize ROLES, not genes (semantic class, never token); Regenesis is the role engine.** The
+    mechanism is invariant; genes are population-local, *fungible* fillers. Pull out the genes filling
+    each role by the *role they play* (relational signature → class centroid), never by gene-identity —
+    Genesis **semantic-class firing** over genes, deterministic (GSE/HDC), never a learned embedding.
+    Regenesis is the working engine: **use it, do not rebuild it.** STRING/GTEx are the role-defining
+    relational context, never the map-as-answer (the Act-2 death).
+11. **Statistics-or-thin-signal imputes the individual from the population; that is the error, and
+    cross-population differential outcomes are its body count.** The story-understanding engine is the
+    *most* rigorous, objective approach precisely because it refuses that substitution. Frame the paper
+    in accepted vocabulary (methods discloses Genesis/Winston, fully); never let the framing outrun what
+    the instrument computes (σ_sem > 0 at the meta-level).
 
 ---
 
