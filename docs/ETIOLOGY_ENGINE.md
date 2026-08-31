@@ -98,6 +98,18 @@ known biology, not from nothing.* This distinction keeps the program honest with
 - **The workflow, in one line: author the known (the substrate), compute the novel (the composite).** This
   is compute-not-guess at the level of *composition*, grounded in real medical knowledge rather than
   discarding it.
+- **The substrate is role VOCABULARY (rules/Forms) — NEVER hard-coded gene→role bindings (founder,
+  cardinal; ONE correct version, no exceptions).** Authoring *which roles exist* in a known mechanism —
+  the rule `if x amplifies signal then x becomes amplifier`, the mechanism-STRUCTURE of established
+  biology — is legitimate. Authoring *which gene fills which role* — asserting `NOD2 amplifies signal` as
+  an input fact — is purposivistic role-assignment (canon §3.3), the annotation-as-ground-truth premise
+  the program inverts, and it is FORBIDDEN. There is no "positive-control version" that gets to hard-code
+  and a "true version" that computes: roles/fillers are ALWAYS computed from the data (behavioral
+  characterization §3b + cross-lens convergence), with the falsifier live (the engine may abstain, fail to
+  recover, or disagree). Mechanism components emerge from convergence across the *computed* data lenses
+  (differentiation, co-expression, physical binding, …), never from an authored gene→role fact. A directed
+  signaling role (`amplifies`) enters only when real directed evidence (Reactome) supplies it — as data,
+  not by hand.
 
 ---
 

@@ -75,16 +75,20 @@ Detective-pinned (26/26). Honest caveats: intensity needs ABSOLUTE Fst bands (no
 which lands LRRK2 as a *moderate* (not core) component — the honest nuance, not tuning; and the
 co-expression lens is permissive (hubs reach moderate component but never core).
 
-## DENSITY + EVIDENCE-DERIVED THRESHOLDS — DONE (2026-08-31)
-Added the **STRING physical-binding lens** (`binds seed`, STRING ≥700 high-confidence — evidence-derived
-tier) and replaced the arbitrary co-expression `0.5` with a **GTEx-null-derived cutoff** (95th percentile
-of the |pearson| null between a shuffled seed and every gene = **0.266**; deterministic permutation).
-Result: density raised significance via κ (**core 2.996 → 3.178**, all weights up); RIPK2 is the richest
-node (4 surfaces: dominant-diff + co-expr + STRING-bind + known role) and the engine induced binding
-rules; the evidence cutoff grounds co-expression in GTEx's own null. `data_facts` re-pinned (29/29).
-**Honest limitation:** density lifts everything and gives RIPK2 more derivations, but NOD2 & RIPK2 both
-sit at core 3.178 per-fact — to RANK "3 lenses > 2 lenses" needs a lens-count STACK (`core ∧ binds ⇒
-deep-core`, the ordinal trick applied to convergence count). Not done.
+## DENSITY + EVIDENCE-THRESHOLDS + NO HARD-CODING — DONE (2026-08-31)
+**Hard-coded gene→role bindings NUKED** (founder, cardinal: one correct version, no purposivistic
+role-assignment). The L2 shell no longer authors `NOD2 senses pathogen` etc.; the mechanism emerges
+PURELY from CONVERGENCE across the computed data lenses — population differentiation (Fst ordinal tier),
+GTEx co-expression, STRING physical binding, informational zero. The signaling-role vocabulary stays in
+the universe but only fires when real directed evidence (Reactome) supplies it, as data.
+Lenses/thresholds: STRING ≥700 (evidence tier); co-expression cutoff = GTEx-null 95th percentile
+(**0.266**, deterministic permutation — not 0.5). Result (no roles authored): **core 3.178 = NOD2, RIPK2**
+(dominant diff + co-expression converge; RIPK2 also binds); **component 2.485 = LRRK2 + two co-expressing
+hubs**; TNFSF15 differentiated-but-unconverged (not a component); HLA-DRB1/IL1RL1 → diagnostic. The engine
+induced its own core rules from the data. `diff_tier`/`data_facts` Detective-pinned (29/29).
+**Honest:** without a *computed* directed-signaling lens, co-expression is permissive (hubs reach moderate
+component) — the Reactome lens would sharpen it FROM EVIDENCE, never by authoring. Ranking "3 lenses > 2"
+still needs a lens-count stack (`core ∧ binds ⇒ deep-core`).
 
 ## THE NEXT ACTION — lens-count stack + more surfaces + a geneticist
 (1) The lens-count stack (deep-core) so more converging surfaces rank higher. (2) More lenses:
