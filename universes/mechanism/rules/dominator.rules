@@ -1,0 +1,4 @@
+# The stacked intensity marker on the differentiation base primitive (GSE ordinal, §3b): a gene whose
+# population-differentiation is TOP-TIER (Wright very-great) carries `dominates population` on top of
+# `differentiates population`. This is the "marker on a base primitive" — it becomes a distinct class.
+if x dominates population then x becomes dominant

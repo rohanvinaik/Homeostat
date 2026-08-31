@@ -168,6 +168,20 @@ significance, and never prevalence.**
 So L2 is not an open unknown: it is `measuring_agi`'s instrument pointed at genes — statistics as
 *characterization*, held to external validation, feeding role-facts to the reasoning stack.
 
+**Graded intensity is ORDINAL STRUCTURE, not a scalar (from the GSE primary sources).** GSE deliberately
+rejects "arbitrary scalar multiples" — magnitude is carried as *discrete ordinal markers stacked on a
+base primitive* (a 5-level `BARELY→EXTREMELY` marker count), and it only reaches the significance layer by
+becoming STRUCTURE: the emit contract has no magnitude slot, the one intensity field (`world_epa`) is
+emitted-but-unread, and significance is κ over the rule graph — magnitude-blind. So a per-fact number
+(Fst 0.45) is *lost* at the surface→emit boundary; the native lever is to **bin the magnitude into
+ordinal tiers and stack an intensity marker on the base role-fact**, with a graded rule that deepens the
+stronger tier's chain. Realized (2026-08-31): `l2_encoder.diff_tier` bins Fst into Wright bands, a
+dominant gene stacks `dominates population` on `differentiates population`, and the universe deepens a
+dominant component into a **core** — so significance grades (core > component > differentiator > role >
+zero) by *structure*, exactly the founder's "markers stacking on base primitives." True continuous
+magnitude modulating rank remains a genuine gap (would need new magnitude-aware fields in emit +
+significance + the fire gate); ordinal-to-structure is the GSE-faithful path.
+
 ---
 
 ## 4. The Regenesis mechanism universe
