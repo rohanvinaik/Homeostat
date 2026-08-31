@@ -793,8 +793,8 @@ Take a partition where the answer is known (the leprosy/Crohn's/T1R overlap). Ge
   **SDIS master report**. It is a **candidate carving and a characterization target, NOT the
   object and NOT ground truth**: dopamine-centric (the loud-signal risk incarnate — §2.4), n=1
   (a design-frame, §11), and written as a 100%-retrodiction story (the self-confirming pattern —
-  §5.9, §12.3), with its "central driver" variants (DRD2 A1, COMT Val/Val, BDNF Met) only
-  ○reported, not on the array. Its **value**: it is a specimen of the output type (what the
+  §5.9, §12.3), with its "central driver" variants only ○reported (personal genotypes redacted;
+  held locally), not on the array. Its **value**: it is a specimen of the output type (what the
   machine should *compute*), a source of candidate constraint edges (the neuro↔immune coupling:
   D2-on-immune-cells → NF-κB, the vagal reflex, IL-23/Th17, BH4-depletion → less dopamine), and
   the index-case signal set. The machine's job is to **recover its defensible core and correct
