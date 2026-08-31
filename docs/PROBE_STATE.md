@@ -61,15 +61,27 @@ zero fires (HLA-DRB1, IL1RL1 → diagnostic). **Three authoring lessons (add to 
 **Determinism bug fixed:** `cloud_rsids` assigned shared rsIDs via unordered-set iteration (hash-random) →
 `diff_data` flipped run-to-run; now `sorted(genes)`. Verified stable across `PYTHONHASHSEED`.
 
-## THE NEXT ACTION — graded intensity (GSE depth layer)
-Founder's diagnosis (2026-08-31): the significance weights are **exactly identical** (every 1-hop role =
-0.6931 = ln 2 = one bit) because the signals are BOOLEAN — significance can only count structure, not
-strength. Next: **carry intensity as a scalar multiple of the fixed role-meaning (GSE "sentence as set
-theory + intensity as scalar")** — the Fst magnitude / correlation strength ride as an intensity on the
-role, so a strongly-differentiated component outweighs a weak one and the node-network can be navigated
-by depth. This is real work: wire the actual magnitudes through each lens, and ultimately a
-doctor/geneticist populates the full frame/rule/analytical-surface set with graded data. Do NOT fake
-intensities. The full design is recorded in **`docs/ETIOLOGY_ENGINE.md`** (self-contained
+## GRADED INTENSITY — DONE (2026-08-31), the GSE-native way
+The flat-`ln 2` degeneracy is solved. GSE (read from primary sources) does NOT carry a continuous scalar
+— it stacks discrete ORDINAL markers on a base primitive, and that only reaches significance by becoming
+STRUCTURE (significance is κ over the rule graph, magnitude-blind; the emit contract has no magnitude
+slot; `world_epa` is emitted-but-unread). So `l2_encoder.diff_tier` bins Fst into ordinal tiers (Wright
+bands: dominant ≥0.25, moderate ≥0.05) and a dominant gene STACKS `dominates population` on the base
+`differentiates population`; `component.rules` deepens a dominant component into **core** (extra hop).
+Result: significance now grades — **core 2.996 (NOD2, RIPK2: dominant Fst + known role) > component 2.303
+(LRRK2 moderate; two co-expressing hubs) > differentiator 1.609 > role 0.693 > zero 0.0**. The engine
+induced its own graded rules (`sense ∧ differentiate ∧ dominate ⇒ core`). `diff_tier`/`data_facts`
+Detective-pinned (26/26). Honest caveats: intensity needs ABSOLUTE Fst bands (not the relative decile),
+which lands LRRK2 as a *moderate* (not core) component — the honest nuance, not tuning; and the
+co-expression lens is permissive (hubs reach moderate component but never core).
+
+## THE NEXT ACTION — populate the lenses (density) + more tiers
+The 2-tier stack (moderate/dominant) proves grading; extend toward the GSE 5-level ordinal (BARELY→
+EXTREMELY) and — the bigger lever — **populate MORE lenses** (STRING co-occurrence, trait-wiring,
+Reactome-directed roles, the measuring_agi perturbation panel) so a strongly-supported node accumulates
+converging facts across surfaces (density → κ). Ultimately a doctor/geneticist populates the full
+frame/rule/analytical-surface set with real graded data. Do NOT fake intensities or invent role-facts.
+The full design is recorded in **`docs/ETIOLOGY_ENGINE.md`** (self-contained
 — thesis + two-layer architecture + the mechanism-universe design, distilled from the founder's working
 universes: ARC_AGI_3 L2/L3 render→speak split, MentalAtlas `zero_signal`/marker taxonomy, Regenesis
 `UNIVERSE_AUTHORING.md`). **Next = build the minimal proof (ETIOLOGY_ENGINE §8):** hand-render
