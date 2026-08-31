@@ -1,3 +1,8 @@
-# Convergence = conjunction: a gene is a confirmed mechanism component only where INDEPENDENT lenses
-# co-occur (it amplifies the signaling AND is population-differentiated). Literal objects both sides.
+# Convergence = conjunction: a gene is a confirmed component of the population-specific mechanism only
+# where INDEPENDENT lenses co-occur. Either a KNOWN signaling role (substrate, §2b) OR pure-data
+# co-expression, AND a real population-differentiation signal (L2-computed, §3b). Literal objects both
+# sides, single subject — sidesteps the re-binding gotcha.
 if x amplifies signal and x differentiates population then x becomes component
+if x senses pathogen and x differentiates population then x becomes component
+if x relays signal and x differentiates population then x becomes component
+if x tracks seed and x differentiates population then x becomes component

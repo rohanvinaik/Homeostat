@@ -49,12 +49,27 @@ authoring lessons baked in:** (1) align rule objects to the EMITTED lemma (GSE l
 informational-zero TRANSITIVELY (`lacks data`). What is proven is the REASONING layer on hand-rendered
 facts; the censor/node-death was not exercised (needs contradictory input).
 
-## THE NEXT ACTION
-**Scale the L2 encoder:** derive the role-events (`amplifies signal`, `differentiates population`, …)
-from the REAL relational geometry (Fst differentiation in hand; GTEx co-expression in hand; directed
-`amplifies/inhibits` needs Reactome/directed pathway data) instead of hand-rendering them, then run the
-LRRK2 mechanism through the universe for real. The reasoning layer is validated; the encoder is the work.
-The full design is recorded in **`docs/ETIOLOGY_ENGINE.md`** (self-contained
+## L2 v1 — DONE, end-to-end on REAL data (2026-08-31, `src/homeostat/l2_encoder.py` + `probes/l2_lrrk2.py`)
+The L2 role encoder runs the real signals (Fst differentiation over 1000G + GTEx co-expression) → L3
+facts → the mechanism universe, composed with the known-mechanism substrate (§2b). Pure core
+`data_facts` Detective-pinned (12/12). Result (triad + hubs, opaque tokens): **RIPK2 is the sole
+confirmed component** (known transducer role + real population-differentiation converge, top significance
+2.30); **NOD2** (rank 29) and **LRRK2** (rank 143) are recognized as their roles but NOT confirmed (not
+differentiated at continental resolution) — the §7 finding carried through the FULL stack. Informational-
+zero fires (HLA-DRB1, IL1RL1 → diagnostic). **Three authoring lessons (add to the lemma/copula pair):**
+(3) a rule verb must be a clean WordNet verb or its object won't bind (`coexpress` → `∅`; use `tracks`).
+**Determinism bug fixed:** `cloud_rsids` assigned shared rsIDs via unordered-set iteration (hash-random) →
+`diff_data` flipped run-to-run; now `sorted(genes)`. Verified stable across `PYTHONHASHSEED`.
+
+## THE NEXT ACTION — graded intensity (GSE depth layer)
+Founder's diagnosis (2026-08-31): the significance weights are **exactly identical** (every 1-hop role =
+0.6931 = ln 2 = one bit) because the signals are BOOLEAN — significance can only count structure, not
+strength. Next: **carry intensity as a scalar multiple of the fixed role-meaning (GSE "sentence as set
+theory + intensity as scalar")** — the Fst magnitude / correlation strength ride as an intensity on the
+role, so a strongly-differentiated component outweighs a weak one and the node-network can be navigated
+by depth. This is real work: wire the actual magnitudes through each lens, and ultimately a
+doctor/geneticist populates the full frame/rule/analytical-surface set with graded data. Do NOT fake
+intensities. The full design is recorded in **`docs/ETIOLOGY_ENGINE.md`** (self-contained
 — thesis + two-layer architecture + the mechanism-universe design, distilled from the founder's working
 universes: ARC_AGI_3 L2/L3 render→speak split, MentalAtlas `zero_signal`/marker taxonomy, Regenesis
 `UNIVERSE_AUTHORING.md`). **Next = build the minimal proof (ETIOLOGY_ENGINE §8):** hand-render

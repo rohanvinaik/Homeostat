@@ -7,5 +7,6 @@ sensor           | sense detect recognize            | rules/sensor.rules       
 transducer       | relay propagate transduce         | rules/transducer.rules     |
 amplifier        | amplify enhance potentiate        | rules/amplifier.rules      |
 differentiator   | differentiate stratify conserve   | rules/differentiator.rules |
-component        | amplify differentiate             | rules/component.rules      |
+coexpressor      | track mirror accompany            | rules/coexpressor.rules    |
+component        | amplify sense relay track differentiate | rules/component.rules  |
 zero             | lack miss omit                    | rules/zero_signal.rules    |
