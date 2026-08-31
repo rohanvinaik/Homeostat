@@ -110,14 +110,28 @@ expression false positive); triad clean (NOD2 19, RIPK2 2, LRRK2 40). `data_fact
 `hub_counts` confirmed via Serena. Lesson #4 (lemma): the censor object must be the EMITTED lemma
 (`floods trait`, not `traits`) or it silently no-ops.
 
-## THE NEXT ACTION — more lenses via the protocol
-(1) **Reactome-directed roles** (needs pull) — the computed source of the signaling roles
-(amplifies/senses/relays), as data. (2) The **lens-count stack** (`core ∧ binds ⇒ deep-core`) so more
-converging surfaces rank higher. (3) Re-scope or drop trait-wiring (failed the orthogonality gate;
-still over-promotes TNFSF15). (4) Tune the promiscuity cut only from evidence (IL18R1 at 79 traits is below
-top-decile → not censored — honest, not tuned). (5) Ultimately a doctor/geneticist populates the frame/rule
-set with recorded evidence. Every addition via **`docs/DENSITY_PROTOCOL.md`**; do NOT fake signals, invent
-role-facts, hard-code gene→role bindings, or plug default thresholds. Full design: **`docs/ETIOLOGY_ENGINE.md`**. (self-contained
+## LENS-COUNT STACK — DONE (2026-08-31)
+`if x becomes core and x binds seed then x becomes deep_core` — a core gene confirmed by a further lens
+deepens (extra hop). Verified: RIPK2 (differentiation + co-expression + STRING binding) → **deep_core 4.43**
+> core (NOD2) 3.33 > component 2.64; the engine induced the deep_core rule from the data.
+
+## NEXT STEP (LATER — a real bioinformatics pull, not a flat-file lens): Reactome-directed roles
+The directed signaling roles (`amplifies/senses/relays` — sensor→transducer→amplifier cascade) are the
+computed source that would turn the recovered mechanism SET into a directed CASCADE. **Diagnosed
+2026-08-31:** the Reactome flat interactions file
+(`data/network/reactome_interactions.txt`, pulled, gitignored) is only UNDIRECTED "physical association" by
+pathway (UniProt/Ensembl-keyed) — NOT the directed roles, and for the NOD2 seed it is largely redundant
+with the STRING binding lens. The TRUE directed roles live in Reactome's **reaction-regulation graph**
+(input/output/catalyst/regulator with direction) — the graph DB dump or the ContentService API — a scoped
+extraction. Build it via **`docs/DENSITY_PROTOCOL.md`** (directed roles are still COMPUTED from Reactome's
+recorded reaction structure — a gene's relational position — never hand-authored role labels).
+
+## THE OTHER RECORDED NEXT STEPS
+Re-scope or drop trait-wiring (failed the orthogonality gate; over-promotes TNFSF15); tune the promiscuity
+cut only from evidence (IL18R1 at 79 traits is below top-decile → not censored — honest, not tuned); run
+the stack on the FULL cloud (~289 genes) to show discrimination at scale; ultimately a doctor/geneticist
+populates the frame/rule set with recorded evidence. Do NOT fake signals, invent role-facts, hard-code
+gene→role bindings, or plug default thresholds. Full design: **`docs/ETIOLOGY_ENGINE.md`**. (self-contained
 — thesis + two-layer architecture + the mechanism-universe design, distilled from the founder's working
 universes: ARC_AGI_3 L2/L3 render→speak split, MentalAtlas `zero_signal`/marker taxonomy, Regenesis
 `UNIVERSE_AUTHORING.md`). **Next = build the minimal proof (ETIOLOGY_ENGINE §8):** hand-render

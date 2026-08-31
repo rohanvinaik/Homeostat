@@ -20,3 +20,6 @@ __pycache__/
 # Detective mutation-testing reports (build artifacts)
 .detective/
 .wesker/
+
+# Serena language-server project cache (build artifact)
+.serena/
