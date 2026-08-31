@@ -1,3 +1,9 @@
+> **⛔ SUPERSEDED (2026-08-31) — historical only.** This describes a pre-Regenesis LLM-proposer +
+> κ-over-STRING/GTEx architecture. It was replaced by the confirmed role-recognition stack: the mechanism
+> is grown from CONVERGENCE across computed data lenses and recognized by **Regenesis** (roles, not gene
+> tokens), with NO LLM proposer and NO κ over a generic network. Current design: `docs/ETIOLOGY_ENGINE.md`.
+> Kept for provenance; do NOT build from this.
+
 # Phase 2 — the significance-search layer (Part III intelligence layer, build 1)
 
 **Status:** design confirmed with the founder 2026-08-28 (the AGENTS.md gate:
