@@ -40,14 +40,15 @@ def diff_tier(fst: float | None) -> str:
     return "none"
 
 
-def data_facts(token: str, tier: str, coexpresses_seed: bool) -> list[str]:
+def data_facts(token: str, tier: str, coexpresses_seed: bool, binds_seed: bool) -> list[str]:
     """The L3 facts a gene's binned data-signals license, as sentence strings.
 
     `nodata` -> the informational zero (`lacks data`, never silence). `dominant` stacks an
     intensity marker (`dominates population`) on the base differentiation fact — the ordinal
     "marker on a base primitive" that the universe's graded rule deepens. `moderate` emits the
     base only. `none` (has data, below the floor) licenses no differentiation fact. Co-expression
-    is an independent lens.
+    (GTEx) and physical binding (STRING) are two further independent lenses — each an orthogonal
+    surface, so a gene confirmed by more of them accumulates more converging facts (density -> κ).
     """
     facts: list[str] = []
     if tier == "nodata":
@@ -59,4 +60,6 @@ def data_facts(token: str, tier: str, coexpresses_seed: bool) -> list[str]:
         facts.append(f"{token} differentiates population")
     if coexpresses_seed:
         facts.append(f"{token} tracks seed")
+    if binds_seed:
+        facts.append(f"{token} binds seed")
     return facts

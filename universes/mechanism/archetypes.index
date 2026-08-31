@@ -9,5 +9,6 @@ amplifier        | amplify enhance potentiate        | rules/amplifier.rules    
 differentiator   | differentiate stratify conserve   | rules/differentiator.rules |
 coexpressor      | track mirror accompany            | rules/coexpressor.rules    |
 dominator        | dominate exceed surpass           | rules/dominator.rules      |
-component        | amplify sense relay track differentiate dominate | rules/component.rules |
+binder           | bind couple attach                | rules/binder.rules         |
+component        | amplify sense relay track bind differentiate dominate | rules/component.rules |
 zero             | lack miss omit                    | rules/zero_signal.rules    |
