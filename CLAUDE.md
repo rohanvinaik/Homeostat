@@ -99,8 +99,16 @@ population — cross-population differential outcomes are its body count — so 
 *most* rigorous, objective approach; frame the paper in accepted vocabulary (methods discloses
 Genesis/Winston fully) but never let framing outrun the computed result (σ_sem > 0 at the meta-level).
 
+**NO HARD-CODED GENE→ROLE BINDINGS (cardinal; ONE correct version).** The substrate authors role
+VOCABULARY — the rules/Forms (`if x amplifies signal then x becomes amplifier`) — NEVER *which gene
+fills which role*. Asserting `NOD2 amplifies signal` as an input fact is purposivistic role-assignment
+(canon §3.3), the annotation-as-ground-truth premise the program inverts. The mechanism is GROWN from
+data convergence; a directed signaling role enters only when real directed evidence (Reactome) supplies
+it, as data. There is no "positive-control version" that gets to hard-code and a "true version" that
+computes — one correct version, and it computes the fillers.
+
 The recurring failure has one root: reaching for a statistic, authoring/seeding the object, reading
-one map's shape as the answer, or **matching gene tokens instead of roles** — because it feels like
-progress — instead of running the σ-trajectory search that grows the object by triangulating the data
-geometry across searched partitions and recognizing roles by class. Recognizing the reflex and
-refusing it is the only fix.
+one map's shape as the answer, **matching gene tokens instead of roles**, or **hard-coding a gene→role
+binding** — because it feels like progress — instead of running the σ-trajectory search that grows the
+object by triangulating the data geometry across searched partitions and recognizing roles by class.
+Recognizing the reflex and refusing it is the only fix.

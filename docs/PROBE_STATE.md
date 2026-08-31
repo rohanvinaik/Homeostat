@@ -90,13 +90,23 @@ induced its own core rules from the data. `diff_tier`/`data_facts` Detective-pin
 component) — the Reactome lens would sharpen it FROM EVIDENCE, never by authoring. Ranking "3 lenses > 2"
 still needs a lens-count stack (`core ∧ binds ⇒ deep-core`).
 
-## THE NEXT ACTION — lens-count stack + more surfaces + a geneticist
-(1) The lens-count stack (deep-core) so more converging surfaces rank higher. (2) More lenses:
-trait-wiring (in hand), Reactome-directed roles (needs pull), the measuring_agi perturbation panel.
-(3) Derive the remaining thresholds from evidence (Fst tiers from the cloud's own distribution). (4) The
-real populate-the-surfaces work is a doctor/geneticist filling the frame/rule set with recorded evidence.
-Do NOT fake intensities, invent role-facts, or plug conventional-default thresholds (evidence-derived per
-lens). The full design is recorded in **`docs/ETIOLOGY_ENGINE.md`** (self-contained
+## DENSITY ADDITION PROTOCOL — written + grounded (2026-08-31, `docs/DENSITY_PROTOCOL.md`)
+The repeatable recipe for adding one principled lens (invariants · steps 1–7 · the two archetypes
+convergence-adder / censor · the compounding). Grounded in a real addition: the **trait-wiring lens**
+(GWAS `wires presentation`) plugged in cleanly and lifted significance (core 3.178→3.332) — but it's the
+worked **orthogonality-gate FAILURE**: every presentation-derived gene wires → κ≈0 → it trivially
+converged with differentiation and over-promoted TNFSF15 to core (an artifact of a non-discriminating
+lens, not a finding). The Step-3 gate catches exactly this. `data_facts` re-pinned (32/32).
+
+## THE NEXT ACTION — apply the protocol for DISCRIMINATING lenses
+(1) A **specificity CENSOR** (the censor archetype): promiscuity from the GWAS catalog (Slice-3 hub_counts)
+→ `if x floods traits then x cannot become component` — kills the generic co-expressing hubs that
+convergence lets through (fixes the honest limitation). (2) **Reactome-directed roles** (needs pull) — the
+computed source of the signaling roles (amplifies/senses/relays), as data. (3) The **lens-count stack**
+(`core ∧ binds ⇒ deep-core`) so more converging surfaces rank higher. (4) Re-scope or drop trait-wiring
+(failed the gate). (5) Ultimately a doctor/geneticist populates the frame/rule set with recorded evidence.
+Every addition via **`docs/DENSITY_PROTOCOL.md`**; do NOT fake signals, invent role-facts, hard-code
+gene→role bindings, or plug default thresholds. Full design: **`docs/ETIOLOGY_ENGINE.md`**. (self-contained
 — thesis + two-layer architecture + the mechanism-universe design, distilled from the founder's working
 universes: ARC_AGI_3 L2/L3 render→speak split, MentalAtlas `zero_signal`/marker taxonomy, Regenesis
 `UNIVERSE_AUTHORING.md`). **Next = build the minimal proof (ETIOLOGY_ENGINE §8):** hand-render

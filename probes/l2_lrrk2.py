@@ -61,21 +61,22 @@ def main() -> None:
 
     facts: list[str] = []
     audit = []
-    for g in scope:  # L2: ONLY computed data lenses — Fst tier + GTEx co-expression + STRING binding
+    for g in scope:  # L2: ONLY computed data lenses — Fst tier + GTEx co-expr + STRING bind + GWAS wiring
         tier = diff_tier(gene_fst.get(g))
         coexp = bool(nod2 and g in prof and pearson(prof[g], nod2) >= coexpr_cut)
         binds = g in binders and g != SEED
-        facts.extend(data_facts(token[g], tier, coexp, binds))
-        audit.append((token[g], g, gene_fst.get(g), tier, coexp, binds))
+        wires = g in pres  # trait-wiring: gene associates with the presentation's disease traits (GWAS)
+        facts.extend(data_facts(token[g], tier, coexp, binds, wires))
+        audit.append((token[g], g, gene_fst.get(g), tier, coexp, binds, wires))
 
     print(f"=== evidence-derived GTEx co-expression cutoff (p{NULL_PCT} of null): {coexpr_cut:.3f} ===")
     print("=== token -> gene ===")
     for g in scope:
         print(f"  {token[g]:<7} = {g}")
-    print("\n=== per-gene REAL signals (Fst, tier, coexpr, binds-seed) ===")
-    for t, g, fst, tier, c, b in audit:
+    print("\n=== per-gene REAL signals (Fst, tier, coexpr, binds, wires) ===")
+    for t, g, fst, tier, c, b, w in audit:
         fs = f"{fst:.3f}" if fst is not None else "  -  "
-        print(f"  {t:<7} {g:<10} Fst={fs:<7} tier={tier:<9} coexpr={c!s:<5} binds={b}")
+        print(f"  {t:<7} {g:<10} Fst={fs:<7} tier={tier:<9} coexpr={c!s:<5} binds={b!s:<5} wires={w}")
     print("\n=== ASSEMBLED FACT TEXT (feed to understand) ===")
     print(". ".join(facts) + ".")
 
