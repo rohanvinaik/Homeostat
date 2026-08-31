@@ -128,6 +128,51 @@ def gene_maxfst(genes: set[str], cache: Path = Path("/tmp/panel_fst.tsv")) -> di
     return gene_fst
 
 
+def gene_pop_profile(genes: set[str]) -> dict[str, dict[str, float]]:
+    """Per gene: the per-superpop AFs at its most-differentiated (max-Fst) variant.
+
+    Same scan as gene_maxfst, but retains the lead variant's five AFs instead of collapsing to a
+    scalar — so a caller can ask WHICH population drives the differentiation (the fungibility signal
+    C1 needs: is a mechanism's differentiated-member set population-specific?)."""
+    by_chrom = gene_regions(genes)
+    starts = {c: [iv[0] for iv in ivs] for c, ivs in by_chrom.items()}
+    best_fst: dict[str, float] = {}
+    lead: dict[str, dict[str, float]] = {}
+    proc = subprocess.Popen(["gzip", "-dc", str(SITES_VCF)], stdout=subprocess.PIPE, text=True)
+    seen = 0
+    for line in proc.stdout:  # type: ignore[union-attr]
+        if line.startswith("#"):
+            continue
+        seen += 1
+        if seen % 10_000_000 == 0:
+            print(f"  … {seen // 1_000_000}M variants scanned", file=sys.stderr)
+        tab1 = line.find("\t")
+        chrom = line[:tab1]
+        ivs = by_chrom.get(chrom)
+        if ivs is None:
+            continue
+        tab2 = line.find("\t", tab1 + 1)
+        pos = int(line[tab1 + 1 : tab2])
+        i = bisect.bisect_right(starts[chrom], pos) - 1
+        hit = None
+        for j in (i, i - 1):
+            if 0 <= j < len(ivs) and ivs[j][0] <= pos <= ivs[j][1]:
+                hit = ivs[j][2]
+                break
+        if hit is None:
+            continue
+        info = line.rsplit("\t", 1)[-1]
+        freqs = {p: _af(info, p + "_AF") for p in POPS}
+        if any(v is None for v in freqs.values()):
+            continue
+        fst = _variant_maxfst(freqs)  # type: ignore[arg-type]
+        if fst > best_fst.get(hit, -1.0):
+            best_fst[hit] = fst
+            lead[hit] = freqs  # type: ignore[assignment]
+    proc.wait()
+    return lead
+
+
 if __name__ == "__main__":
     req = set(sys.argv[1:])
     out = gene_maxfst(req) if req else {}

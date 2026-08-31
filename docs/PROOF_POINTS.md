@@ -64,7 +64,7 @@ else does, and it is currently *argued*, not *shown*.
 
 | # | Demonstrates | Method | Pass bar | Status |
 |---|---|---|---|---|
-| **C1** | The same mechanism, different genes, one recovered frame | Find/construct a real case where a mechanism is realized by **disjoint filler sets** in two populations (a founder isolate, a caste-stratified subpopulation vs. a continental group). Run `common_frame` across both | The invariant **role-frame** is recovered while the gene fillers differ by population | **not started** — the synthetic proof exists; the real-data case does not |
+| **C1** | The same mechanism, different genes, one recovered frame | Find/construct a real case where a mechanism is realized by **disjoint filler sets** in two populations (a founder isolate, a caste-stratified subpopulation vs. a continental group). Run `common_frame` across both | The invariant **role-frame** is recovered while the gene fillers differ by population | **◐ PARTIAL (strong)** — `validation/c1_crosspop.py`: premise measured in real 1000G (**7/8 mechanisms** have members differentiated in ≥2 populations), and `common_frame` recovers the invariant role-frame at **2/2 support** across disjoint pop-driven fillers. Still open: a *curated* disease mechanism known to use functionally-disjoint genes per population (the gated-data ceiling) |
 | **C2** | It recovers what the standard toolkit misses | On the C1 case, run single-locus GWAS/PRS, network propagation (HotNet2-style), pathway enrichment (GSEA), colocalization | The token-bound methods return null/inconsistent across populations exactly where fillers differ; Homeostat returns the shared frame | **not started** |
 
 C2 is the whole argument in one experiment: the standard methods are token-bound, so they
@@ -122,9 +122,19 @@ Not a cell that goes green — a rule that governs how every result above is rep
 5. **D1 → D2** — annotation-recovery first (self-contained), then the prospective
    novel-hypothesis confirmation that turns method into discovery.
 
-**Green so far:** the LRRK2 recovery (A1, 1/8), plus **A2**, **A3**, and **B3** fully closed with
-real-engine demonstrations (see `validation/VALIDATION_RESULTS.md`). The instrument is shown
-deterministic, adversarially abstaining, and carried by convergence rather than any single lens. The
-remaining gap is the panel (A1/B1/B2), the cross-population headline (C1/C2), cross-domain transfer
-(E1/E2), and novel recovery (D1/D2) — most needing a disjoint-filler dataset or a domain
-collaborator, not more code.
+**Green so far** (all with real-engine demonstrations under `validation/`, see `VALIDATION_RESULTS.md`):
+
+- **A2 / A3 / B3 — full PASS.** The instrument is deterministic, adversarially abstaining (0/15
+  false-positives promote), and carried by convergence — no single co-occurrence lens is load-bearing,
+  the censor and the differentiation-gate are.
+- **E1 — full PASS.** The identical pipeline runs over 8 domains changing only the seed + member list.
+- **A1 — PARTIAL, and the partial is the finding.** Hub censoring 100%; recovery is bounded because
+  the method is differentiation-gated by design and the GTEx-median co-expression *proxy* is coarse.
+  The panel's value is **measuring** that the bottleneck is free-data lens quality, not the reasoning.
+- **C1 — PARTIAL (strong).** The fungibility premise is measured in real 1000G data (7/8 mechanisms),
+  and `common_frame` recovers the invariant role-frame across disjoint pop-driven fillers (2/2).
+
+**What genuinely remains** needs data or a collaborator, not more code: better co-expression + variant-
+level differentiation for a clean A1/B1; a **curated disjoint-filler disease mechanism** for the full
+C1 + the C2 head-to-head; the annotation-recovery falsifier D1; and the prospective novel-hypothesis
+confirmation D2. The infra to run them (`local_fst`, the panel harness, per-superpop profiles) is built.

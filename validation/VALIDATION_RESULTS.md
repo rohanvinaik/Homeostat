@@ -93,7 +93,31 @@ The honest reading, from the primary data (`validation/local_fst.py`, `a1_score.
 So E1 lands clean; A1's clean form needs better lens data, and the panel's value is having **measured**
 exactly which layer is the bottleneck.
 
+## C1 — cross-population fungibility · **PARTIAL — strong** (the headline, premise + machinery)
+
+`validation/c1_crosspop.py` → `common_frame`. Two independent halves, both real:
+
+- **The premise, measured in real 1000G data.** For each mechanism member, which superpopulation
+  drives its lead-variant differentiation? **7/8 mechanisms have members driven by ≥2 different
+  populations** — e.g. NOD2 signaling splits EAS-driven (CARD9, BIRC3) vs AFR-driven (RIPK2, XIAP,
+  BIRC2). *Which* member carries the population-differentiated variant is population-specific. That is
+  the fungibility premise, not asserted but measured.
+- **The machinery.** Two populations' reads of one mechanism, with **disjoint** differentiated-filler
+  tokens (AFR: afrg3/4/5/7/9; AMR: amrg8), handed to `common_frame`: the invariant role-frame recovers
+  at **2/2 support** — the full `differentiate+dominate+track/bind → component → core → deep_core`
+  chain, with roles binding to the population-specific tokens (component → afrg3 in AFR, → amrg8 in
+  AMR). The reasoning abstracts the surface tokens and recovers the identical mechanism across
+  populations.
+
+**Honest scope (why PARTIAL, not full PASS).** This shows the premise exists in real data and the
+engine recovers the invariant frame across disjoint fillers. It does **not** curate a specific disease
+mechanism *known* to use functionally-disjoint genes per population with the same clinical outcome —
+the fully convincing C1, and the head-to-head against token-bound methods (C2), still need a curated
+real disjoint-filler dataset (the gated-data / collaborator ceiling, tier F). The driver populations
+skew AFR/EAS (the most divergent superpops), as expected; a variant-level functional filter would
+sharpen it.
+
 ---
 
 _Open cells (need better lens data, a curated disjoint-filler dataset, or an external collaborator):
-A1 (clean form), B1, B2, C1, C2, D1, D2, E2 — see `docs/PROOF_POINTS.md`._
+A1 (clean form), B1, B2, C1 (curated case), C2, D1, D2, E2 — see `docs/PROOF_POINTS.md`._
