@@ -28,7 +28,9 @@ from lrrk2_slice5 import cloud_rsids  # noqa: E402
 from homeostat.l2_encoder import data_facts, diff_tier  # noqa: E402
 
 STRING_HI = 700  # STRING benchmark-calibrated high-confidence tier (evidence-derived, not a guess)
-NULL_PCT = 95  # evidence-derived co-expression cutoff = this percentile of the GTEx correlation null
+NULL_PCT = (
+    95  # evidence-derived co-expression cutoff = this percentile of the GTEx correlation null
+)
 NULL_PERMS = 200
 TRIAD = ["NOD2", "RIPK2", "LRRK2"]  # genes of interest to scope the read (NOT role-assigned)
 HUBS = ["HLA-DRB1", "HLA-DQA1", "IL18R1", "IL1RL1", "TNFSF15"]
@@ -48,40 +50,94 @@ def gtex_null_cutoff(seed_vec: list[float], profiles: dict[str, list[float]]) ->
     return null[min(len(null) - 1, len(null) * NULL_PCT // 100)]
 
 
-def main() -> None:
+def build_context(seed: str = SEED, string_lo: int = 400, string_hi: int = STRING_HI) -> dict:
+    """Compute the mechanism-general lens context around a seed, ONCE, for reuse across a scope.
+
+    Returns the cloud grown from the seed plus every genome-wide signal source the L2 encoder reads:
+    per-gene population differentiation (Fst), the GTEx co-expression seed vector + evidence-derived
+    cutoff, the seed's high-confidence STRING binders, the presentation (trait-wiring) set, and the
+    GWAS-promiscuity counts + top-decile flood cutoff. Nothing here is LRRK2-specific except the seed
+    argument — point it at any seed to build that mechanism's context (the A1/E1/C1 entry point)."""
     pres = presentation_genes()
-    cloud, _ = grow(SEED, string_adjacency(400), pres)
+    cloud, _ = grow(seed, string_adjacency(string_lo), pres)
     prof = gtex_profiles(cloud)
-    nod2 = prof.get("NOD2")
+    seed_vec = prof.get(seed)
     gene_fst, _ = load_gene_diff(cloud_rsids(cloud))
-    binders = string_adjacency(STRING_HI).get(SEED, set())  # STRING high-conf physical partners of seed
-    coexpr_cut = gtex_null_cutoff(nod2, prof) if nod2 else 1.0
-    hc = hub_counts(cloud)  # promiscuity: distinct traits per gene in the full GWAS catalog (BOUNDARY)
+    binders = string_adjacency(string_hi).get(
+        seed, set()
+    )  # STRING high-conf physical partners of seed
+    coexpr_cut = gtex_null_cutoff(seed_vec, prof) if seed_vec else 1.0
+    hc = hub_counts(
+        cloud
+    )  # promiscuity: distinct traits per gene in the full GWAS catalog (BOUNDARY)
     prom = sorted(hc.values(), reverse=True)
-    prom_cut = prom[max(1, len(prom) // 10) - 1] if prom else 10**9  # evidence: top-decile of the cloud
+    prom_cut = (
+        prom[max(1, len(prom) // 10) - 1] if prom else 10**9
+    )  # evidence: top-decile of the cloud
+    return {
+        "seed": seed,
+        "pres": pres,
+        "cloud": cloud,
+        "prof": prof,
+        "seed_vec": seed_vec,
+        "gene_fst": gene_fst,
+        "binders": binders,
+        "coexpr_cut": coexpr_cut,
+        "hc": hc,
+        "prom_cut": prom_cut,
+    }
+
+
+def scope_signals(scope: list[str], ctx: dict) -> list[tuple]:
+    """The real per-gene L2 signals for a scope, in the given context — the SINGLE computation the
+    probe and every validation script share, so a validation can never drift from the probe's numbers.
+    Row: (gene, fst, tier, coexpr, binds, wires, traits, floods)."""
+    out = []
+    for g in scope:
+        tier = diff_tier(ctx["gene_fst"].get(g))
+        coexp = bool(
+            ctx["seed_vec"]
+            and g in ctx["prof"]
+            and pearson(ctx["prof"][g], ctx["seed_vec"]) >= ctx["coexpr_cut"]
+        )
+        binds = g in ctx["binders"] and g != ctx["seed"]
+        wires = (
+            g in ctx["pres"]
+        )  # trait-wiring: gene associates with the presentation's disease traits
+        floods = (
+            ctx["hc"].get(g, 0) >= ctx["prom_cut"]
+        )  # specificity CENSOR: top-decile-promiscuous hub
+        out.append(
+            (g, ctx["gene_fst"].get(g), tier, coexp, binds, wires, ctx["hc"].get(g, 0), floods)
+        )
+    return out
+
+
+def main() -> None:
+    ctx = build_context()
+    cloud, coexpr_cut, prom_cut = ctx["cloud"], ctx["coexpr_cut"], ctx["prom_cut"]
 
     scope = [g for g in TRIAD + HUBS if g in cloud]
     token = {g: f"gene{i + 1}" for i, g in enumerate(scope)}
 
     facts: list[str] = []
     audit = []
-    for g in scope:  # L2: computed data lenses (Fst · GTEx · STRING · GWAS-wiring) + the specificity censor
-        tier = diff_tier(gene_fst.get(g))
-        coexp = bool(nod2 and g in prof and pearson(prof[g], nod2) >= coexpr_cut)
-        binds = g in binders and g != SEED
-        wires = g in pres  # trait-wiring: gene associates with the presentation's disease traits (GWAS)
-        floods = hc.get(g, 0) >= prom_cut  # specificity CENSOR: a top-decile-promiscuous generic hub
+    for g, fst, tier, coexp, binds, wires, traits, floods in scope_signals(scope, ctx):
         facts.extend(data_facts(token[g], tier, coexp, binds, wires, floods))
-        audit.append((token[g], g, gene_fst.get(g), tier, coexp, binds, wires, hc.get(g, 0), floods))
+        audit.append((token[g], g, fst, tier, coexp, binds, wires, traits, floods))
 
-    print(f"=== GTEx co-expr cutoff p{NULL_PCT} null={coexpr_cut:.3f} | promiscuity flood cut (top decile)>={prom_cut} ===")
+    print(
+        f"=== GTEx co-expr cutoff p{NULL_PCT} null={coexpr_cut:.3f} | promiscuity flood cut (top decile)>={prom_cut} ==="
+    )
     print("=== token -> gene ===")
     for g in scope:
         print(f"  {token[g]:<7} = {g}")
     print("\n=== per-gene REAL signals (Fst, tier, coexpr, binds, wires, promiscuity/floods) ===")
     for t, g, fst, tier, c, b, w, hcount, fl in audit:
         fs = f"{fst:.3f}" if fst is not None else "  -  "
-        print(f"  {t:<7} {g:<10} Fst={fs:<7} tier={tier:<9} coexpr={c!s:<5} binds={b!s:<5} wires={w!s:<5} traits={hcount:<5} floods={fl}")
+        print(
+            f"  {t:<7} {g:<10} Fst={fs:<7} tier={tier:<9} coexpr={c!s:<5} binds={b!s:<5} wires={w!s:<5} traits={hcount:<5} floods={fl}"
+        )
     print("\n=== ASSEMBLED FACT TEXT (feed to understand) ===")
     print(". ".join(facts) + ".")
 

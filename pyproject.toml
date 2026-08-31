@@ -11,7 +11,9 @@ src = ["src"]
 # Detective-generated mutation-characterization suites are machine-authored and intent-free;
 # they are pinned by their own convergence, collected by pytest, and excluded from linting
 # (mirrors the sonar.exclusions entry). Do not hand-edit them.
-extend-exclude = ["tests/detective", "probes"]
+# `probes` and `validation` are operational demonstration scripts (the running experiment and the
+# proof-point harnesses), not the rigorous src/ core — same treatment as the global lint-scope rule.
+extend-exclude = ["tests/detective", "probes", "validation"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "SIM"]
