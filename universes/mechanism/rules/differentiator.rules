@@ -1,0 +1,5 @@
+# The population-differentiated role + its near-miss censor (node-death).
+# A gene that is population-structured fills the differentiator role;
+# but a gene that is CONSERVED (same everywhere) cannot — kill the false positive (learn at the residual).
+if x differentiates population then x becomes differentiator
+if x amplifies signal and x conserves population then x cannot become differentiator

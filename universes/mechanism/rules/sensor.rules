@@ -1,0 +1,2 @@
+# The pathogen-sensor role (e.g. NOD2). Fires on the role verb, whatever gene fills it.
+if x senses pathogen then x becomes sensor

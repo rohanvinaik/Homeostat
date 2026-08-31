@@ -38,8 +38,23 @@ Two coupled moves, both in `docs/THEORY_OF_THE_CASE.md`:
    *fungible fillers*. Recognize by role (semantic-class firing), never gene-token. **Regenesis is the
    role engine** — use it, don't rebuild it.
 
+## MINIMAL PROOF — PASSED (2026-08-31, `universes/mechanism/`)
+The Regenesis role-recognition proof (ETIOLOGY_ENGINE §8) **fires**. Two partitions with DISJOINT filler
+genes (amplifier = `genea3` in A, `geneb9` in B) → `common_frame` recovers the invariant role-structure
+(sensor, transducer, amplifier, differentiator, component; all 2/2) with no gene-identity correspondence.
+Roles fire on the VERB not the token (opaque `Gene*` names); convergence = conjunction (`component`, top
+significance 1.39); informational-zero works (`genea4 lacks data → diagnostic`, abstain≠no). **Two
+authoring lessons baked in:** (1) align rule objects to the EMITTED lemma (GSE lemmatizes `signaling`→
+`signal`) or the rule silently doesn't fire; (2) the copula `is absent` emits NO fact — express the
+informational-zero TRANSITIVELY (`lacks data`). What is proven is the REASONING layer on hand-rendered
+facts; the censor/node-death was not exercised (needs contradictory input).
+
 ## THE NEXT ACTION
-The Regenesis role-recognition design is DONE and recorded: **`docs/ETIOLOGY_ENGINE.md`** (self-contained
+**Scale the L2 encoder:** derive the role-events (`amplifies signal`, `differentiates population`, …)
+from the REAL relational geometry (Fst differentiation in hand; GTEx co-expression in hand; directed
+`amplifies/inhibits` needs Reactome/directed pathway data) instead of hand-rendering them, then run the
+LRRK2 mechanism through the universe for real. The reasoning layer is validated; the encoder is the work.
+The full design is recorded in **`docs/ETIOLOGY_ENGINE.md`** (self-contained
 — thesis + two-layer architecture + the mechanism-universe design, distilled from the founder's working
 universes: ARC_AGI_3 L2/L3 render→speak split, MentalAtlas `zero_signal`/marker taxonomy, Regenesis
 `UNIVERSE_AUTHORING.md`). **Next = build the minimal proof (ETIOLOGY_ENGINE §8):** hand-render
