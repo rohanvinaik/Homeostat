@@ -98,15 +98,26 @@ worked **orthogonality-gate FAILURE**: every presentation-derived gene wires →
 converged with differentiation and over-promoted TNFSF15 to core (an artifact of a non-discriminating
 lens, not a finding). The Step-3 gate catches exactly this. `data_facts` re-pinned (32/32).
 
-## THE NEXT ACTION — apply the protocol for DISCRIMINATING lenses
-(1) A **specificity CENSOR** (the censor archetype): promiscuity from the GWAS catalog (Slice-3 hub_counts)
-→ `if x floods traits then x cannot become component` — kills the generic co-expressing hubs that
-convergence lets through (fixes the honest limitation). (2) **Reactome-directed roles** (needs pull) — the
-computed source of the signaling roles (amplifies/senses/relays), as data. (3) The **lens-count stack**
-(`core ∧ binds ⇒ deep-core`) so more converging surfaces rank higher. (4) Re-scope or drop trait-wiring
-(failed the gate). (5) Ultimately a doctor/geneticist populates the frame/rule set with recorded evidence.
-Every addition via **`docs/DENSITY_PROTOCOL.md`**; do NOT fake signals, invent role-facts, hard-code
-gene→role bindings, or plug default thresholds. Full design: **`docs/ETIOLOGY_ENGINE.md`**. (self-contained
+## SPECIFICITY CENSOR — DONE (2026-08-31), the NATIVE way
+Built via Regenesis's native `cannot` censor (`load_library_censors`), NOT a reinvention. Read the primary
+sources (`SIGNIFICANCE_WEIGHTING §6.1`): the spine floor `_spine_noise` is STRUCTURAL/intrinsic only —
+a gene's PROMISCUITY is open-class genericness → "a consumer's own filter" (CareerForge `_STRUCTURAL_FILLERS`
+precedent). So promiscuity is computed at the BOUNDARY (L2, `hub_counts` over the full GWAS catalog;
+evidence-derived cut = top-decile of the cloud's own promiscuity distribution), emitted as `floods traits`,
+and `rules/specificity.rules` — `if x floods trait then x cannot become component` — vetoes it. Verified:
+HLA-DQA1 (1021 traits) & HLA-DRB1 (756) flood → **HLA-DQA1 CENSORED from component** (was a permissive-co-
+expression false positive); triad clean (NOD2 19, RIPK2 2, LRRK2 40). `data_facts` re-pinned (35/35);
+`hub_counts` confirmed via Serena. Lesson #4 (lemma): the censor object must be the EMITTED lemma
+(`floods trait`, not `traits`) or it silently no-ops.
+
+## THE NEXT ACTION — more lenses via the protocol
+(1) **Reactome-directed roles** (needs pull) — the computed source of the signaling roles
+(amplifies/senses/relays), as data. (2) The **lens-count stack** (`core ∧ binds ⇒ deep-core`) so more
+converging surfaces rank higher. (3) Re-scope or drop trait-wiring (failed the orthogonality gate;
+still over-promotes TNFSF15). (4) Tune the promiscuity cut only from evidence (IL18R1 at 79 traits is below
+top-decile → not censored — honest, not tuned). (5) Ultimately a doctor/geneticist populates the frame/rule
+set with recorded evidence. Every addition via **`docs/DENSITY_PROTOCOL.md`**; do NOT fake signals, invent
+role-facts, hard-code gene→role bindings, or plug default thresholds. Full design: **`docs/ETIOLOGY_ENGINE.md`**. (self-contained
 — thesis + two-layer architecture + the mechanism-universe design, distilled from the founder's working
 universes: ARC_AGI_3 L2/L3 render→speak split, MentalAtlas `zero_signal`/marker taxonomy, Regenesis
 `UNIVERSE_AUTHORING.md`). **Next = build the minimal proof (ETIOLOGY_ENGINE §8):** hand-render

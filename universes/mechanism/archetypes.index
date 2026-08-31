@@ -11,5 +11,6 @@ coexpressor      | track mirror accompany            | rules/coexpressor.rules  
 dominator        | dominate exceed surpass           | rules/dominator.rules      |
 binder           | bind couple attach                | rules/binder.rules         |
 wirer            | wire link associate               | rules/wirer.rules          |
+specificity      | flood swamp saturate              | rules/specificity.rules    |
 component        | amplify sense relay track bind wire differentiate dominate | rules/component.rules |
 zero             | lack miss omit                    | rules/zero_signal.rules    |

@@ -21,6 +21,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from lrrk2_genetic_diff import load_gene_diff  # noqa: E402
 from lrrk2_slice2 import SEED, grow, presentation_genes, string_adjacency  # noqa: E402
+from lrrk2_slice3 import hub_counts  # noqa: E402
 from lrrk2_slice4 import gtex_profiles, pearson  # noqa: E402
 from lrrk2_slice5 import cloud_rsids  # noqa: E402
 
@@ -55,28 +56,32 @@ def main() -> None:
     gene_fst, _ = load_gene_diff(cloud_rsids(cloud))
     binders = string_adjacency(STRING_HI).get(SEED, set())  # STRING high-conf physical partners of seed
     coexpr_cut = gtex_null_cutoff(nod2, prof) if nod2 else 1.0
+    hc = hub_counts(cloud)  # promiscuity: distinct traits per gene in the full GWAS catalog (BOUNDARY)
+    prom = sorted(hc.values(), reverse=True)
+    prom_cut = prom[max(1, len(prom) // 10) - 1] if prom else 10**9  # evidence: top-decile of the cloud
 
     scope = [g for g in TRIAD + HUBS if g in cloud]
     token = {g: f"gene{i + 1}" for i, g in enumerate(scope)}
 
     facts: list[str] = []
     audit = []
-    for g in scope:  # L2: ONLY computed data lenses — Fst tier + GTEx co-expr + STRING bind + GWAS wiring
+    for g in scope:  # L2: computed data lenses (Fst · GTEx · STRING · GWAS-wiring) + the specificity censor
         tier = diff_tier(gene_fst.get(g))
         coexp = bool(nod2 and g in prof and pearson(prof[g], nod2) >= coexpr_cut)
         binds = g in binders and g != SEED
         wires = g in pres  # trait-wiring: gene associates with the presentation's disease traits (GWAS)
-        facts.extend(data_facts(token[g], tier, coexp, binds, wires))
-        audit.append((token[g], g, gene_fst.get(g), tier, coexp, binds, wires))
+        floods = hc.get(g, 0) >= prom_cut  # specificity CENSOR: a top-decile-promiscuous generic hub
+        facts.extend(data_facts(token[g], tier, coexp, binds, wires, floods))
+        audit.append((token[g], g, gene_fst.get(g), tier, coexp, binds, wires, hc.get(g, 0), floods))
 
-    print(f"=== evidence-derived GTEx co-expression cutoff (p{NULL_PCT} of null): {coexpr_cut:.3f} ===")
+    print(f"=== GTEx co-expr cutoff p{NULL_PCT} null={coexpr_cut:.3f} | promiscuity flood cut (top decile)>={prom_cut} ===")
     print("=== token -> gene ===")
     for g in scope:
         print(f"  {token[g]:<7} = {g}")
-    print("\n=== per-gene REAL signals (Fst, tier, coexpr, binds, wires) ===")
-    for t, g, fst, tier, c, b, w in audit:
+    print("\n=== per-gene REAL signals (Fst, tier, coexpr, binds, wires, promiscuity/floods) ===")
+    for t, g, fst, tier, c, b, w, hcount, fl in audit:
         fs = f"{fst:.3f}" if fst is not None else "  -  "
-        print(f"  {t:<7} {g:<10} Fst={fs:<7} tier={tier:<9} coexpr={c!s:<5} binds={b!s:<5} wires={w}")
+        print(f"  {t:<7} {g:<10} Fst={fs:<7} tier={tier:<9} coexpr={c!s:<5} binds={b!s:<5} wires={w!s:<5} traits={hcount:<5} floods={fl}")
     print("\n=== ASSEMBLED FACT TEXT (feed to understand) ===")
     print(". ".join(facts) + ".")
 
