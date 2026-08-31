@@ -56,8 +56,8 @@ def cloud_rsids(cloud: set[str]) -> dict[str, str]:
                     continue
                 for rs in re.split(r"[;,\s]+", row[SNP_COL]):
                     if rs.startswith("rs"):
-                        for g in genes:
-                            out.setdefault(rs, g)  # first gene wins; good enough for the profile
+                        for g in sorted(genes):  # sorted -> deterministic first-wins (set order varies)
+                            out.setdefault(rs, g)
     return out
 
 
