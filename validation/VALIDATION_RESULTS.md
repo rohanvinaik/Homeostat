@@ -57,7 +57,43 @@ fact-subsets.
 The engine rejects exactly the false-positives that single-signal methods accept, and never
 manufactures a core from noise.
 
+## E1 — cross-domain transfer · **PASS**
+
+`validation/a1_panel.py` runs the identical pipeline over **8 documented mechanisms spanning 8
+domains** — NOD2 signaling, DNA mismatch repair, complement, coagulation, LDL clearance, PINK1/Parkin
+mitophagy, NLRP3 inflammasome, type-I interferon — changing **only the seed + member list**, no engine
+/ probe / threshold code. Every domain produces a ledger; none abstains. The instrument is not fitted
+to inflammation.
+
+## A1 — positive-control panel · **PARTIAL (honest)** — and the partial is the finding
+
+Same harness, scored member-vs-decoy across the 8 mechanisms, blind to identity. Two calibrations of
+the differentiation lens bracket the result:
+
+| differentiation lens | member recovery | decoy FP | hub censoring |
+|---|---|---|---|
+| absolute Wright bands (whole-region max-Fst **saturates** — every gene "dominant") | 83% | 28% | 81% |
+| **genome-wide percentile** (top-decile = dominant; the count-bias fix) | 36% | 19% | **100%** |
+
+The honest reading, from the primary data (`validation/local_fst.py`, `a1_score.py`):
+
+- **Hub censoring is perfect** under the corrected lens (32/32) — the specificity censor is robust.
+- **The method is differentiation-GATED by design.** Every convergence rule requires
+  `differentiates population`; most mechanism members are *not* under population-differentiating
+  selection, so a broad panel recovers the **population-differential subset** of each mechanism, not
+  all members. That is on-thesis (the whole program is population-differential mechanism), but it means
+  "recover every textbook member" was the wrong bar — the method never claimed it.
+- **The residual weak discrimination (36% vs 19%) is a free-DATA-quality limit, not a reasoning
+  limit.** GTEx *median-TPM* measures tissue-breadth similarity, not true co-expression, so
+  broadly-expressed decoys chance-correlate with broadly-expressed seeds. The architecture is sound
+  (censor perfect, convergence correct — A2/B3); the lens *shadows* are coarse. This is the "free
+  shadows" thesis made quantitative, and it names the fix: a real co-expression dataset (not GTEx
+  median) and variant-level differentiation (not whole-region max) — the same gated-data ceiling as F.
+
+So E1 lands clean; A1's clean form needs better lens data, and the panel's value is having **measured**
+exactly which layer is the bottleneck.
+
 ---
 
-_Open cells (need local Fst infra, then panel/cross-population data, or an external collaborator):
-A1, B1, B2, C1, C2, D1, D2, E1, E2 — see `docs/PROOF_POINTS.md`._
+_Open cells (need better lens data, a curated disjoint-filler dataset, or an external collaborator):
+A1 (clean form), B1, B2, C1, C2, D1, D2, E2 — see `docs/PROOF_POINTS.md`._

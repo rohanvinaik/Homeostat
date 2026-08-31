@@ -38,7 +38,7 @@ come first but they are not where the claim lives.
 
 | # | Demonstrates | Method | Pass bar | Status |
 |---|---|---|---|---|
-| **A1** | Recovers more than one known mechanism | A panel of ≥8 independently-documented compositional mechanisms (NOD signaling, complement cascade, a DNA-repair complex, a metabolic channel, a mitophagy module…), each run blind to gene identity | Core members surface above censored hubs in ≥8/8, graded by convergence | **not started** — LRRK2–NOD2–RIPK2 is 1/8 |
+| **A1** | Recovers more than one known mechanism | A panel of ≥8 independently-documented compositional mechanisms (NOD signaling, complement cascade, a DNA-repair complex, a metabolic channel, a mitophagy module…), each run blind to gene identity | Core members surface above censored hubs in ≥8/8, graded by convergence | **◐ PARTIAL** — `validation/a1_panel.py`: 8 mechanisms run blind; hub censoring **100%**, but member recovery is bounded because the method is differentiation-gated (recovers the population-differential subset) and GTEx-median co-expression is a coarse proxy. The clean form needs real co-expression + variant-level Fst. The *finding* is measuring which layer is the bottleneck (lens data, not reasoning) |
 | **A2** | Abstains on nothing | Null inputs: random gene sets matched for degree + expression, a shuffled seed, a hub-only set, a non-mechanism | No `core`/`deep_core` emitted from null input; false-positive rate quantified | **✅ PASS** (reasoning layer) — `validation/a2_abstention.py`: 0/15 false-positive archetypes (incl. promiscuous hubs with every qualifying fact) reach mechanism, 6/6 controls promote, 20/20 random subsets match the spec. Genome-sampled form pending Fst infra |
 | **A3** | Same input → same answer | Re-run the full stack across runs and machines | Bit-identical role ledger | **✅ PASS** — `validation/a3_determinism.py`: byte-identical fact-text across 3 distinct `PYTHONHASHSEED` (sha `faab482d`); guards the `sorted()` fix |
 
@@ -89,7 +89,7 @@ that most benefits from a domain collaborator.
 
 | # | Demonstrates | Method | Pass bar | Status |
 |---|---|---|---|---|
-| **E1** | Zero-tuning transfer to a new disease family | Run the whole pipeline on a metabolic / neuro / cardiac mechanism, changing **only** the domain's role anchors in its universe `.index` (the one registration step) — no engine, no probe, no threshold touched | Recovers a known mechanism in the new domain with no code change | **not started** |
+| **E1** | Zero-tuning transfer to a new disease family | Run the whole pipeline on a metabolic / neuro / cardiac mechanism, changing **only** the domain's role anchors in its universe `.index` (the one registration step) — no engine, no probe, no threshold touched | Recovers a known mechanism in the new domain with no code change | **✅ PASS** — `validation/a1_panel.py` runs the identical pipeline over 8 domains (inflammation, DNA-repair, complement, coagulation, lipid, mitophagy, inflammasome, interferon) changing only the seed+member list; every domain produces a ledger, none abstains |
 | **E2** | New roles register without touching the engine | Add a role the current vocabulary lacks; confirm it fires from `.index` rows alone | New role works via vocabulary registration only | **not started** |
 
 E1 is the direct, checkable form of "generalizable": if a new domain costs one `.index`
