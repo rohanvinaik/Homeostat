@@ -108,7 +108,10 @@ call, named as a bounded utility, never your default, never the method, never "t
    the object GROWN by the search (node birth/death) and not authored/seeded; are the constraints
    TRIANGULATED across several partly-orthogonal lenses (generate-not-calculate), never read off one
    map's shape; does the σ_sem > 0 guard hold so it cannot collapse into SDIS-style self-confirmation;
-   and does it stop at the κ-knee?* If you cannot point at those, you have not understood it yet.
+   does it stop at the κ-knee; is the **partition searched** (any legitimately-isolatable group,
+   differentiation direction-free) not a hardcoded SAS-vs-EUR axis; and does it recognize **roles, not
+   gene-tokens** — the mechanism invariant across fungible population-specific fillers, via semantic-class
+   firing / Regenesis (LAW 8–9)?* If you cannot point at those, you have not understood it yet.
 3. **The object is GROWN by the search, NEVER authored or seeded.** The mechanism graph is computed
    by node birth/death from the data geometry (LAW 3) — it is not a hand-written edge list, and
    seeding it (a PBS pile, a generic interactome, **SDIS's edges**) is the root of the 2026-08-30

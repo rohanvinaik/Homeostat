@@ -75,7 +75,32 @@ already embodies it: κ is **marginal** coverage (overlap → κ = 0, ignored, n
 max-κ reaches for the most-orthogonal next lens by construction. Never read a single source's *shape*
 (hubs/participation) as significance; triangulate.
 
-The recurring failure has one root: reaching for a statistic, authoring/seeding the object, or reading
-one map's shape as the answer — because it feels like progress — instead of running the σ-trajectory
-search that grows the object by triangulating the data geometry. Recognizing the reflex and refusing
-it is the only fix.
+**LAW 8 — THE PARTITION IS A FREE VARIABLE (any legitimately-isolatable group), NOT A HARDCODED AXIS.**
+A population/phenotype lens is *differentiation across any independently-isolatable group* — ancestry
+at ANY resolution (continent → sub-continent → founder/caste isolate), a phenotypic sub-section, an
+exposure — read **direction-free** (magnitude, e.g. max pairwise Fst), never `SAS>EUR`. The partition
+is *searched*; a partition carved to fit the answer is σ_sem = 0 one level up (admit only genuinely
+isolatable groups). SA-vs-EUR was the coarsest, dumbest instance — the motivating example, not the
+architecture (measured 2026-08-31: the bare binary is a 44% coin flip; differentiation restores
+specificity; LRRK2's signal is sub-continental, so it needs a *finer* partition — NOT a lowered
+threshold).
+
+**LAW 9 — RECOGNIZE ROLES, NOT GENES (semantic class, never token); REGENESIS IS THE ROLE ENGINE.** The
+mechanism is invariant; genes are population-local, **fungible fillers** (one pool in group A, a
+different pool in a founder isolate, same mechanism). Pull out the genes filling each **role** by the
+*role they play* (relational signature → class centroid), NEVER by gene-identity — this is Genesis
+**semantic-class firing** over genes (fire on the class, never the surface token), deterministic
+(GSE/HDC vector-symbolic binding), NEVER a learned embedding. **Regenesis (`mcp__Regenesis__*`) is the
+working engine — use it, do not rebuild it**: a mechanism universe whose classes are roles, centroids
+from real relational geometry (STRING/GTEx as role-defining *context*, never the map-as-answer). The
+holographic combine (per-population lossy filler-projections → the role-structure) is Regenesis
+deriving. **Meta-thesis:** any statistics-or-thin-signal read imputes the individual from the
+population — cross-population differential outcomes are its body count — so the story engine is the
+*most* rigorous, objective approach; frame the paper in accepted vocabulary (methods discloses
+Genesis/Winston fully) but never let framing outrun the computed result (σ_sem > 0 at the meta-level).
+
+The recurring failure has one root: reaching for a statistic, authoring/seeding the object, reading
+one map's shape as the answer, or **matching gene tokens instead of roles** — because it feels like
+progress — instead of running the σ-trajectory search that grows the object by triangulating the data
+geometry across searched partitions and recognizing roles by class. Recognizing the reflex and
+refusing it is the only fix.
