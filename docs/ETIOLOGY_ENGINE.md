@@ -182,6 +182,17 @@ zero) by *structure*, exactly the founder's "markers stacking on base primitives
 magnitude modulating rank remains a genuine gap (would need new magnitude-aware fields in emit +
 significance + the fire gate); ordinal-to-structure is the GSE-faithful path.
 
+**Thresholds and baselines are EVIDENCE-DERIVED, not divine or arbitrary (founder, 2026-08-31).** Biology
+is not divinely optimal — a neuron itself establishes an activity as a *threshold plus a statistical
+expectation tuned for noise-robustness*, not a universal truth. So every filter, baseline, and tier-cut in
+this stack (the Fst bands, the co-expression cutoff, a lens's confidence floor) should be **derived from
+recorded evidence** — the data's own distributions and the medical/biological databases — not plugged in
+as a conventional constant or an agent's default. "Real numbers from medicine," grounded per lens. This is
+also the standing guard against default-substitution: derive the cut from the evidence in front of you,
+never from "what's typical." (Today's Fst bands are Wright's *published* interpretation — evidence, not
+invention — but a stricter version derives the cut from the cloud's own Fst distribution; the co-expression
+cutoff should likewise come from GTEx's own correlation null, not a round number.)
+
 ---
 
 ## 4. The Regenesis mechanism universe
