@@ -10,5 +10,6 @@ differentiator   | differentiate stratify conserve   | rules/differentiator.rule
 coexpressor      | track mirror accompany            | rules/coexpressor.rules    |
 dominator        | dominate exceed surpass           | rules/dominator.rules      |
 binder           | bind couple attach                | rules/binder.rules         |
-component        | amplify sense relay track bind differentiate dominate | rules/component.rules |
+wirer            | wire link associate               | rules/wirer.rules          |
+component        | amplify sense relay track bind wire differentiate dominate | rules/component.rules |
 zero             | lack miss omit                    | rules/zero_signal.rules    |

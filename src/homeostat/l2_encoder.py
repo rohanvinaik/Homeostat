@@ -40,15 +40,20 @@ def diff_tier(fst: float | None) -> str:
     return "none"
 
 
-def data_facts(token: str, tier: str, coexpresses_seed: bool, binds_seed: bool) -> list[str]:
+def data_facts(
+    token: str, tier: str, coexpresses_seed: bool, binds_seed: bool, wires_presentation: bool
+) -> list[str]:
     """The L3 facts a gene's binned data-signals license, as sentence strings.
 
     `nodata` -> the informational zero (`lacks data`, never silence). `dominant` stacks an
     intensity marker (`dominates population`) on the base differentiation fact — the ordinal
     "marker on a base primitive" that the universe's graded rule deepens. `moderate` emits the
     base only. `none` (has data, below the floor) licenses no differentiation fact. Co-expression
-    (GTEx) and physical binding (STRING) are two further independent lenses — each an orthogonal
-    surface, so a gene confirmed by more of them accumulates more converging facts (density -> κ).
+    (GTEx), physical binding (STRING), and trait-wiring (GWAS) are further INDEPENDENT lenses,
+    each an orthogonal surface — a gene confirmed by more of them accumulates more converging
+    facts (density -> kappa). Adding a lens follows the Density Addition Protocol
+    (docs/DENSITY_PROTOCOL.md): one boolean/tier signal in, one transitive role-fact out; the
+    mechanism grows from convergence, never a hard-code.
     """
     facts: list[str] = []
     if tier == "nodata":
@@ -62,4 +67,6 @@ def data_facts(token: str, tier: str, coexpresses_seed: bool, binds_seed: bool) 
         facts.append(f"{token} tracks seed")
     if binds_seed:
         facts.append(f"{token} binds seed")
+    if wires_presentation:
+        facts.append(f"{token} wires presentation")
     return facts
