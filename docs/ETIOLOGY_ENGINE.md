@@ -73,6 +73,34 @@ data-geometry signals: the signals are the evidence; the reasoning is the etiolo
 
 ---
 
+## 2b. The substrate — seed known mechanisms, grow the novel composite
+
+The object (the composite etiology) is **grown, never guessed** — but it is grown *over a substrate of
+known biology, not from nothing.* This distinction keeps the program honest without making it purist:
+
+- **Authoring known allopathic mechanisms is legitimate — they are the vocabulary, not the answer.** The
+  established mechanisms of Western medicine (the NOD2→RIP2 signaling axis, a clearance pathway, a
+  resolution cascade) are hand-authored as role-Forms. This is the μ-oracle / the Form library, and it is
+  *not* the forbidden move — the forbidden move is seeding the **object** from **guesses** (SDIS's vibed
+  edges, a population-differentiation pile). Known mechanisms are established, not guessed. There is no
+  need to discard a century of medical research for academic purity; that research **is** the substrate.
+- **The novelty is produced by the engine's generative layer, over that substrate.** Three native
+  capacities, each measured in the §8 proof or the significance-weighting work:
+  - **Auto-written rules (induction).** The engine writes new rules combining the authored Forms (the
+    `learned` output — a rule the read wrote itself, seen firing in the §8 proof). Combination is
+    computed, not hand-listed.
+  - **Significance / surprise.** The improbable-and-coherent composite leads (κ / the significance
+    bracket): a chain of known mechanisms that is improbable by idle coincidence yet coherent is exactly a
+    candidate **novel** etiology — the sub-threshold combination no single known mechanism names.
+  - **Holographic composition** (Wayfinder-style impute + significance-weighting chaining): chain and
+    compose the known mechanisms into the multi-hop composite no single one contains — the holographic
+    projection at the *mechanism* level (the same move `measuring_agi` calls behavioral holography, §3b).
+- **The workflow, in one line: author the known (the substrate), compute the novel (the composite).** This
+  is compute-not-guess at the level of *composition*, grounded in real medical knowledge rather than
+  discarding it.
+
+---
+
 ## 3. The signal→story translation (L2 → L3)
 
 Regenesis reads subject-verb-object **event sentences**, not a frequency matrix. So the data geometry is
@@ -98,6 +126,47 @@ author's universes):
    (`differentiates partition`, never bare `differentiates`; manufacture a mechanical object if needed).
 2. **Reserve verbs; generic verbs do not fire.** A specific verb carries a specific provenance; a
    generic one (like "move") is floored by the engine.
+
+---
+
+## 3b. The L2 encoder — role imputation by behavioral characterization (co-localization, not prevalence)
+
+How is a gene's role-fact (`Gene17 amplifies signal`) *derived from data*? By the author's
+**`measuring_agi` method — black-box behavioral characterization**, transported from LLMs to genes. It is
+the one place a statistical method belongs in the stack, and it is a **characterization tool, never the
+significance, and never prevalence.**
+
+- **Characterize the gene as a black box you cannot open.** You do not have its full causal mechanism; you
+  have its **behavior under systematic perturbation** (knockouts, stresses, cell states, timepoints).
+  Measure the *structure* of that behavior — the shape of its response distribution — not any single
+  readout. Content is held free (baseline expression is not the signal) so **process** — the regulatory
+  behavior — remains. (`measuring_agi`, verbatim: *"measure the statistical structure of a model's output
+  distribution under systematic perturbation… behavioral holography — probing a black box from multiple
+  angles to reconstruct its internal cognitive structure."* This is the founder's holographic-impute idea,
+  already built.)
+- **The role is imputed by co-localization — guilt-by-association in behavior-space.** Two relational
+  signals: (a) the gene's **relative position in the cohort** responding to the *identical* perturbation
+  battery — *the cohort of other genes is not the background, it is the evidence*; and (b) **where** the
+  divergence concentrates — which axes/pathways the behavioral signal co-localizes onto is the mechanistic
+  read. The role-class a gene fires is the fingerprint-cluster it sits in — exactly how a Regenesis
+  trigger-column **class centroid** is populated from real relational geometry (fix the centroid from the
+  behavior, never the input).
+- **Why this is not prevalence and not a significance test.** Accuracy/frequency is deliberately held free
+  (it carries zero signal — the swamping trap); the signal is the **second-order** structure
+  (variance/entropy/composition under perturbation) invisible to a first-order count. The output is a
+  continuous fingerprint located in a morphospace by relative geometry — a **positioning instrument**, not
+  a p<0.05 verdict on a prevalence.
+- **The three guardrails (identical to `measuring_agi`) that keep behavior→role honest:**
+  1. **Anytime-valid stopping** (Empirical-Bernstein confidence sequences): σ = the minimum assays to
+     characterize a role; you do not over-read a role from too few perturbations — the sequence says when
+     it has measured enough. (The canon's σ / specification complexity, applied to assays.)
+  2. **A pre-committed perturbation panel**: the assays are fixed in advance, so a role is not fished out.
+  3. **External falsification**: every imputed role is a **hypothesis**, confirmed against out-of-band
+     ground truth (known pathway membership, a positive-control gene), never proven from co-behavior alone
+     — the program's annotation-recovery falsifier and the LRRK2 positive control, at the encoder level.
+
+So L2 is not an open unknown: it is `measuring_agi`'s instrument pointed at genes — statistics as
+*characterization*, held to external validation, feeding role-facts to the reasoning stack.
 
 ---
 
@@ -165,9 +234,12 @@ A universe = a directory of `.rules` bundles + `.index` manifests. Each `.index`
 
 ## 6. The honest seam and the data bound
 
-- **The real work is Layer-1/L2 — deriving the role-events from data (the "role encoder").** In hand
-  today: `DIFFERENTIATES` (Fst), `COEXPRESSES` (GTEx), `WIRES` (GWAS). The **directed** roles
-  (`AMPLIFIES`/`INHIBITS`) need directed pathway data (Reactome), not the undirected interaction graph —
+- **The real work is Layer-1/L2 — the role encoder — but it now has a method (§3b) and a substrate
+  (§2b), so it is a build, not an open unknown.** Much of the role-vocabulary is *authored* from known
+  allopathic mechanisms (§2b); what must be *derived* from data is imputed by behavioral characterization
+  (§3b, the `measuring_agi` instrument), held to external validation. In hand today: `DIFFERENTIATES`
+  (Fst), `COEXPRESSES` (GTEx), `WIRES` (GWAS). The **directed** roles (`AMPLIFIES`/`INHIBITS`) need
+  directed pathway data (Reactome) or a perturbation panel (§3b), not the undirected interaction graph —
   a data-acquisition question, not a method gap. The LRRK2 proof (§8) is feasible because the NOD2→RIP2
   signaling direction is known.
 - **Static data gates the claim.** A coherent regulatory mechanism is a dynamical state; static allele
@@ -219,4 +291,10 @@ ARC_AGI_3 (the `chassis` recognizer + per-task universes, and the L2 `render/eve
 taxonomy, the multi-`.index` multi-lens split, `zero_signal.rules`, `compositional.rules`); and the
 engine's `docs/UNIVERSE_AUTHORING.md`. The reasoning engine is **Regenesis** (`mcp__Regenesis__*`); the
 signal layer is **Peitho**-style data geometry; the σ / κ / early-stopping formal substrate is the
-author's Specification-Complexity, Significance-Weighting, and pabkit work (canon Appendix B).
+author's Specification-Complexity, Significance-Weighting, and pabkit work (canon Appendix B). The **L2
+role encoder** (§3b) is the author's **`measuring_agi`** black-box behavioral-characterization method
+(`~/Projects/Kaggle_Killer/competitions/measuring_agi` — "behavioral holography": characterize a black
+box by the structure of its response under systematic perturbation, role imputed by cohort-relative
+co-localization; anytime-valid stopping + pre-commitment + external falsification). The **holographic
+composition** of known mechanisms (§2b) draws on **Wayfinder** (`~/Projects/Wayfinder`) + the
+significance-weighting chaining.
