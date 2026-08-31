@@ -23,12 +23,11 @@ def tagged(name: str) -> Path:
     return EIR / f"{base}{TAG}.{ext}"
 
 
-# Index genotype R (directly-observed tier — the raw array export, copied local)
+# Index genotype R (directly-observed tier — the raw array export, copied local).
+# The personal source path is NEVER committed — set it locally via the env var.
 GENOTYPE_DIR = DATA / "genotype"
 GENOTYPE_RAW = GENOTYPE_DIR / "genome_R_v5_full_build37.txt"
-GENOTYPE_SOURCE = Path(
-    "/Users/rohanvinaik/Desktop/Desktop/Genetics/genome_Rohan_Vinaik_v5_Full_20220112035411.txt"
-)
+GENOTYPE_SOURCE = Path(os.environ.get("HOMEOSTAT_GENOTYPE_SOURCE", ""))
 
 # 1000 Genomes phase 3 (GRCh37) sites-only VCF with per-superpop AFs
 REFERENCE_DIR = DATA / "reference"
