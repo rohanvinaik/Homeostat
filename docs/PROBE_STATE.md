@@ -39,10 +39,14 @@ Two coupled moves, both in `docs/THEORY_OF_THE_CASE.md`:
    role engine** — use it, don't rebuild it.
 
 ## THE NEXT ACTION
-**Poke Regenesis (`mcp__Regenesis__capabilities` first, read-only), then design the mechanism universe:**
-semantic classes = mechanistic roles, centroids from real relational geometry (STRING/GTEx as
-role-defining context, NOT the map), fire roles over genes by class. Confirm the port is clean before
-building anything. Do NOT fabricate role anchors or fire on synthetic input.
+The Regenesis role-recognition design is DONE and recorded: **`docs/ETIOLOGY_ENGINE.md`** (self-contained
+— thesis + two-layer architecture + the mechanism-universe design, distilled from the founder's working
+universes: ARC_AGI_3 L2/L3 render→speak split, MentalAtlas `zero_signal`/marker taxonomy, Regenesis
+`UNIVERSE_AUTHORING.md`). **Next = build the minimal proof (ETIOLOGY_ENGINE §8):** hand-render
+NOD2–RIP2–LRRK2 as L3 facts for two contrasting partitions, author ~4 role-Forms + convergence
+conjunction + zero-signal + censor twin, run `understand()` per partition, and check `common_frame`
+recovers the invariant role-structure while the filler genes differ. Do NOT fabricate role anchors or
+rewrite input to hit a rule's verbs (fix the centroid, never the input).
 
 ## Discipline (do not drift)
 - Statistics/differentiation is a **lens vote**, never the significance; the significance is convergence /
