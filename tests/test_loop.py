@@ -8,6 +8,7 @@ from homeostat.loop import (
     RESOLVED,
     STUCK,
     loop_verdict,
+    resolve_presentation,
     run,
 )
 
@@ -94,3 +95,38 @@ def test_run_budget_stops_bulk_progress_over_time():
     r = run(["a", "b", "c", "d", "e"], {}, "a", propose, max_rounds=1)
     assert r.verdict == BUDGET
     assert r.mechanism is None
+
+
+# ---- the seedless presentation reader --------------------------------------------
+
+
+def test_resolve_presentation_mechanism_is_the_survivor():
+    # No target: eliminating a and b leaves c, and c IS the returned mechanism.
+    r = resolve_presentation(["a", "b", "c"], {"k1": ["a"], "k2": ["b"]}, _no_growth, max_rounds=5)
+    assert r.verdict == RESOLVED
+    assert r.mechanism == "c"
+    assert r.rounds == 0
+
+
+def test_resolve_presentation_single_candidate_is_degenerate():
+    r = resolve_presentation(["a"], {}, _no_growth, max_rounds=5)
+    assert r.verdict == DEGENERATE  # a lone candidate resolves nothing (self-confirming)
+    assert r.mechanism is None
+
+
+def test_resolve_presentation_grows_then_resolves():
+    # No constraint separates a,b at first; node birth supplies one that kills b -> a survives.
+    def propose(_residual, round_):
+        return ([], {"g": ["b"]}) if round_ == 0 else ([], {})
+
+    r = resolve_presentation(["a", "b"], {}, propose, max_rounds=5)
+    assert r.verdict == RESOLVED
+    assert r.mechanism == "a"
+    assert r.rounds == 1
+
+
+def test_resolve_presentation_stuck_plural_when_cannot_grow():
+    r = resolve_presentation(["a", "b"], {}, _no_growth, max_rounds=5)
+    assert r.verdict == STUCK
+    assert r.mechanism is None
+    assert r.trajectory.survivors_left == ["a", "b"]  # the plural residual, honestly abstained

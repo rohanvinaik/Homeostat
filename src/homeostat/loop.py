@@ -23,7 +23,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from homeostat.search import Trajectory, sigma_trajectory
+from homeostat.search import Trajectory, eliminate_to_survivor, sigma_trajectory
 
 # Loop verdicts — named string codes.
 RESOLVED = "RESOLVED"  # a unique mechanism, pinned AND falsifiable — the real finding
@@ -120,6 +120,54 @@ def run(
         verdict = loop_verdict(resolved, traj.falsifiable, grew, round_, max_rounds, at_knee)
         if verdict != CONTINUE:
             mechanism = target if verdict == RESOLVED else None
+            return Result(verdict, mechanism, round_, traj)
+
+        prev_residual = residual  # the residual before this birth, for the next round's knee test
+        for c in new_cands:  # node birth: merge the grown state
+            if c not in cands:
+                cands.append(c)
+        cons.update(new_cons)
+        round_ += 1
+
+
+def resolve_presentation(
+    candidates: list[str],
+    constraints: dict[str, list[str]],
+    propose: Propose,
+    max_rounds: int,
+) -> Result:
+    """Seedless search-and-grow — the presentation-reader entry (the front door, minus the object).
+
+    Identical to `run` except the search is `eliminate_to_survivor` (no protected target): each
+    round drives H → 0 by candidate-elimination; if it does not resolve to a unique mechanism,
+    `propose` grows the state (node birth) from the plural residual and the round repeats. The knee
+    and both stopping laws are unchanged. Because there is no target, the pinned `mechanism` is the
+    **sole survivor** of elimination on `RESOLVED`, else `None` (`DEGENERATE` when a lone candidate
+    resolved with no plurality to falsify — the self-confirming case — and `STUCK`/`KNEE`/`BUDGET`
+    for an unresolved plural residual). I/O-free orchestration over the pinned `loop_verdict` and
+    `eliminate_to_survivor`; validated by hand-authored intent tests with a synthetic `propose`.
+    """
+    cands = list(candidates)
+    cons = dict(constraints)
+    round_ = 0
+    prev_residual: int | None = None
+
+    while True:
+        traj = eliminate_to_survivor(cands, cons)
+        is_resolved = traj.sigma is not None
+        residual = len(traj.survivors_left)
+        at_knee = prev_residual is not None and (prev_residual - residual) <= 1
+
+        grew = False
+        new_cands: list[str] = []
+        new_cons: dict[str, list[str]] = {}
+        if not is_resolved:
+            new_cands, new_cons = propose(traj.survivors_left, round_)
+            grew = bool(new_cands) or bool(new_cons)
+
+        verdict = loop_verdict(is_resolved, traj.falsifiable, grew, round_, max_rounds, at_knee)
+        if verdict != CONTINUE:
+            mechanism = traj.survivors_left[0] if verdict == RESOLVED else None
             return Result(verdict, mechanism, round_, traj)
 
         prev_residual = residual  # the residual before this birth, for the next round's knee test

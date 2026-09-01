@@ -81,6 +81,16 @@ def marginal_kill(kill_set: list[str], already_killed: list[str]) -> int:
     return len(new)
 
 
+def survivors_killed(kill_set: list[str], alive: list[str]) -> int:
+    """κ for **seedless** elimination: how many CURRENT survivors a constraint eliminates —
+    |alive ∩ kill_set|, measured against the live survivor set (so it is the marginal coverage at
+    this step). A constraint with κ = 0 *confirms* rather than *resolves* (value zero, Howard); a
+    constraint with κ = |alive| would empty the set — an over-constrained contradiction, never a
+    resolution — so seedless admissibility is 0 < κ < |alive|. Pure over `(list[str], list[str])`.
+    """
+    return len(set(alive) & set(kill_set))
+
+
 def falsifiable(n_candidates_start: int, kappas: list[int]) -> bool:
     """The σ_sem > 0 guard, as a decision over a completed trajectory.
 
@@ -178,6 +188,52 @@ def sigma_trajectory(
         kset = remaining.pop(best_id)
         applied.append(kset)
         killed_flat.extend(kset)
+        steps.append(Step(best_id, best_kappa))
+
+    alive = survivors(candidates, applied)
+    kappas = [s.kappa for s in steps]
+    return Trajectory(steps, len(steps), alive, falsifiable(n_start, kappas))
+
+
+def eliminate_to_survivor(candidates: list[str], constraints: dict[str, list[str]]) -> Trajectory:
+    """Seedless σ-trajectory: drive **H = log₂|survivors| → 0** by candidate-elimination until a
+    UNIQUE mechanism survives — **no protected target** (the SURVIVOR of elimination *is* the
+    reading, per SSL: understanding is candidate-elimination to a unique or plural-stable survivor).
+
+    `constraints` maps a constraint-id to its kill-set. At each step the admissible constraint with
+    the greatest marginal coverage κ = |alive ∩ kill_set| is chosen — *admissible* means it kills
+    ≥1 current survivor AND leaves ≥1 (`0 < κ < |alive|`: learn at the residual, never eliminate to
+    the empty set); ties break by constraint-id for determinism. The run ends when one candidate
+    survives (`sigma` = number of steps, and `survivors_left` is the pinned mechanism) or no
+    admissible constraint remains while survivors are plural (`sigma` = None — a STUCK residual for
+    node birth, or a genuine σ_sem > 0 plurality that no constraint separates). The σ_sem > 0 guard
+    is evaluated via `falsifiable`. I/O-free orchestration over the pinned pure decisions; validated
+    by hand-authored intent tests.
+    """
+    n_start = len(set(candidates))
+    remaining = dict(constraints)
+    applied: list[list[str]] = []
+    steps: list[Step] = []
+
+    while True:
+        alive = survivors(candidates, applied)
+        if resolved(len(alive)):
+            break
+        # score the admissible constraints by marginal coverage κ over the LIVE survivor set
+        best_id: str | None = None
+        best_kappa = 0
+        for cid in sorted(remaining):
+            k = survivors_killed(remaining[cid], alive)
+            if k <= 0 or k >= len(alive):  # confirms nothing, or would empty the set
+                continue
+            if k > best_kappa:
+                best_kappa = k
+                best_id = cid
+        if (
+            best_id is None
+        ):  # no admissible constraint — STUCK plural residual (node birth / σ_sem>0)
+            return Trajectory(steps, None, alive, False)
+        applied.append(remaining.pop(best_id))
         steps.append(Step(best_id, best_kappa))
 
     alive = survivors(candidates, applied)
