@@ -91,6 +91,31 @@ def survivors_killed(kill_set: list[str], alive: list[str]) -> int:
     return len(set(alive) & set(kill_set))
 
 
+def constraint_disposition(kill_count: int, alive_count: int, is_censor: bool) -> str:
+    """The two-sign admissibility decision for one constraint against the live survivor set.
+
+    `kill_count` = κ = |alive ∩ kill_set|; `alive_count` = |alive|. Returns a named code (never a
+    bool — two conditions that mean different things must not collapse into one truthy check):
+
+    - ``"inert"`` — κ ≤ 0: kills no live survivor (a positive constraint confirms nothing; a censor
+      rules nothing out). Value zero (Howard) — skip it.
+    - ``"bottom"`` — κ ≥ alive_count AND `is_censor`: a negative censor rules out every surviving
+      candidate → certified non-membership, the typed ⊥ (a proof that no lawful mechanism explains
+      the presentation; NEGATIVE_SPECIFICATION §5 — the positive channel cannot produce this).
+    - ``"inadmissible"`` — κ ≥ alive_count AND not `is_censor`: a positive constraint may not empty
+      the set (the survivor of elimination IS the reading; emptying is the censor's job).
+    - ``"eliminate"`` — 0 < κ < alive_count: a partial elimination, admissible on either sign.
+
+    The whole two-sign asymmetry in one function: the positive sign may never empty the survivor
+    set; the negative sign emptying it is the ⊥ certificate. Pure over `(int, int, bool)`.
+    """
+    if kill_count <= 0:
+        return "inert"
+    if kill_count >= alive_count:
+        return "bottom" if is_censor else "inadmissible"
+    return "eliminate"
+
+
 def falsifiable(n_candidates_start: int, kappas: list[int]) -> bool:
     """The σ_sem > 0 guard, as a decision over a completed trajectory.
 
@@ -136,16 +161,19 @@ class Trajectory:
     """The result of a σ-trajectory search.
 
     `steps` is the ordered greedy sequence (each carrying its κ). `sigma` = len(steps) when the
-    search resolved `target` to the sole survivor, else `None` — a **STUCK** residual no available
-    constraint can resolve, which is where **node birth** is called for (a new candidate/constraint
-    must be grown). `survivors_left` is what remains. `falsifiable` is the σ_sem > 0 guard evaluated
-    over the run.
+    search resolved to the sole survivor, else `None` — a **STUCK** plural residual no available
+    constraint separates (where the discrimination selector adds a new dimension), OR a certified
+    **⊥** when `bottom` is set. `survivors_left` is what remains (empty on ⊥). `falsifiable` is the
+    σ_sem > 0 guard evaluated over the run. `bottom` = a negative censor ruled out every surviving
+    candidate — certified non-membership ("no lawful mechanism, with proof"), reachable only on the
+    two-sign path (`eliminate_two_sign`), never the positive-only one.
     """
 
     steps: list[Step]
     sigma: int | None
     survivors_left: list[str]
     falsifiable: bool
+    bottom: bool = False
 
 
 def sigma_trajectory(
@@ -235,6 +263,71 @@ def eliminate_to_survivor(candidates: list[str], constraints: dict[str, list[str
             return Trajectory(steps, None, alive, False)
         applied.append(remaining.pop(best_id))
         steps.append(Step(best_id, best_kappa))
+
+    alive = survivors(candidates, applied)
+    kappas = [s.kappa for s in steps]
+    return Trajectory(steps, len(steps), alive, falsifiable(n_start, kappas))
+
+
+def eliminate_two_sign(
+    candidates: list[str],
+    constraints: dict[str, list[str]],
+    censors: dict[str, list[str]],
+) -> Trajectory:
+    """Two-sign σ-trajectory: positive candidate-elimination (μ, `constraints`) ∧ negative censors
+    (μ⁻, `censors`) — driving H → 0 to a unique survivor, a certified ⊥, or a stuck plurality.
+
+    Both signs eliminate by the same greedy max-κ rule (`constraint_disposition`), with one
+    asymmetry: a **positive** constraint may never empty the survivor set (``"inadmissible"`` — the
+    survivor of elimination IS the reading), while a **censor** that rules out every remaining
+    survivor is not a failure but the **certified ⊥** — a proof of non-membership
+    (`bottom=True`, `survivors_left=[]`; NEGATIVE_SPECIFICATION). The ⊥ check precedes the resolved
+    check, so a censor ruling out the *sole* remaining candidate is ⊥, never a false RESOLVED. A
+    censor may also act as a partial eliminator (0 < κ < |alive|), competing with positive
+    constraints for the greedy step. Ends on: a unique survivor (`sigma` = steps, with `falsifiable`
+    the σ_sem>0 guard); a certified ⊥ (`bottom=True`); or a STUCK plurality that no admissible
+    constraint of either sign can separate (`sigma=None`, survivors plural — the selector's cue to
+    add a new dimension). I/O-free orchestration over the pinned `constraint_disposition`; validated
+    by hand-authored intent tests.
+    """
+    n_start = len(set(candidates))
+    remaining_pos = dict(constraints)
+    remaining_neg = dict(censors)
+    applied: list[list[str]] = []
+    steps: list[Step] = []
+
+    while True:
+        alive = survivors(candidates, applied)
+        n = len(alive)
+        # 1. certified ⊥ — a censor that now rules out EVERY surviving candidate (checked first, so
+        #    a censor killing the sole survivor is ⊥, never a false resolution).
+        for cid in sorted(remaining_neg):
+            k = survivors_killed(remaining_neg[cid], alive)
+            if constraint_disposition(k, n, is_censor=True) == "bottom":
+                steps.append(Step(cid, k))
+                return Trajectory(steps, None, [], False, bottom=True)
+        # 2. a unique survivor is the resolved mechanism
+        if resolved(n):
+            break
+        # 3. greedy max-κ admissible eliminator across BOTH signs (positive before negative on ties,
+        #    then sorted id — deterministic).
+        best_id: str | None = None
+        best_kappa = 0
+        best_kill: list[str] | None = None
+        for cid in sorted(remaining_pos):
+            k = survivors_killed(remaining_pos[cid], alive)
+            if constraint_disposition(k, n, is_censor=False) == "eliminate" and k > best_kappa:
+                best_id, best_kappa, best_kill = cid, k, remaining_pos[cid]
+        for cid in sorted(remaining_neg):
+            k = survivors_killed(remaining_neg[cid], alive)
+            if constraint_disposition(k, n, is_censor=True) == "eliminate" and k > best_kappa:
+                best_id, best_kappa, best_kill = cid, k, remaining_neg[cid]
+        if best_id is None:  # STUCK plural residual — no dimension separates the survivors
+            return Trajectory(steps, None, alive, False)
+        applied.append(best_kill if best_kill is not None else [])
+        steps.append(Step(best_id, best_kappa))
+        remaining_pos.pop(best_id, None)
+        remaining_neg.pop(best_id, None)
 
     alive = survivors(candidates, applied)
     kappas = [s.kappa for s in steps]
