@@ -229,6 +229,51 @@ selection reaches for the **most orthogonal** next lens each step (the one that 
 rivals). "Don't pick heavily-overlapping lenses" is therefore not a rule to enforce by hand — the
 search prefers orthogonal lenses by construction and shrugs off the overlap.
 
+### The constraint object is a weighted relational web — and how direction enters (2026-09-01)
+
+The kill-matrix above is not a flat list; it has a *shape*, and specifying that shape is the deferred
+**constraint object** (canon §13.1). Worked out with the founder 2026-09-01. The object is a **weighted
+relational web of couplings**, and five properties are load-bearing. (Toy proof throughout: the
+*Sisyphean Air Route Map* — every node recovered purely from its position in a weighted relational web,
+content-free, relation-everything.)
+
+- **The web is prior; the person's data are the deviations that settle over it.** The engine reads *one*
+  person, *zero-time* (canon §0 Warning 2): it does not learn the wiring from them — you cannot fit a
+  wiring diagram to a single snapshot. The web — which regulatory things influence which — is **prior
+  structure**: known biology, plus evidence-of-coupling triangulated *once* from the multi-lens
+  co-movement above (co-expression, co-travel), held as reference. What is per-person is the
+  **deviations** (symptoms/labs/vitals off the mined zero) that propagate *through* that web. So the
+  multi-lens triangulation builds the *web's edges*; it is **not** a population precondition for the read
+  (that conflation is the retired n=1 confusion — Warning 2).
+- **Edges are weighted; weak couplings are not drawn.** A coupling enters only above a strength
+  threshold — the scalar impact of that link on the combined system flow (a Kuramoto coupling gain, not a
+  boolean). Not every valve carries the same weight in a coupled system. (Map: Grijalva↔Villahermosa gets
+  an edge because the river runs *through* the capital; Monte Hall↔Assiniboine gets none though both sit
+  in Manitoba — "too weak to warrant a route.")
+- **Edges are ternary, and absence is the informational zero — never negation.** A coupling is drive
+  (+1), inhibit (−1), or **not-drawn / abstain (0)**. A *missing* edge asserts *no opinion*, never
+  *definitely uncoupled* ("don't assume that because there isn't a flight, no connection exists"). A
+  binary graph cannot hold this — it collapses "no edge" into "not connected." The OTP ternary makes the
+  abstention un-violatable **by construction** — the SymbolicSpellCheck principle that the guarantee lives
+  in the data structure, not a runtime check (its trie-over-bloom choice).
+- **Direction is a relation *type*, earned — and it buys efficiency, not correctness.** You never guess
+  an arrow. **Undirected co-movement is the safe web you build from**: it narrows candidates and can
+  never destroy the true one. A **directed** edge is added *only* where the relation is inherently
+  directed and trustworthy — the treatment-response probe most of all (one drug resolving many symptoms →
+  the arrow points *out from its target*, near-zero guessing; SSL's Socratic-learning signal), or an
+  established directed pathway (Reactome). The asymmetry is forced by the eliminate-to-survivor engine: a
+  wrong arrow is **destruction** — an unrecoverable false elimination that kills the true mechanism and
+  lets the search settle confidently on a wrong one — while an undirected/abstained edge is at worst
+  **non-recovery**, and the project's law confines failure to the second kind (SymbolicSpellCheck). What
+  direction *does* buy is **search efficiency**: a directed web admits a fast bidirectional descent
+  (inward from the symptom-leaves, outward from the candidate sources, meet in the middle — Bellman-Ford's
+  bidirectional speedup) — a layer on a correct-by-relation base, never the thing holding the answer up.
+- **Why any of this is tractable: the bounded universe.** Classical AI drowns on the open, messy world;
+  Homeostat works because it collapses to a **bounded** relational universe — a finite web with a defined,
+  modelable *tail of the genuinely-unknown* (the informational zero). That bound is exactly what makes σ
+  (the teaching dimension) finite and the elimination terminate; the whole engine is *licensed* by the
+  collapse. (Map: 56 nodes, a fixed set.)
+
 ### The generalization (2026-08-31): the partition is a free variable, and the unit is the ROLE — not the gene
 
 Worked out with the founder 2026-08-31; the deepest statement of the design. The SA-vs-EUR contrast
