@@ -85,3 +85,31 @@ def test_censor_as_partial_eliminator_competes_in_the_greedy_step():
     censors = {"neg": ["B"]}
     traj = eliminate_two_sign(cands, cons, censors)
     assert traj.survivors_left == ["A"] and traj.bottom is False and traj.sigma == 2
+
+
+# ---- positive-path behaviors (migrated from the retired eliminate_to_survivor) ---
+
+
+def test_positive_bulk_then_tail_kappa_pattern():
+    traj = eliminate_two_sign(["a", "b", "c", "d"], {"k1": ["b", "c"], "k2": ["d"]}, {})
+    assert traj.sigma == 2
+    assert [s.kappa for s in traj.steps] == [2, 1]  # bulk (kills a cluster) then tail
+
+
+def test_positive_never_empties_the_set():
+    # A positive constraint that would kill ALL survivors is inadmissible -> STUCK, never ⊥.
+    traj = eliminate_two_sign(["a", "b"], {"k1": ["a", "b"]}, {})
+    assert traj.sigma is None and traj.survivors_left == ["a", "b"]
+    assert traj.bottom is False  # only a censor can certify ⊥
+
+
+def test_kappa_zero_constraint_leaves_a_plural_residual():
+    # A κ=0 constraint (kills no live survivor) resolves nothing -> STUCK plural (σ_sem>0).
+    traj = eliminate_two_sign(["a", "b"], {"k1": ["x"]}, {})
+    assert traj.sigma is None and traj.survivors_left == ["a", "b"]
+
+
+def test_single_candidate_is_not_falsifiable():
+    traj = eliminate_two_sign(["a"], {}, {})
+    assert traj.sigma == 0  # trivially resolved in zero steps
+    assert traj.falsifiable is False  # no plurality to resolve -> not a real finding

@@ -1,7 +1,7 @@
 """Intent tests for the constraint object — the weighted relational web + its bridge to the engine.
 Authored from the design (THEORY_OF_THE_CASE Part II), not generated."""
 
-from homeostat.loop import DEGENERATE, RESOLVED, STUCK, resolve_presentation
+from homeostat.search import eliminate_two_sign
 from homeostat.web import (
     Coupling,
     RelationalWeb,
@@ -10,11 +10,6 @@ from homeostat.web import (
     reaches,
     web_adjacency,
 )
-
-
-def _no_growth(_residual, _round):
-    return [], {}
-
 
 # ---- the web + its pure pieces ---------------------------------------------------
 
@@ -79,14 +74,14 @@ def test_end_to_end_directed_web_recovers_the_unique_source():
         )
     )
     cands, cons = kill_matrix(web, ["A", "B"])
-    r = resolve_presentation(cands, cons, _no_growth, max_rounds=5)
-    assert r.verdict == RESOLVED
-    assert r.mechanism == "source"  # the one source that propagates to every symptom
+    traj = eliminate_two_sign(cands, cons, {})
+    assert traj.sigma is not None  # resolved to a unique survivor
+    assert traj.survivors_left == ["source"]  # the one source that propagates to every symptom
 
 
 def test_undirected_web_stays_plural_where_directed_would_collapse():
     # Same shape but UNDIRECTED: with both-way flow, A itself reaches source→B, so several nodes
-    # explain both symptoms -> genuine σ_sem>0 plurality -> STUCK (node birth / earned direction).
+    # explain both symptoms -> genuine σ_sem>0 plurality -> STUCK (the Jeeves selector's cue).
     web = RelationalWeb(
         (
             Coupling("source", "A", 1.0, 0),
@@ -95,15 +90,14 @@ def test_undirected_web_stays_plural_where_directed_would_collapse():
         )
     )
     cands, cons = kill_matrix(web, ["A", "B"])
-    r = resolve_presentation(cands, cons, _no_growth, max_rounds=5)
-    assert r.verdict == STUCK  # undirected can't pin which node is the source
-    assert r.mechanism is None
+    traj = eliminate_two_sign(cands, cons, {})
+    assert traj.sigma is None and traj.bottom is False  # plural, not resolved, not ⊥
+    assert len(traj.survivors_left) > 1  # undirected can't pin which node is the source
 
 
 def test_single_symptom_is_degenerate():
     # One symptom, many sources reach it -> no plurality resolved -> not a real finding.
     web = RelationalWeb((Coupling("source", "A", 1.0, +1), Coupling("decoy", "A", 1.0, +1)))
     cands, cons = kill_matrix(web, ["A"])
-    r = resolve_presentation(cands, cons, _no_growth, max_rounds=5)
-    assert r.verdict in (DEGENERATE, STUCK)  # a lone symptom does not pin a mechanism
-    assert r.mechanism is None
+    traj = eliminate_two_sign(cands, cons, {})
+    assert traj.sigma is None  # a lone symptom does not pin a mechanism (stays plural)

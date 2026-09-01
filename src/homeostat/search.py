@@ -1,25 +1,24 @@
-"""homeostat.search — the σ-trajectory search: candidate-elimination to a parsimonious mechanism.
+"""homeostat.search — the σ-trajectory search: two-sign candidate-elimination to a mechanism.
 
-The confirmed core (`docs/THEORY_OF_THE_CASE.md` Part II): drive **H = log₂(surviving candidate
-mechanisms) → 0** by candidate-elimination, each "test" a **data-geometry constraint** that kills
-a subset of candidates. **σ = the minimum constraints to pin a UNIQUE mechanism (SC=1)** — the
-teaching dimension, a Blum measure, NOT a frequency. This module is the **object-agnostic engine**:
-the candidates and their kill-sets are DATA plugged in; nothing here is a statistic and nothing
-here authors the object.
+The core (`docs/SYSTEM_DESIGN.md` §8): drive **H = log₂(surviving candidate mechanisms) → 0** by
+candidate-elimination, each "test" a **data-geometry constraint** that kills a subset of candidates.
+**σ = the minimum constraints to pin a UNIQUE mechanism (SC=1)** — the teaching dimension, a Blum
+measure, NOT a frequency. This module is the **object-agnostic engine**: candidates and their
+kill-sets are DATA plugged in; nothing here is a statistic and nothing here authors the object.
 
-The only interface is the **kill-matrix**: a constraint is the set of candidate-ids it KILLS. So
-the data geometry (population co-variation + symptom co-presentation) enters *solely* as "which
-candidate mechanisms does this constraint eliminate" — never as a frequency, an association, or a
-hand-written edge.
+The sole orchestrator is **`eliminate_two_sign`** (SYSTEM_DESIGN LAW 3b): positive constraints (μ,
+what could cast the shadow) ∧ negative censors (μ⁻, what is ruled out). A positive constraint may
+never empty the survivor set; a censor that empties it is the **certified ⊥** — the whole asymmetry
+lives in `constraint_disposition`. The interface is the **kill-matrix**: a constraint/censor is the
+set of candidate-ids it KILLS, never a frequency, an association, or a hand-written edge.
 
-Two of the founder's laws are enforced here:
-- **The σ_sem > 0 falsifiability guard** (`falsifiable`): a resolution reached without genuine
-  plurality to start, or without every step killing a rival (κ > 0), is the self-confirming
-  degenerate case — the SDIS failure (100% retrodiction = memorization). Learn at the residual,
-  never at the confirmation.
-- **Early stopping at the κ-knee** (`knee_index`): κ is antitone under greedy selection; the bulk
-  (κ > 1, clusters die at once) gives way to the tail (κ = 1, one rival at a time). The knee is the
-  parsimony halt — past it, the search is memorizing the presentation.
+The founder's laws, and where they sit:
+- **The σ_sem > 0 falsifiability guard** (`falsifiable`) is ENFORCED: a resolution reached without
+  genuine plurality to start, or without every step killing a rival (κ > 0), is the self-confirming
+  SDIS failure (100% retrodiction = memorization). Learn at the residual, not the confirmation.
+- **The κ-knee primitive** (`knee_index` — the bulk→tail parsimony halt) is provided as pure
+  machinery; the fixed-web two-sign elimination runs to a unique survivor / certified ⊥ / STUCK
+  rather than knee-halting, since there is no node-growth here to guard against past the knee.
 """
 
 from __future__ import annotations
@@ -66,19 +65,6 @@ def resolved(n_survivors: int) -> bool:
     """True iff exactly one candidate mechanism survives — SC=1, a unique reading. n = 0 (nothing
     coheres) is NOT resolution; it is abstention. Pure over `int`."""
     return n_survivors == 1
-
-
-def marginal_kill(kill_set: list[str], already_killed: list[str]) -> int:
-    """κ — the marginal coverage of a constraint: how many NEW candidates it eliminates beyond those
-    already killed. A constraint with κ = 0 *confirms* rather than *resolves* (value zero, Howard)
-    and must never count toward a resolution (the σ_sem guard). Pure over `(list[str], list[str])`.
-    """
-    seen = set(already_killed)
-    new: set[str] = set()
-    for c in kill_set:
-        if c not in seen:
-            new.add(c)
-    return len(new)
 
 
 def survivors_killed(kill_set: list[str], alive: list[str]) -> int:
@@ -174,99 +160,6 @@ class Trajectory:
     survivors_left: list[str]
     falsifiable: bool
     bottom: bool = False
-
-
-def sigma_trajectory(
-    candidates: list[str], constraints: dict[str, list[str]], target: str
-) -> Trajectory:
-    """Greedy σ-trajectory: apply max-κ constraints until `target` uniquely survives.
-
-    `constraints` maps a constraint-id to its kill-set. At each step the admissible constraint with
-    the greatest marginal coverage κ is chosen — *admissible* means κ > 0 (it kills a surviving
-    rival: learn at the residual) AND it does not kill `target` (never eliminate the reading being
-    pinned); ties break by constraint-id for determinism. The run ends when `target` is the sole
-    survivor (`sigma` = number of steps) or no admissible constraint remains (`sigma` = None — a
-    STUCK residual for node birth). The σ_sem > 0 guard is evaluated via `falsifiable`. I/O-free
-    orchestration over the pinned pure decisions; validated by hand-authored intent tests.
-    """
-    n_start = len(set(candidates))
-    remaining = dict(constraints)
-    applied: list[list[str]] = []
-    killed_flat: list[str] = []
-    steps: list[Step] = []
-
-    while True:
-        alive = survivors(candidates, applied)
-        if resolved(len(alive)):
-            break
-        # score the admissible constraints by marginal coverage κ
-        best_id: str | None = None
-        best_kappa = 0
-        for cid in sorted(remaining):
-            kset = remaining[cid]
-            if target in kset:  # never eliminate the reading we are pinning
-                continue
-            k = marginal_kill(kset, killed_flat)
-            if k > best_kappa:
-                best_kappa = k
-                best_id = cid
-        if best_id is None:  # no admissible κ>0 constraint — STUCK; node birth is needed
-            alive = survivors(candidates, applied)
-            return Trajectory(steps, None, alive, False)
-        kset = remaining.pop(best_id)
-        applied.append(kset)
-        killed_flat.extend(kset)
-        steps.append(Step(best_id, best_kappa))
-
-    alive = survivors(candidates, applied)
-    kappas = [s.kappa for s in steps]
-    return Trajectory(steps, len(steps), alive, falsifiable(n_start, kappas))
-
-
-def eliminate_to_survivor(candidates: list[str], constraints: dict[str, list[str]]) -> Trajectory:
-    """Seedless σ-trajectory: drive **H = log₂|survivors| → 0** by candidate-elimination until a
-    UNIQUE mechanism survives — **no protected target** (the SURVIVOR of elimination *is* the
-    reading, per SSL: understanding is candidate-elimination to a unique or plural-stable survivor).
-
-    `constraints` maps a constraint-id to its kill-set. At each step the admissible constraint with
-    the greatest marginal coverage κ = |alive ∩ kill_set| is chosen — *admissible* means it kills
-    ≥1 current survivor AND leaves ≥1 (`0 < κ < |alive|`: learn at the residual, never eliminate to
-    the empty set); ties break by constraint-id for determinism. The run ends when one candidate
-    survives (`sigma` = number of steps, and `survivors_left` is the pinned mechanism) or no
-    admissible constraint remains while survivors are plural (`sigma` = None — a STUCK residual for
-    node birth, or a genuine σ_sem > 0 plurality that no constraint separates). The σ_sem > 0 guard
-    is evaluated via `falsifiable`. I/O-free orchestration over the pinned pure decisions; validated
-    by hand-authored intent tests.
-    """
-    n_start = len(set(candidates))
-    remaining = dict(constraints)
-    applied: list[list[str]] = []
-    steps: list[Step] = []
-
-    while True:
-        alive = survivors(candidates, applied)
-        if resolved(len(alive)):
-            break
-        # score the admissible constraints by marginal coverage κ over the LIVE survivor set
-        best_id: str | None = None
-        best_kappa = 0
-        for cid in sorted(remaining):
-            k = survivors_killed(remaining[cid], alive)
-            if k <= 0 or k >= len(alive):  # confirms nothing, or would empty the set
-                continue
-            if k > best_kappa:
-                best_kappa = k
-                best_id = cid
-        if (
-            best_id is None
-        ):  # no admissible constraint — STUCK plural residual (node birth / σ_sem>0)
-            return Trajectory(steps, None, alive, False)
-        applied.append(remaining.pop(best_id))
-        steps.append(Step(best_id, best_kappa))
-
-    alive = survivors(candidates, applied)
-    kappas = [s.kappa for s in steps]
-    return Trajectory(steps, len(steps), alive, falsifiable(n_start, kappas))
 
 
 def eliminate_two_sign(
