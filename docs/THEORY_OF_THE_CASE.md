@@ -75,8 +75,8 @@ you feed it, because the thing it is testing (the element) is not where the mech
 mechanism is one level up, in the collective state the elements hold together. This is not an
 underpowered version of the right method; it is the wrong level of description.
 
-**The enemy the project exists to defeat.** For a polygenic condition, the dopamine-synthesis and uptake genes
-light up every statistic; everyone has already found them. The problem is that those **loud
+**The enemy the project exists to defeat.** For a polygenic psychiatric condition, the loud
+canonical neurotransmitter genes light up every statistic; everyone has already found them. The problem is that those **loud
 signals become the noise that drowns out the other etiologies** — the ones that only matter in
 combination, the ones shared with a neurodevelopmental condition (the prior work), the ones that never clear a threshold alone. The
 goal is to stop letting the loud, obvious signal hide the quiet, coherent one. (No "initiation vs.
