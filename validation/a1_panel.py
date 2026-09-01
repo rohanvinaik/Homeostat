@@ -39,6 +39,8 @@ from lrrk2_slice4 import gtex_profiles, pearson  # noqa: E402
 
 from homeostat.l2_encoder import data_facts  # noqa: E402
 
+# seed -> textbook members. Established complexes/pathways from public biology (Reactome/CORUM/textbook)
+# — the ground-truth EVAL set for scoring, NEVER a pipeline input (the pipeline stays blind to identity).
 MECHANISMS = {
     "nod2_signaling": ("NOD2", ["RIPK2", "XIAP", "CARD9", "BIRC2", "BIRC3"]),
     "mismatch_repair": ("MLH1", ["MSH2", "MSH6", "PMS2", "MSH3", "PMS1"]),
@@ -48,6 +50,14 @@ MECHANISMS = {
     "mitophagy": ("PINK1", ["PRKN", "PARK7", "FBXO7"]),
     "inflammasome": ("NLRP3", ["PYCARD", "CASP1", "IL1B", "IL18", "NEK7"]),
     "type1_ifn": ("TBK1", ["IRF3", "IRF7", "STING1", "MAVS", "DDX58"]),
+    "proteasome_core": ("PSMB5", ["PSMA1", "PSMA3", "PSMB1", "PSMB2", "PSMB6", "PSMB7", "PSMD1"]),
+    "spliceosome_u2": ("SF3B1", ["SF3B2", "SF3A1", "SNRPB", "SNRPD1", "U2AF1", "U2AF2", "SNRNP200"]),
+    "wnt_signaling": ("CTNNB1", ["APC", "AXIN1", "GSK3B", "TCF7L2", "LRP6", "DVL1"]),
+    "intrinsic_apoptosis": ("CASP9", ["APAF1", "CASP3", "CASP7", "BAX", "BCL2", "CYCS"]),
+    "g1s_cellcycle": ("CDK4", ["CCND1", "RB1", "CDKN2A", "E2F1", "CDK6", "CCNE1"]),
+    "oxphos_complex1": ("NDUFS1", ["NDUFS2", "NDUFS3", "NDUFS7", "NDUFS8", "NDUFV1", "NDUFV2", "NDUFA9"]),
+    "autophagy_core": ("ATG5", ["ATG7", "ATG12", "ATG16L1", "BECN1", "MAP1LC3B", "ATG3"]),
+    "hr_repair": ("BRCA1", ["BRCA2", "RAD51", "PALB2", "ATM", "MRE11", "NBN", "RAD50"]),
 }
 HUBS = ["HLA-DQA1", "HLA-DRB1", "HLA-B", "HLA-DRB5"]
 N_DECOYS = 8

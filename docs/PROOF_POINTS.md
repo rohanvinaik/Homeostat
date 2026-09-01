@@ -38,7 +38,7 @@ come first but they are not where the claim lives.
 
 | # | Demonstrates | Method | Pass bar | Status |
 |---|---|---|---|---|
-| **A1** | Recovers more than one known mechanism | A panel of ≥8 independently-documented compositional mechanisms (NOD signaling, complement cascade, a DNA-repair complex, a metabolic channel, a mitophagy module…), each run blind to gene identity | Core members surface above censored hubs in ≥8/8, graded by convergence | **◐ PARTIAL** — `validation/a1_panel.py`: 8 mechanisms run blind; hub censoring **100%**, but member recovery is bounded because the method is differentiation-gated (recovers the population-differential subset) and GTEx-median co-expression is a coarse proxy. The clean form needs real co-expression + variant-level Fst. The *finding* is measuring which layer is the bottleneck (lens data, not reasoning) |
+| **A1** | Recovers more than one known mechanism | A panel of ≥8 independently-documented compositional mechanisms (NOD signaling, complement cascade, a DNA-repair complex, a metabolic channel, a mitophagy module…), each run blind to gene identity | Core members surface above censored hubs in ≥8/8, graded by convergence | **◑ PRECISE + SELECTIVE** — `validation/a1_panel.py`: **16 mechanisms** run blind. Hub censoring **100%** (64/64); precision of `component+` **87%** (34/39 promoted are real members/seeds). Recall **31%** is bounded *by design* (differentiation-gated → recovers the population-differential subset). Only decoy-FP is free-data-limited + noisy (4–19% across 8-decoy draws → GTEx-median proxy). Clean-precision form needs real co-expression / more decoys |
 | **A2** | Abstains on nothing | Null inputs: random gene sets matched for degree + expression, a shuffled seed, a hub-only set, a non-mechanism | No `core`/`deep_core` emitted from null input; false-positive rate quantified | **✅ PASS** (reasoning layer) — `validation/a2_abstention.py`: 0/15 false-positive archetypes (incl. promiscuous hubs with every qualifying fact) reach mechanism, 6/6 controls promote, 20/20 random subsets match the spec. Genome-sampled form pending Fst infra |
 | **A3** | Same input → same answer | Re-run the full stack across runs and machines | Bit-identical role ledger | **✅ PASS** — `validation/a3_determinism.py`: byte-identical fact-text across 3 distinct `PYTHONHASHSEED` (sha `faab482d`); guards the `sorted()` fix |
 
@@ -64,7 +64,7 @@ else does, and it is currently *argued*, not *shown*.
 
 | # | Demonstrates | Method | Pass bar | Status |
 |---|---|---|---|---|
-| **C1** | The same mechanism, different genes, one recovered frame | Find/construct a real case where a mechanism is realized by **disjoint filler sets** in two populations (a founder isolate, a caste-stratified subpopulation vs. a continental group). Run `common_frame` across both | The invariant **role-frame** is recovered while the gene fillers differ by population | **◐ PARTIAL (strong)** — `validation/c1_crosspop.py`: premise measured in real 1000G (**7/8 mechanisms** have members differentiated in ≥2 populations), and `common_frame` recovers the invariant role-frame at **2/2 support** across disjoint pop-driven fillers. Still open: a *curated* disease mechanism known to use functionally-disjoint genes per population (the gated-data ceiling) |
+| **C1** | The same mechanism, different genes, one recovered frame | Find/construct a real case where a mechanism is realized by **disjoint filler sets** in two populations (a founder isolate, a caste-stratified subpopulation vs. a continental group). Run `common_frame` across both | The invariant **role-frame** is recovered while the gene fillers differ by population | **◐ PARTIAL (strong)** — `validation/c1_crosspop.py`: premise measured in real 1000G (**14/16 mechanisms** have members differentiated in ≥2 populations, proteasome across 4), and `common_frame` recovers the invariant role-frame at **2/2 support** across disjoint pop-driven fillers. Still open: a *curated* disease mechanism known to use functionally-disjoint genes per population (the gated-data ceiling) |
 | **C2** | It recovers what the standard toolkit misses | On the C1 case, run single-locus GWAS/PRS, network propagation (HotNet2-style), pathway enrichment (GSEA), colocalization | The token-bound methods return null/inconsistent across populations exactly where fillers differ; Homeostat returns the shared frame | **not started** |
 
 C2 is the whole argument in one experiment: the standard methods are token-bound, so they
@@ -77,7 +77,7 @@ If C1+C2 land on real data, "advance" stops being a claim and becomes a result.
 
 | # | Demonstrates | Method | Pass bar | Status |
 |---|---|---|---|---|
-| **D1** | Known biology falls out of structure that didn't use it | The §3.2 annotation-recovery falsifier through the *full* pipeline: on candidates whose mechanism was withheld, test whether independently-known annotations enrich in the recovered frame vs. matched background — **preregistered** | Significant held-out-annotation recovery | **not started** |
+| **D1** | Known biology falls out of structure that didn't use it | The §3.2 annotation-recovery falsifier through the *full* pipeline: on candidates whose mechanism was withheld, test whether independently-known annotations enrich in the recovered frame vs. matched background — **preregistered** | Significant held-out-annotation recovery | **✅ PASS** — `validation/d1_annotation.py`: held-out annotation = shares seed's specific GWAS disease trait (independent of all 3 lenses). Recovered components **18%** vs decoys **4%**, permutation **p=0.0155**. (Underpowered at 8 mechs, p=0.10; significant at 16 — stable effect, more power) |
 | **D2** | It proposes something new that checks out | Emit a novel mechanistic hypothesis; confirm against a source **not used** in the derivation (a later-published finding, an orthogonal database, a wet-lab collaborator) | ≥1 novel hypothesis externally confirmed | **not started** — the hardest and most valuable row |
 
 D2 is where a methods paper becomes a discovery. It is open-ended by nature and the one row
@@ -127,14 +127,15 @@ Not a cell that goes green — a rule that governs how every result above is rep
 - **A2 / A3 / B3 — full PASS.** The instrument is deterministic, adversarially abstaining (0/15
   false-positives promote), and carried by convergence — no single co-occurrence lens is load-bearing,
   the censor and the differentiation-gate are.
-- **E1 — full PASS.** The identical pipeline runs over 8 domains changing only the seed + member list.
-- **A1 — PARTIAL, and the partial is the finding.** Hub censoring 100%; recovery is bounded because
-  the method is differentiation-gated by design and the GTEx-median co-expression *proxy* is coarse.
-  The panel's value is **measuring** that the bottleneck is free-data lens quality, not the reasoning.
-- **C1 — PARTIAL (strong).** The fungibility premise is measured in real 1000G data (7/8 mechanisms),
+- **E1 — full PASS.** The identical pipeline runs over **16 domains** changing only the seed+member list.
+- **D1 — full PASS.** Independently-known disease biology (GWAS traits, held out) is recovered from the
+  geometry that never used it: components 18% vs decoys 4% share the seed's disease trait, p=0.0155.
+- **A1 — precise + selective.** Hub censoring 100%, precision of `component+` 87%; recall 31% is bounded
+  *by design* (differentiation-gated). Only decoy-FP is free-data-limited and noisy (more decoys tighten it).
+- **C1 — PARTIAL (strong).** The fungibility premise is measured in real 1000G (**14/16 mechanisms**),
   and `common_frame` recovers the invariant role-frame across disjoint pop-driven fillers (2/2).
 
-**What genuinely remains** needs data or a collaborator, not more code: better co-expression + variant-
-level differentiation for a clean A1/B1; a **curated disjoint-filler disease mechanism** for the full
-C1 + the C2 head-to-head; the annotation-recovery falsifier D1; and the prospective novel-hypothesis
-confirmation D2. The infra to run them (`local_fst`, the panel harness, per-superpop profiles) is built.
+**What genuinely remains** needs data or a collaborator, not more code: a tighter-precision A1 + B1/B2
+(real co-expression + variant-level Fst, or just more decoys); a **curated disjoint-filler disease
+mechanism** for the full C1 + the C2 head-to-head; and the prospective novel-hypothesis confirmation D2.
+The infra (`local_fst`, `gene_pop_profile`, the 16-mechanism panel harness, the scorers) is all built.
