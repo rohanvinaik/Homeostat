@@ -84,10 +84,12 @@ it and retire the statistical bypass.
    synonyms + the GSE entity substrate). Kills the substring-collision class (a short symptom
    abbreviation matching a longer unrelated word) *and* is itself a data-geometry move (grounding +
    informational-zero abstention). No hard-coded conditions.
-2. **Grow the mechanism, don't score a network.** From the resolved presentation's genes, run the
-   **existing** `loop.run` — node birth/death growing a candidate mechanism graph, σ-trajectory
-   parsimony (H→0) against the lenses **as elimination constraints**, κ-knee halt. This is wiring the
-   orphan in, not writing it.
+2. **Grow the mechanism, don't score a network.** From the resolved presentation, run the **seedless**
+   `resolve_presentation` / `eliminate_to_survivor` (built 2026-09-01) — node birth/death growing a
+   candidate mechanism graph, σ-trajectory parsimony (H→0) against the lenses **as elimination
+   constraints**, κ-knee halt. There is **no protected target**: the survivor of elimination *is* the
+   mechanism, computed **zero-time on the one person** (Peitho on one body — not population-dependent;
+   see canon §0 Warning 2). This is wiring the orphan in, not writing it.
 3. **Coherence replaces significance.** Score the surviving mechanism with **`chain_significance`** (σ /
    improbable-yet-coherent over the grown rule graph). **Delete the permutation p-value from the read
    path entirely** — it is the genus violation in one line.
