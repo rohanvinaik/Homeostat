@@ -1,20 +1,23 @@
 """The κ / significance math, transported from Regenesis `significance.py`.
 
+κ is a coherence measure **only over the mechanism-derivation graph** — the
+what-implies-what of a *reconstructed* combination (§5.12, §12.13). Read over a
+generic network (a universal interactome, STRING ∪ GTEx) it silently becomes a
+topology statistic: a node's participation/hub-score in a pre-drawn map with no
+person, no phenotype, no coherence-of-a-specific-combination in it. That is the
+recorded death (§15, Act 2). So this module keeps only the derivation-graph
+forms; the `pagerank` / `personalized_pagerank` participation-scorers — κ applied
+to the undirected STRING/GTEx graph, and the §10.3 PBS-teleportation prior that
+"demoted the known connectors" (Act 4) — are removed, not quarantined.
+
 Faithful correspondence (definitions mirrored, not reinvented):
 - `reachable`, `coverage`, `marginal_coverage`  -> verbatim (directed graphs;
-  used for the LLM's directed proposed chains + chain_significance).
-- `weak_components`, `is_bridge`                 -> verbatim: a bridge joins two
-  previously-DISJOINT components (§13's definition).
+  κ = marginal coverage over the derivation graph, §5).
+- `weak_components`, `is_bridge`, `components_joined` -> a bridge joins two
+  previously-DISJOINT components (§5.7/§5.8's definition) — structural, and
+  legitimate ONLY over the derivation graph, never a generic interactome.
 - `chain_significance`                           -> Σ log(out-degree) over the
-  ancestor hops a chain navigates (§5).
-
-Transport note (documented, load-bearing): SIGNIFICANCE_WEIGHTING §5 states
-κ = marginal coverage = hub-score = genealogy PageRank. Regenesis uses the
-reachable-set-size FORM because its rule graph is a directed DAG where reachable
-sets differ per node. On an UNDIRECTED gene structure graph (STRING physical,
-GTEx co-expression) reachable-set-size degenerates to component size, so we use
-the equivalent PAGERANK form of κ. Same quantity, the form that does not
-degenerate on this substrate.
+  ancestor hops a chain navigates (§5). RANKING-ONLY.
 """
 
 from collections import deque
@@ -79,100 +82,13 @@ def weak_components(adj: dict[str, set[str]]) -> list[set[str]]:
 
 def is_bridge(adj: dict[str, set[str]], antecedent: str, consequent: str) -> bool:
     """Does adding antecedent->consequent join two previously-disjoint weak
-    components? §13's definition, verbatim (Regenesis `is_bridge`)."""
+    components? §5.7/§5.8's definition, verbatim (Regenesis `is_bridge`).
+    Structural only; legitimate over the derivation graph, never a generic
+    interactome (§5.12)."""
     comps = weak_components(adj)
     home = {n: i for i, c in enumerate(comps) for n in c}
     a, c = home.get(antecedent), home.get(consequent)
     return a is not None and c is not None and a != c
-
-
-def pagerank(
-    adj: dict[str, set[str]], damping: float = 0.85, iters: int = 100, tol: float = 1e-9
-) -> dict[str, float]:
-    """κ as hub-score: PageRank over the (undirected-symmetrised) graph.
-
-    Deterministic: fixed iteration count with sorted node order, dangling mass
-    redistributed uniformly. This is the §5 κ = hub-score = PageRank form.
-    """
-    undirected: dict[str, set[str]] = {}
-    nodes = sorted(set(adj) | {t for outs in adj.values() for t in outs})
-    for u in nodes:
-        undirected.setdefault(u, set())
-    for u, outs in adj.items():
-        for v in outs:
-            undirected[u].add(v)
-            undirected[v].add(u)
-    n = len(nodes)
-    if n == 0:
-        return {}
-    rank = dict.fromkeys(nodes, 1.0 / n)
-    for _ in range(iters):
-        dangling = sum(rank[x] for x in nodes if not undirected[x])
-        new = {}
-        base = (1.0 - damping) / n + damping * dangling / n
-        for node in nodes:
-            s = 0.0
-            for nb in undirected[node]:
-                deg = len(undirected[nb])
-                if deg:
-                    s += rank[nb] / deg
-            new[node] = base + damping * s
-        if max(abs(new[x] - rank[x]) for x in nodes) < tol:
-            rank = new
-            break
-        rank = new
-    return rank
-
-
-def personalized_pagerank(
-    adj: dict[str, set[str]],
-    prior: dict[str, float],
-    damping: float = 0.85,
-    iters: int = 100,
-    tol: float = 1e-9,
-) -> dict[str, float]:
-    """κ with a non-uniform teleportation prior — the §10.3 selection-weighted κ.
-
-    Identical to `pagerank` except the restart/dangling mass lands on nodes in
-    proportion to `prior` (normalized over the node set) instead of uniformly. So
-    genes under strong differential selection (high PBS) get higher PRIOR
-    participation, and that prior DIFFUSES through the structure (a gene coupled to
-    high-prior genes is lifted too — the coherence math, not a per-node multiply).
-    Genes absent from `prior` get weight 0; if the prior sums to 0 it falls back to
-    uniform (i.e. plain PageRank). Deterministic (sorted node order, fixed iters).
-    """
-    undirected: dict[str, set[str]] = {}
-    nodes = sorted(set(adj) | {t for outs in adj.values() for t in outs})
-    for u in nodes:
-        undirected.setdefault(u, set())
-    for u, outs in adj.items():
-        for v in outs:
-            undirected[u].add(v)
-            undirected[v].add(u)
-    n = len(nodes)
-    if n == 0:
-        return {}
-    total = sum(max(prior.get(x, 0.0), 0.0) for x in nodes)
-    if total <= 0.0:
-        p = dict.fromkeys(nodes, 1.0 / n)
-    else:
-        p = {x: max(prior.get(x, 0.0), 0.0) / total for x in nodes}
-    rank = dict(p)
-    for _ in range(iters):
-        dangling = sum(rank[x] for x in nodes if not undirected[x])
-        new = {}
-        for node in nodes:
-            s = 0.0
-            for nb in undirected[node]:
-                deg = len(undirected[nb])
-                if deg:
-                    s += rank[nb] / deg
-            new[node] = (1.0 - damping) * p[node] + damping * (s + dangling * p[node])
-        if max(abs(new[x] - rank[x]) for x in nodes) < tol:
-            rank = new
-            break
-        rank = new
-    return rank
 
 
 def components_joined(candidate_edges: set[str], base_components: list[set[str]]) -> int:

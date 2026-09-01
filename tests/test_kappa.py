@@ -7,7 +7,6 @@ from homeostat.kappa import (
     coverage,
     is_bridge,
     marginal_coverage,
-    pagerank,
     reachable,
     weak_components,
 )
@@ -40,14 +39,6 @@ def test_weak_components_ignore_direction():
     adj = {"A": {"B"}, "C": {"D"}, "E": set()}
     comps = weak_components(adj)
     assert sorted(len(c) for c in comps) == [1, 2, 2]
-
-
-def test_pagerank_ranks_hub_above_leaf():
-    # Star: H connected to L1..L4. Hub H must outrank every leaf.
-    adj = {"H": {"L1", "L2", "L3", "L4"}}
-    pr = pagerank(adj)
-    assert pr["H"] > max(pr[f"L{i}"] for i in range(1, 5))
-    assert abs(sum(pr.values()) - 1.0) < 1e-6  # distribution
 
 
 def test_components_joined_counts_distinct_base_components():
