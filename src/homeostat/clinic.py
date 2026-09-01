@@ -20,8 +20,10 @@ pipeline will produce the censors from GO/Reactome physics-orthogonality + treat
 
 from __future__ import annotations
 
+from collections.abc import Collection, Iterable
 from dataclasses import dataclass
 
+from homeostat.event import Event, active_censors, events_to_censors, events_to_web
 from homeostat.jeeves import Probe, select_probe
 from homeostat.position import Position
 from homeostat.search import Trajectory, eliminate_two_sign
@@ -89,3 +91,24 @@ def read_presentation(
     verdict = clinical_verdict(traj.bottom, is_resolved, traj.falsifiable, probe is not None)
     mechanism = traj.survivors_left[0] if verdict == RESOLVED else None
     return ClinicalResult(verdict, mechanism, probe, traj)
+
+
+def read_from_events(
+    events: Iterable[Event],
+    positions: dict[str, Position],
+    active_roles: Collection[str],
+    probes: list[Probe],
+    directed_networks: Collection[str],
+    min_weight: float = 0.0,
+) -> ClinicalResult:
+    """End-to-end read from a multi-network event stream — SYSTEM_DESIGN.md §10's encode → resolve.
+
+    Compiles the events into the positive web (`events_to_web`) and the role-scoped censors
+    active in this presentation (`events_to_censors` then `active_censors`), then runs the
+    two-sign `read_presentation`. `active_roles` (the roles this presentation implicates) is
+    supplied by the caller (object-led); nothing here decides what makes a role active. I/O-free
+    orchestration over the pinned encoders and read; intent-tested.
+    """
+    web = events_to_web(events, directed_networks)
+    censors = active_censors(events_to_censors(events), active_roles)
+    return read_presentation(web, positions, censors, probes, min_weight)

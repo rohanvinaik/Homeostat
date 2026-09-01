@@ -10,8 +10,10 @@ from homeostat.clinic import (
     RESOLVED,
     clinical_verdict,
     observed_symptoms,
+    read_from_events,
     read_presentation,
 )
+from homeostat.event import Event
 from homeostat.jeeves import Probe
 from homeostat.otp import ORTHOGONAL, SUPPORT
 from homeostat.position import Position
@@ -97,3 +99,39 @@ def test_plural_residual_abstains_when_no_probe_discriminates():
         _undirected_two_source_web(), _plural_positions(), censors={}, probes=[useless]
     )
     assert r.verdict == ABSTAIN and r.probe is None
+
+
+# ---- end-to-end from a multi-network event stream --------------------------------
+
+
+def _reg_events():
+    # regulatory (directed) events building: source->A, source->B, decoy->A.
+    return [
+        Event("regulatory", "amplify", "source", "A", 1),
+        Event("regulatory", "amplify", "source", "B", 1),
+        Event("regulatory", "amplify", "decoy", "A", 1),
+    ]
+
+
+def test_read_from_events_resolves_from_a_directed_event_web():
+    r = read_from_events(
+        _reg_events(),
+        _positions("A", "B"),
+        active_roles=set(),
+        probes=[],
+        directed_networks={"regulatory"},
+    )
+    assert r.verdict == RESOLVED and r.mechanism == "source"
+
+
+def test_read_from_events_active_role_censor_certifies_bottom():
+    # a developmental censor rules `source` out FOR role `kinase`; with that role active -> ⊥.
+    events = _reg_events() + [Event("developmental", "closes_off", "source", "kinase", -1)]
+    r = read_from_events(
+        events,
+        _positions("A", "B"),
+        active_roles={"kinase"},
+        probes=[],
+        directed_networks={"regulatory"},
+    )
+    assert r.verdict == BOTTOM and r.mechanism is None
