@@ -1,16 +1,16 @@
 # Homeostat — project laws (auto-loaded; these bind every session)
 
 **Homeostat is a mechanism-unearthing engine: it imputes the causal mechanism under a symptom
-presentation — the combination of weak, fungible, sub-threshold signals holding a coherent state —
-by a Peitho-style parsimony search that grows its own mechanism graph (node birth/death) and reads
-candidates by convergence across many lossy lenses (a holographic projection). Data geometry, not
-statistics.** These laws exist because an agent (me) repeatedly installed **statistics** where that
-coherence search belongs — and an earlier version of these laws *enshrined* the mistake. The method
-is CONFIRMED (2026-08-30, with the founder): it is Peitho with automated node birth/death, a
-σ-trajectory search for the most parsimonious mechanism that resolves a presentation. Read the full
-theory before any analysis:
-`docs/THEORY_OF_THE_CASE.md` Part II (the confirmed architecture) and
-`docs/REGULATORY_DEFICIT_PROGRAM.md` (canon: σ §4, κ §5, the falsifiability guard §5.9).
+presentation — the combination of weak, fungible, sub-threshold signals holding a coherent state (a
+*shadow* the signals cast in concert) — by reading ONE person, zero-time, over a FIXED PRIOR web of
+known regulatory mechanisms, eliminating candidates by TWO signs (positive candidate-elimination +
+negative censors) and reading convergence across many lossy lenses (a holographic projection). Data
+geometry, not statistics.** These laws exist because an agent (me) repeatedly installed **statistics**
+where that coherence search belongs — and an earlier version of these laws *enshrined* the mistake.
+The design is **SETTLED (2026-09-01): `docs/SYSTEM_DESIGN.md` is the governing document** — one
+clinical engine over a prior web (Engine A, population node-birth, is RETIRED), two-sign σ-elimination,
+biology read as an OTP geometry. Read it before any analysis, then the canon
+`docs/REGULATORY_DEFICIT_PROGRAM.md` (σ §4, κ §5, the falsifiability guard §5.9).
 
 **LAW 1 — DATA-GEOMETRY + CLASSICAL AI, NOT STATISTICS.** Statistics is priorless and honest but
 **too weak** for this problem: a phenotype from many weak, *fungible* (interchangeable),
@@ -29,13 +29,38 @@ mechanism is where the two geometries lock. **σ = the minimum constraints to pi
 in clusters, then the tail is PAC-limited). Primary sources: the founder's **SSL paper** + κ
 (`SIGNIFICANCE_WEIGHTING.md`).
 
-**LAW 3 — THE OBJECT (the mechanism graph) IS GROWN, NEVER AUTHORED.** The one piece beyond Peitho
-is **automated node birth/death**: **birth** = induction on a residual (a recurring cross-population
-dyad posits a mechanism node); **death** = negative learning on a near-miss (a population/presentation
-that breaks the coupling — withdraw before it fires); **consolidation** = safe-forget a κ=0 node.
-The graph is *computed by the search from the data geometry* — NEVER a hand-written edge list, and
-NEVER seeded from guesses, **including SDIS's**. Guessing the object (the PBS pile, the generic
-interactome, SDIS's edges) is the recorded death (§15, §12.14).
+**LAW 3 — THE OBJECT IS A PRIOR WEB — extracted from proven biology, NEVER grown per-read, NEVER
+guessed.** The web (which regulatory things couple to which, and each node's role) is PRIOR structure:
+proven deterministic mechanism (UniProt/GO/Reactome/Pfam), extracted **once** — not learned from the
+person (you cannot fit a wiring diagram to one snapshot), not a hand-written edge list, and NEVER
+seeded from guesses (the PBS pile, the generic interactome, SDIS's edges — the recorded death §15,
+§12.14). **The bright line (the genus guard):** an edge enters only as *proven deterministic mechanism*
+(authored/extracted, incomplete-but-not-wrong), never as a *computed association* (a frequency/
+enrichment — the forbidden statistic). Node *birth* by population induction (Engine A) is **RETIRED**;
+node *death* (negative learning / near-miss) is promoted to the negative sign (LAW 3b);
+**consolidation** = safe-forget a κ=0 node (the idempotent bulk) survives. Per-person growth is
+**DIMENSIONAL** — discriminate by adding a *measurement dimension*, never by growing nodes (Peitho: the
+node set is fixed and bounded; `position.py::discriminates` — add a dimension, never a model or
+threshold).
+
+**LAW 3b — SPECIFICATION IS TWO-SIGN; "no disease" is a certified ⊥, not an empty search.** σ = teaching
+dimension is defined over BOTH signs: positive candidate-elimination (μ: what could cast this shadow)
+AND negative censors (μ⁻: what is ruled out — physics-orthogonal role exclusions; and treatment-
+response, which *rules out* every mechanism where the drug's target isn't upstream of the resolved
+symptoms). The channels are information-theoretically isolated — "this is not disease X, *with proof*"
+cannot be recovered from the positive side. **Completeness is κ-coverage of the shadow, NEVER a count
+of criteria** (a count is blind to the composition gap γ, which lives at the bridges — the non-idempotent
+part). Score the phenotype as σ(P, μ ∪ μ⁻). Primary source: `NEGATIVE_SPECIFICATION.md`.
+
+**LAW 3c — BIOLOGY IS ALREADY AN OTP GEOMETRY; the engine is OTP-native.** Gene roles are physically-
+orthogonal projection axes (a membrane transporter and a polymerase fold in different electrochemical
+environments — mutually transparent = the informational zero = the negative-sign censor, at *zero*
+abstention tax). Consequences that fall out for free: **d** (the bridge count) is bounded by the proven
+semantic-category structure of gene function; **fungibility** is a free consequence (same-category genes
+are fungible fillers = one class centroid); **direction is never guessed** (it is the residue of
+negative-sign censors — free and safe, the Bellman-Ford bidirectional speedup without the destruction
+risk). DNA is the base-2² OTP code (`ORTHOGONAL_TERNARY_PROJECTION_THEORY_PART2.md`); the instrument
+reads the projection biology already stores.
 
 **LAW 4 — THE FALSIFIABILITY GUARD: σ_sem MUST STAY > 0.** A frame that makes every observation
 *confirm* it reports **σ_sem = 0** — zero information, Quixote's windmills, **memorization not
@@ -44,11 +69,11 @@ by construction.** So: NEVER collapse to a single self-confirming mechanism; kee
 (regime-multiplicity, H3); and **learn at the residual** — the informative constraint KILLS a rival,
 never confirms the leader (a confirming constraint has value zero, Howard).
 
-**LAW 5 — EARLY STOPPING AT THE κ-KNEE IS THE PARSIMONY HALT.** Grow nodes while the bulk amplifies
-(κ high); **stop at κ → 0** (§5.5, §10.4). Past the knee, each node resolves only one tail rival —
-the search is *memorizing the presentation*, i.e. becoming SDIS. Judge the **process**, not the
-endpoint (pabkit — the search's trajectory tells you structured coherence vs. overfit). This is the
-overfitting guard for small-n.
+**LAW 5 — EARLY STOPPING AT THE κ-KNEE IS THE PARSIMONY HALT.** Drive the elimination/discrimination
+trajectory while the bulk amplifies (κ high — structure resolving rivals in clusters); **stop at
+κ → 0** (§5.5, §10.4). Past the knee, each further constraint resolves only one tail rival — the search
+is *memorizing the presentation*, i.e. becoming SDIS. Judge the **process**, not the endpoint (pabkit —
+the trajectory tells you structured coherence vs. overfit). This is the overfitting guard for small-n.
 
 **LAW 6 — THE DECISION SHELL IS PEITHO; the oracle (μ) is diversified; no ML; the data gates the
 claim.** Signals enter as tiered, signed-ternary positions off a **per-individual mined zero**
@@ -107,8 +132,8 @@ data convergence; a directed signaling role enters only when real directed evide
 it, as data. There is no "positive-control version" that gets to hard-code and a "true version" that
 computes — one correct version, and it computes the fillers.
 
-The recurring failure has one root: reaching for a statistic, authoring/seeding the object, reading
+The recurring failure has one root: reaching for a statistic, seeding/guessing the object, reading
 one map's shape as the answer, **matching gene tokens instead of roles**, or **hard-coding a gene→role
-binding** — because it feels like progress — instead of running the σ-trajectory search that grows the
-object by triangulating the data geometry across searched partitions and recognizing roles by class.
-Recognizing the reflex and refusing it is the only fix.
+binding** — because it feels like progress — instead of running the two-sign σ-trajectory elimination
+over the *prior* web, discriminating by new dimensions, and recognizing roles by class. Recognizing the
+reflex and refusing it is the only fix.

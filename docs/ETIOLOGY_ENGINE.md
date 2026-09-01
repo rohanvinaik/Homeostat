@@ -1,5 +1,13 @@
 # The Etiology Engine — mechanism-role recovery over data-geometry signals
 
+> **Reconciliation note (2026-09-01):** `docs/SYSTEM_DESIGN.md` governs. This document's **role-recognition
+> machinery survives intact** — it is SYSTEM_DESIGN §10 (roles by semantic-class firing on physically-real
+> centroids; Regenesis; the `measuring_agi` encoder). Two alignments: "the object is grown over a substrate
+> of known biology" (§2b) *is* SYSTEM_DESIGN's **prior web** (proven biology, extracted once — the bright
+> line: authored/extracted mechanism, never a computed association); and Engine A's node-*birth by
+> population induction* is retired (per-person growth is dimensional). Read SYSTEM_DESIGN for the two-sign
+> specification and the OTP-substrate framing that this doc predates.
+
 ### Deriving a proper etiology for an illness/phenotype **without statistical swamping**, robust to highly fungible gene substitution
 
 **Status:** Design specification, 2026-08-31. Self-contained — written to be reconstructed cold, by a

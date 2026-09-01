@@ -1,5 +1,16 @@
 # Theory of the Case — Homeostat
 
+> **⚠ SUPERSEDED ON THE METHOD'S SHAPE (2026-09-01) by `docs/SYSTEM_DESIGN.md`, which governs.**
+> This document's framing of the method as *"a parsimony search that grows its own mechanism graph (node
+> birth/death)"* — **Engine A** — is **RETIRED.** There is one clinical engine (n=1, zero-time) over a
+> **fixed prior web**; it does not grow nodes. Read SYSTEM_DESIGN.md for: the prior-web object, **two-sign**
+> specification (positive elimination + negative censors, certified-⊥), non-idempotence as the composition
+> gap γ at the bridges (completeness = κ-coverage, not a count), directionality as a negative-sign
+> censor-shadow, d bounded by proven gene categories, and biology-as-OTP-geometry. What survives from below:
+> node *death* → the negative sign (μ⁻); consolidation (κ=0 safe-forget); the σ-trajectory; the σ_sem>0
+> guard; Part I (the case) and Part V (the pathology record). Where this doc and SYSTEM_DESIGN disagree on
+> the method, SYSTEM_DESIGN governs.
+
 **Homeostat is a mechanism-unearthing engine: it imputes the causal mechanism under a symptom
 presentation — the combination of weak, fungible, sub-threshold signals holding a coherent state —
 by a Peitho-style parsimony search that grows its own mechanism graph (node birth/death) and reads

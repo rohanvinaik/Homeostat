@@ -119,6 +119,15 @@ Once mechanism is recovered independently of annotation:
 
 ### 3.4 The method: a σ-trajectory search with node birth/death (confirmed architecture, 2026-08-30)
 
+> **⚠ CORRECTION (2026-09-01) — the method's shape is superseded by `docs/SYSTEM_DESIGN.md`.** The
+> "automated node birth/death" below is **Engine A** and is RETIRED: there is one clinical engine (n=1,
+> zero-time) reading over a **fixed PRIOR web** (proven biology, extracted once), not a search that grows
+> mechanism nodes by population induction. Node *death* → the **negative sign** (μ⁻ censors);
+> consolidation survives; per-person growth is **dimensional**, not nodal. Specification is **two-sign**
+> — σ(P, μ ∪ μ⁻). The σ / κ / σ_sem>0 formal substrate below (§4, §5, §5.9) is **carried forward
+> unchanged**; only the *shape of the search* is corrected. This §3.4 prose is kept as the historical
+> record of the 2026-08-30 conception.
+
 The signal is the **coherence of a combination**: sub-threshold elements locked together by the mechanism's structure, so that observing part of the pattern lets you impute the coherent whole, and *the coherence itself is the evidence of mechanism* — improbable-and-coherent, never frequent. The confirmed instantiation of that:
 
 **It is Peitho with automated node birth/death.** Peitho searches a limited state space for the most parsimonious configuration that reaches a defined goal state; here the goal state is *a parsimonious mechanistic etiology for a symptom presentation*. The **search is the σ-trajectory** (§4, §5): drive **H = log₂(surviving candidate mechanisms) → 0** by candidate-elimination, each "test" being a **data-geometry constraint** — a population **co-variation** (signals that lock together across genomes) or a symptom **co-presentation** (symptoms that cluster across people); the mechanism is where the two geometries lock. **The coherence measure is σ** (§4): the minimum constraints to pin a unique mechanism (SC=1), a Blum measure equal to the teaching dimension — *not a frequency*. The **bulk/tail phase transition** (§5.4) is the collective-state / parsimony signal Kuramoto/metastability (§2.4) names in shape.

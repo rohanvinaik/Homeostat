@@ -4,6 +4,15 @@
 uncomfortable and load-bearing: the intended data-geometry method is built, tested, and **orphaned**,
 while the live read-paths drift into exactly the statistical genus the project exists to defeat.*
 
+> **Note (2026-09-01, post-design):** the *wiring findings* below (the orphaned σ-engine, the statistical
+> live-paths, `kappa.py`'s topology statistics) remain accurate and still drive the build. But where this
+> audit describes "the intended method" as **node birth/death growing a mechanism graph** (§1, §5.2), that
+> framing is **Engine A, retired** — see `docs/SYSTEM_DESIGN.md` (the governing doc): the node set is a
+> fixed prior web, specification is **two-sign**, and per-person growth is dimensional. The re-architecture
+> in §5 is correct in genus (wire the σ-engine, ground resolution, demote lenses, retire the p-value); read
+> it as "positive-sign," with SYSTEM_DESIGN §12 adding the negative-sign censor layer and the OTP positioning
+> core as the next build.
+
 ---
 
 ## 1. The spec (the intended design, from `AGENTS.md` cardinal law + `THEORY_OF_THE_CASE.md`)

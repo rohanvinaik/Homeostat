@@ -3,20 +3,25 @@
 ## ⛔ WHAT HOMEOSTAT IS — A MECHANISM-UNEARTHING ENGINE (and the law that protects it)
 
 **The build, first.** Homeostat imputes the causal mechanism under a symptom presentation — the
-combination of weak, fungible, sub-threshold signals holding a coherent state — by a **Peitho-style
-parsimony search that grows its own mechanism graph (node birth/death) and reads candidates by
-convergence across many lossy lenses (a holographic projection)**. It is a *positive* construction
-(unearth mechanism), not a critique of medicine. The medicine critique is motivation; the σ/κ
-formalism is scaffolding; the build is the search.
+combination of weak, fungible, sub-threshold signals holding a coherent state (a *shadow* the signals
+cast in concert) — by reading ONE person, zero-time, over a **FIXED PRIOR web of known regulatory
+mechanisms**, eliminating candidates by **two signs** (positive candidate-elimination + negative
+censors) and reading convergence across many lossy lenses (a holographic projection). It is a
+*positive* construction (unearth mechanism), not a critique of medicine. The medicine critique is
+motivation; the σ/κ formalism is scaffolding; the build is the two-sign elimination. **SETTLED
+2026-09-01: `docs/SYSTEM_DESIGN.md` is the governing document** (Engine A — population node-birth — is
+retired).
 
 **THE LOAD-BEARING LAW that protects the build: DATA-GEOMETRY + CLASSICAL AI, NOT STATISTICS.**
 
-Homeostat is a **classical-AI data-geometry** project. Its method is CONFIRMED (2026-08-30):
-**Peitho with automated node birth/death — a σ-trajectory search for the most parsimonious
-mechanism that resolves a symptom presentation**, driving H = log₂(surviving candidate mechanisms)
-→ 0 by candidate-elimination, the "tests" being **data-geometry constraints** (population
-co-variation + symptom co-presentation). The **coherence measure is σ** — a Blum measure equal to
-the teaching dimension, NOT a frequency (`docs/THEORY_OF_THE_CASE.md` Part II). It is **NOT
+Homeostat is a **classical-AI data-geometry** project. Its method is SETTLED (2026-09-01,
+`docs/SYSTEM_DESIGN.md`): **one clinical engine (n=1, zero-time) over a fixed prior web, running a
+TWO-SIGN σ-trajectory elimination** — driving H = log₂(surviving candidate mechanisms) → 0 by
+candidate-elimination (positive sign μ) *and* negative censors (μ⁻: physics-orthogonal role
+exclusions + treatment-response), the "tests" being **data-geometry constraints** (the person's
+signed-ternary deviations off their own mined zero, propagated through the prior web). The
+**coherence measure is σ** — a Blum measure equal to the teaching dimension, NOT a frequency; and
+completeness is **κ-coverage of the shadow, never a count of criteria** (`docs/SYSTEM_DESIGN.md`). It is **NOT
 statistics.** A statistical test (a frequency, an enrichment, a population-differentiation score, a
 network hub/participation score) is at most **one cheap search-order prior**; it is **NEVER the
 method, the significance, or the object of study.**
@@ -48,12 +53,16 @@ it tips. Statistics tests the element; the mechanism is the collective state. So
 **σ-trajectory** (Specification Complexity, the SSL paper): candidate mechanisms are eliminated by
 data-geometry constraints until a unique, parsimonious reading survives; σ (min constraints to
 SC=1, a Blum measure) is the coherence measure, and the **bulk/tail phase transition** is the
-collective-state signal. The **object is GROWN, not authored** — the one piece beyond Peitho:
-**node birth** (induction on a residual), **node death** (negative learning on a near-miss),
-**consolidation** (safe-forget a κ=0 node). Two laws keep it honest: the **σ_sem > 0
-falsifiability guard** (never collapse to a self-confirming single mechanism — that IS SDIS,
-σ_sem=0, *memorization*; `self_confirming_cannot_certify`), and **early stopping at the κ-knee**
-(pabkit — grow while the bulk amplifies, stop at κ→0, judge the *process* not the endpoint). The
+collective-state signal. The **object is a PRIOR web** — extracted once from proven biology
+(UniProt/GO/Reactome/Pfam), NOT grown per-read and NOT a guessed/authored edge list (Engine A's
+node-*birth* by population induction is RETIRED). What survives from that framing: **node death**
+(negative learning on a near-miss) is promoted to the **negative sign** (μ⁻ censors); and
+**consolidation** (safe-forget a κ=0 node — the idempotent bulk). Per-person growth is DIMENSIONAL
+(discriminate by adding a measurement dimension; the node set is fixed and bounded). Two laws keep it
+honest: the **σ_sem > 0 falsifiability guard** (never collapse to a self-confirming single mechanism —
+that IS SDIS, σ_sem=0, *memorization*; `self_confirming_cannot_certify`), and **early stopping at the
+κ-knee** (pabkit — drive the elimination while the bulk amplifies, stop at κ→0, judge the *process*
+not the endpoint). The
 decision shell is built: **Peitho**-style signed-ternary off a mined zero, informational-zero
 abstention (`otp.py`, `signal.py`). It is **NOT** a frequency, **NOT** κ/participation over a
 *generic* network (a topology statistic in disguise — canon §5.12, Act 2 of the death), and **NOT**
@@ -123,24 +132,29 @@ call, named as a bounded utility, never your default, never the method, never "t
 
 ## The gate — every time, before proposing ANY approach
 
-1. Read this file → `docs/THEORY_OF_THE_CASE.md` (the derived design + the Part V pathology
-   record) → `docs/REGULATORY_DEFICIT_PROGRAM.md` (founding canon, authoritative; its Appendix C
-   is the cold-pickup anti-pattern list).
+1. Read this file → `docs/SYSTEM_DESIGN.md` (the governing settled design) → `docs/REGULATORY_DEFICIT_PROGRAM.md`
+   (founding canon, authoritative; its Appendix C is the cold-pickup anti-pattern list). The older
+   `docs/THEORY_OF_THE_CASE.md` is superseded on the *method's shape* (Engine A) by SYSTEM_DESIGN; read it
+   for the Part V pathology record.
 2. **Restate the mechanism in your own words** and have the founder confirm it — the test is not a
    fluent paraphrase, it is: *is the coherence measure σ (a Blum measure) and not a statistic; is
-   the object GROWN by the search (node birth/death) and not authored/seeded; are the constraints
-   TRIANGULATED across several partly-orthogonal lenses (generate-not-calculate), never read off one
-   map's shape; does the σ_sem > 0 guard hold so it cannot collapse into SDIS-style self-confirmation;
-   does it stop at the κ-knee; is the **partition searched** (any legitimately-isolatable group,
-   differentiation direction-free) not a hardcoded SAS-vs-EUR axis; and does it recognize **roles, not
-   gene-tokens** — the mechanism invariant across fungible population-specific fillers, via semantic-class
-   firing / Regenesis (LAW 8–9)?* If you cannot point at those, you have not understood it yet.
-3. **The object is GROWN by the search, NEVER authored or seeded.** The mechanism graph is computed
-   by node birth/death from the data geometry (LAW 3) — it is not a hand-written edge list, and
-   seeding it (a PBS pile, a generic interactome, **SDIS's edges**) is the root of the 2026-08-30
-   death (canon §12.14, §15). SDIS is a *characterization target*, never the object. What is still
-   open is the object's **content** (grown, once the data is in hand) and the **data** itself
-   (co-variation + co-presentation, §12.4) — not the architecture, which is confirmed (Part II).
+   specification **TWO-SIGN** (positive candidate-elimination μ + negative censors μ⁻), with the
+   object a **PRIOR web** (proven biology, extracted once — not grown per-read, not guessed); are the
+   constraints TRIANGULATED across several partly-orthogonal lenses (generate-not-calculate), never
+   read off one map's shape; does the σ_sem > 0 guard hold so it cannot collapse into SDIS-style
+   self-confirmation; does it stop at the κ-knee; is completeness **κ-coverage of the shadow, not a
+   count of criteria**; is the **partition searched** (any legitimately-isolatable group, direction-free)
+   not a hardcoded SAS-vs-EUR axis; and does it recognize **roles, not gene-tokens** — the mechanism
+   invariant across fungible population-specific fillers, via semantic-class firing / Regenesis (LAW 8–9)?*
+   If you cannot point at those, you have not understood it yet.
+3. **The object is a PRIOR web — extracted from proven biology, NEVER grown per-read and NEVER guessed.**
+   The web (roles + couplings) is proven deterministic mechanism (UniProt/GO/Reactome/Pfam), extracted
+   once (LAW 3) — not a hand-written edge list, and seeding it from guesses (a PBS pile, a generic
+   interactome, **SDIS's edges**) is the root of the 2026-08-30 death (canon §12.14, §15). SDIS is a
+   *characterization target*, never the object. The bright line: an edge is a proven mechanism
+   (authored/extracted), never a computed association. What is still open is only the **data** — the
+   web-build pipeline (free public bioinformatics) and, for population *validation*, dynamic/state-resolved
+   data (§12.4); the per-person read gets its dynamics from the person's own treatment-response history.
 4. Never reframe the coherence design as statistics-with-extra-steps. Never rank by a
    frequency/association/differentiation/participation score as the answer. Iterate the
    **constraint graph / the coherence object / the encoder**, never "a better statistic."
