@@ -16,7 +16,7 @@ here. Nothing in this module authors biology.
 
 from __future__ import annotations
 
-from collections.abc import Collection, Iterable
+from collections.abc import Collection, Iterable, Mapping
 from dataclasses import dataclass
 
 from homeostat.web import Coupling, RelationalWeb
@@ -90,3 +90,36 @@ def events_to_web(events: Iterable[Event], directed_networks: Collection[str]) -
         directed = any(e.sign > 0 and e.network in directed_networks for e in evs)
         couplings.append(Coupling(subject, target, float(support), 1 if directed else 0))
     return RelationalWeb(tuple(couplings))
+
+
+def events_to_censors(events: Iterable[Event]) -> dict[str, list[str]]:
+    """Compile the ROLE-SCOPED candidate censors from the negative-sign events.
+
+    A censor event (`sign < 0`) rules out its `subject` FOR the role/context `target` — the same
+    event that keeps the subject→target edge out of the positive web (`couple_verdict`) also rules
+    the subject out as a candidate *for that role*. Returns `{role: [subjects censored for it]}`,
+    sorted and deduped. Role-scoped by design (founder's call): a gene closed off in one lineage is
+    active in another, so a censor names the role it applies to, never the gene globally — and it
+    fires only where that role is active (`active_censors`). Pure over the event stream.
+    """
+    by_role: dict[str, set[str]] = {}
+    for e in events:
+        if e.sign < 0:
+            by_role.setdefault(e.target, set()).add(e.subject)
+    return {role: sorted(subjects) for role, subjects in sorted(by_role.items())}
+
+
+def active_censors(
+    role_censors: Mapping[str, list[str]], active_roles: Collection[str]
+) -> dict[str, list[str]]:
+    """Resolve the role-scoped censors against the roles ACTIVE in a presentation: only a censor
+    whose role is active fires, becoming a candidate kill-set `{"censor:<role>": subjects}` the
+    two-sign engine consumes. A subject censored for an INACTIVE role is NOT ruled out — that is the
+    tooth of role-scoping: the exclusion applies only where its context is live. Pure over
+    `(Mapping, Collection)`.
+    """
+    return {
+        f"censor:{role}": list(role_censors[role])
+        for role in sorted(active_roles)
+        if role in role_censors
+    }

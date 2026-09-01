@@ -2,7 +2,13 @@
 generated. A network's signed vote is an event; the cross-network resolution draws a coupling only
 on convergent, uncontradicted support; direction is earned only from a directed network."""
 
-from homeostat.event import Event, couple_verdict, events_to_web
+from homeostat.event import (
+    Event,
+    active_censors,
+    couple_verdict,
+    events_to_censors,
+    events_to_web,
+)
 
 # ---- the pure cross-network resolution -------------------------------------------
 
@@ -65,3 +71,32 @@ def test_events_group_by_coupling_and_are_deterministic():
     web = events_to_web(evs, DIRECTED)
     # sorted by (subject, target): (A,B) before (C,D)
     assert [(c.a, c.b) for c in web.couplings] == [("A", "B"), ("C", "D")]
+
+
+# ---- role-scoped candidate censors -----------------------------------------------
+
+
+def _censor(subject, role, network="developmental"):
+    return Event(network, "closes_off", subject, role, -1)
+
+
+def test_events_to_censors_groups_by_role_and_ignores_positive():
+    events = [_censor("X", "amplifier"), _censor("Y", "amplifier"), _reg("Z", "amplifier")]
+    # only the negative-sign events count; grouped by role (target), deduped, sorted
+    assert events_to_censors(events) == {"amplifier": ["X", "Y"]}
+
+
+def test_events_to_censors_dedups_a_subject_censored_twice():
+    events = [_censor("X", "amplifier"), _censor("X", "amplifier", network="structural")]
+    assert events_to_censors(events) == {"amplifier": ["X"]}
+
+
+def test_active_censors_fire_only_for_active_roles():
+    role_censors = {"amplifier": ["X"], "transducer": ["Y"]}
+    # only `amplifier` is active -> only its censor fires
+    assert active_censors(role_censors, {"amplifier"}) == {"censor:amplifier": ["X"]}
+
+
+def test_inactive_role_censor_does_not_fire():
+    role_censors = {"amplifier": ["X"]}
+    assert active_censors(role_censors, {"transducer"}) == {}  # role-scoping has teeth
