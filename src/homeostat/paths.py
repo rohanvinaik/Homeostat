@@ -29,3 +29,21 @@ SIGNOR_DIR = DATA / "signor"
 SIGNOR_TSV = SIGNOR_DIR / "signor_human_9606.tsv"
 SIGNOR_SHA = SIGNOR_DIR / "signor_human_9606.sha256"
 SIGNOR_URL = "https://signor.uniroma2.it/getData.php?organism=9606&format=csv"
+
+# STRING physical-interaction subnetwork (the physical-binding undirected-vote substrate).
+# `links` = the detailed physical links (space-separated, gzipped, header:
+# `protein1 protein2 experimental database textmining combined_score`; keys on Ensembl protein ids).
+# `info` = the ENSP → preferred_name (gene symbol) map — the first harmonizing-normalization input.
+# Both gitignored, re-downloadable; sha256 sidecars pin the version built against.
+STRING_DIR = DATA / "string"
+STRING_LINKS = STRING_DIR / "9606.protein.physical.links.detailed.v12.0.txt.gz"
+STRING_INFO = STRING_DIR / "9606.protein.info.v12.0.txt.gz"
+STRING_LINKS_SHA = STRING_DIR / "9606.protein.physical.links.detailed.v12.0.sha256"
+STRING_INFO_SHA = STRING_DIR / "9606.protein.info.v12.0.sha256"
+STRING_LINKS_URL = (
+    "https://stringdb-downloads.org/download/protein.physical.links.detailed.v12.0/"
+    "9606.protein.physical.links.detailed.v12.0.txt.gz"
+)
+STRING_INFO_URL = (
+    "https://stringdb-downloads.org/download/protein.info.v12.0/9606.protein.info.v12.0.txt.gz"
+)

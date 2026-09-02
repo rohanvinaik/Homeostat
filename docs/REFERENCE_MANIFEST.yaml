@@ -77,6 +77,18 @@
   sha256: d8df932cf406bb797813a08d9afa6f667b6031f0dbc94169ca7cc59fa2718f3a
   cited_by: [src/homeostat/signor.py, src/homeostat/signor_fetch.py, src/homeostat/paths.py]
 
+- id: string-physical-9606-v12
+  path: data/string/9606.protein.physical.links.detailed.v12.0.txt.gz
+  role: physical-binding renderer substrate — STRING v12.0 human physical subnetwork, detailed (columns experimental/database/textmining/combined_score; ~1.31M edges pass the experimental-OR-database bright line of the 26.7M physical links). Undirected mechanistic votes (LAW 9 tier 2). Gitignored, re-downloadable via homeostat.string_fetch.ensure_all; sha256 pins the version built against.
+  sha256: db1de86dc7a6e34eba78ca6e6747f9201195b0af1edb607c19bf651b0eddede5
+  cited_by: [src/homeostat/string.py, src/homeostat/string_fetch.py, src/homeostat/paths.py]
+
+- id: string-info-9606-v12
+  path: data/string/9606.protein.info.v12.0.txt.gz
+  role: harmonizing normalization input — STRING v12.0 human protein-info (Ensembl protein id → preferred_name/gene symbol; 19,699 entries). The first entity-normalization layer, keyed by the STRING renderer.
+  sha256: 144de4b0d98c6a7dfde6ddc2591cf88657f27b989eadff4f501450c3ed1f0f1c
+  cited_by: [src/homeostat/string_fetch.py, src/homeostat/paths.py]
+
 - id: predecessor-study
   path: ~/Projects/Predecessor_Study
   role: SUBSUMED predecessor — salvage governed exclusively by docs/SALVAGE_MANIFEST.md; repo pointer, not hashed

@@ -9,25 +9,15 @@ inexpressible (takes URLs / paths / live bytes); intent-tested with a synthetic 
 
 from __future__ import annotations
 
-import hashlib
 import urllib.request
 from collections.abc import Iterator
 from pathlib import Path
 
 from homeostat import paths
-from homeostat.util import atomic_write_text
+from homeostat.util import atomic_write_text, sha256
 
 _UA = "curl/8.4"  # SIGNOR 403s a default urllib User-Agent
 _CHUNK = 1 << 20
-
-
-def sha256(path: Path) -> str:
-    """The sha256 hex digest of a file, read in chunks (the dump is ~21 MB)."""
-    h = hashlib.sha256()
-    with open(path, "rb") as fh:
-        for chunk in iter(lambda: fh.read(_CHUNK), b""):
-            h.update(chunk)
-    return h.hexdigest()
 
 
 def fetch(url: str = paths.SIGNOR_URL, dest: Path = paths.SIGNOR_TSV) -> Path:
