@@ -1,126 +1,134 @@
 # Homeostat
 
-**Tell it your symptoms. It reads the genetics underneath them from open data, works out what — if
-anything — actually connects them, and tells you what that means and, just as carefully, what it
-doesn't.** It is meant to be the one doctor who takes the presentation seriously, and the one who won't
-invent a story to fill the silence. Named for Ashby's homeostat, the machine that finds its own
-equilibrium, because the thing under study is regulation.
+**A machine for reading the mechanism under a set of symptoms — the coupled cause that connects them —
+and for saying, just as carefully, when there is no mechanism it can honestly find.** Named for Ashby's
+homeostat, the machine that finds its own equilibrium, because the thing under study is regulation.
 
-> Research scaffolding for mechanism discovery. It generates *hypotheses*, not diagnoses. **Nothing here
-> is medical advice.**
+> Homeostat generates *hypotheses to interrogate*, not diagnoses. It is a research instrument, not a
+> clinician. **Nothing here is medical advice.** And see *Where it actually is* at the bottom — the
+> reasoning engine is built and proven; the data plumbing that would feed it from open biology is
+> designed but not yet wired, so it does not yet read a real person end to end.
 
 ---
 
-## The problem it's built around
+## The person it is built for
 
-Medicine finds the genetic cause of a disease mostly by counting: which variant shows up more often in
-patients than in healthy people. For a clean single-gene disease that works. For most of disease it
-quietly doesn't — and it fails hardest on exactly the people who are already the hardest to believe.
+Someone arrives with a cluster of conditions that span several body systems and refuse to line up with
+any one clinic. Each specialist tunnels into their own organ and returns an exotic, poor-fitting label —
+or, more often, a shrug. The person is usually the one who says the true thing first:
 
-A symptom usually sits at the end of a long, redundant, forgiving pathway, and a long pathway breaks in
-many places. One person breaks it at step 12; another at step 30 with a different mutation doing the same
-job; a third has a spare gene covering for the first. Same mechanism every time, no shared gene — so the
-count finds nothing. It has taken a real, legible mechanism and smeared it across a population until, in
-the precise information-theoretic sense, the signal is gone.
+> *"I KNOW these are connected. I can feel how one feeds into the other — how treating a part of one makes
+> another mysteriously vanish. I don't have the words for why, but I know they're not separate accidents.
+> I need a mechanism to interrogate. Like Dr. House, without the needless cruelty."*
 
-This bites hardest on the multi-system presentations — the constellations of symptoms that don't line up
-with one organ or one clinic, and get read as "it's probably anxiety" in a seven-minute appointment. Here
-is how thoroughly counting has failed them: some of these conditions are so under-studied that the entire
-free research literature knows **fewer than a handful of their genes.** Not because they are rare —
-because the field's dominant instrument cannot see them, so the research and the funding and the belief
-all went elsewhere.
+They are almost always right, and the medical system almost always cannot help — not out of malice, but
+because of how its main instrument works. Modern genetics largely finds causes by **counting**: which
+variant appears more often in patients than in healthy people. For a clean single-gene disease that
+works. For most of chronic, multi-system illness it quietly fails, and it fails hardest on exactly the
+people who are already hardest to believe.
 
-## The idea
+## Why the counting fails — and it is not fixable with more data
 
-Stop counting genes. Recover the *mechanism*, and recognize it by the **role** a gene plays rather than
-its name — because the name is the interchangeable part and the role is the invariant. Then triangulate:
-no single free dataset shows you a mechanism, so look through several cheap, blurry windows — how variants
-differ across populations, what co-expresses, what physically binds — and trust only what several
-independent windows agree on. Convergence is the signal; a gene that lights up one window and no others
-is noise.
+The mechanism these people are feeling is real, but it is a **shadow**: a coherent state that many weak,
+individually-unremarkable signals cast *in concert*, stored in no single one of them. Three things make
+it invisible to a counting instrument, and each is structural, not a matter of sample size:
 
-The reasoning that combines the windows is **classical AI — not statistics, not machine learning.** It
-derives what the evidence implies but never states, and it abstains when nothing follows. Statistics gets
-exactly one honest job, characterizing a single window; it is never allowed to be the thing that decides
-what is true.
+- **Control is distributed.** A symptom sits at the end of a long, redundant pathway, and no single step
+  holds enough of the control for its failure to register on its own.
+- **The parts are interchangeable.** One person breaks the pathway at step 12; another at step 30 with a
+  different gene doing the same job; a third has a spare covering for the first. *Same mechanism every
+  time, no shared gene* — so the count, which looks for a shared gene, finds nothing.
+- **The state is dynamic.** The mechanism is a meta-stable balance that holds until enough of the coupling
+  shifts and it tips — which is exactly why "treating one part makes another vanish."
 
-## What it does — and you can run it
+A shadow cannot be found by inspecting light sources one at a time, at any sample size. That is the whole
+problem in one sentence — and it is why a fragmented system of single-specialty reads is *structurally*
+positioned never to see the thing the patient is reporting.
 
-```console
-$ python3 validation/read.py "<four symptoms that don't obviously belong together>"
+## What Homeostat does instead
 
-HOMEOSTAT · a reading, not a ruling.
+It stops counting and recovers the **mechanism**, by four moves that no other tool combines:
 
-what you handed me, and how much the open literature actually knows about each:
-  symptom 1     1,856 genes
-  symptom 2        83 genes
-  symptom 3       647 genes
-  symptom 4         5 genes   ← a data desert; the field has all but ceded this one
+1. **It reads roles, not genes.** The gene is the interchangeable part; the *role it plays* is the
+   invariant. Two different genes filling the same role, in two different people, are recognized as the
+   same mechanism.
+2. **It triangulates across the geometries of biology.** No single free dataset shows a mechanism, so it
+   reads several — how genes are related by evolution, by structure, by regulation, by development, by the
+   life a person has lived — and trusts only what several independent views *agree* on. Convergence is the
+   signal; a claim only one view supports is dropped.
+3. **It reasons in two signs.** It weighs not only what *could* explain the presentation but what is
+   *ruled out* — and it can return a **certified "there is no mechanism here," with a proof**, which is a
+   categorically different thing from "I didn't find one." Most systems have no way to say this at all.
+4. **It abstains when it should.** Where the evidence does not converge, it says so and points at the one
+   measurement that would resolve it — rather than confabulating a confident story to fill the silence.
 
-what connects them — the specific genes bridging your symptoms (I dropped the generic
-hubs on purpose: a gene that touches everything explains nothing):
-  [a short list of the specific bridge genes]
+The reasoning is **classical AI and data geometry — not statistics, not a machine-learning model.** It
+derives what the evidence implies but never states, and stops where nothing follows. There is no model to
+train, and that is deliberate: the intelligence is in the correctness of the geometry, not the size of a
+network.
 
-how much to trust it: 472 genes bridge them, against 659 expected purely by chance
-(p=1.00). That is *not* above chance. Read the genes as 'worth a look', not 'the
-mechanism' — the missing piece is the one medicine is also missing: your genes AND
-your symptoms together, at scale. Holding this at 'lead' is the honest part.
+## What a reading looks like
 
-▸ 'symptom 4' is nearly data-empty on its own — but its few genes belong with
-  'symptom 3'. If symptom 4 is the real question, ask that pair instead.
-```
+Give it the cluster, and — once its data senses are wired (see below) — it returns one of four honest
+verdicts, never a label:
 
-That output is the whole design in miniature. The command line is not a print box; it is an **epistemic
-interface**. It reports what it found *and what that finding is worth* — here, honestly, not much yet. It
-refuses to dress a coincidence as a discovery. And in that last line it does something quieter and more
-useful: it notices that one symptom is a data desert, sees that its few genes actually belong with
-another of the symptoms, and — with a few lines of arithmetic, no language model — points you at the
-question you were about to ask. It waits exactly where you'll need it.
+- **A mechanism to interrogate** — the coupled cause the symptoms imply, with the *load-bearing* part
+  named (the connector whose loss would collapse the cascade — which is usually the treatment target), and
+  the provenance of every step. Not "you have disease X"; rather "here is the mechanism, here is what holds
+  it together, here is how sure I am."
+- **The next question** — *Jeeves mode.* When two mechanisms fit equally, it does not guess. It asks for
+  the single measurement that would separate them: *"Do you also have allergies? Is there a persistent
+  tachycardia? Does one drug resolve several of these at once?"* The last is the most powerful input it
+  has — and it is one you already carry in your own history.
+- **A certified nothing** — "no mechanism the known biology can resolve explains this," with the proof.
+  Honest, and rare.
+- **An honest abstention** — "I cannot separate these without a measurement you don't have."
 
-From there, a person (or the agent) puts on the lab coat: group the genes into modules, narrate the most
-coherent causal *hypothesis* they support, and say where the data stops. If you have your own genotype,
-`--genotype` overlays which of the candidate genes *you* carry notable variants in — and that stays on
-your machine.
+It will rank and connect and name the mechanism; it will not decide *why* your life led there — imputing
+purpose is the human's job, and it is careful to say so.
 
-## The honesty is the product
+## Why nothing else does this
 
-Given a hard case, most systems either dismiss it or confabulate a confident story. This one does
-neither, by construction. On a real presentation it once surfaced a genuinely elegant module — a clean
-molecular story tying the symptoms together, the kind of thing that reads beautifully in a case report.
-Then a permutation null showed the convergence was no denser than chance, and the system deleted the
-result and kept the deletion. A tool that will not hand you a beautiful lie is worth more than one that
-impresses you, and that refusal is the point rather than a limitation of it. It will rank and connect; it
-will not decide *why* — imputing purpose is the human's job, and it is careful to say so.
+Not because the pieces are secret, but because the field's dominant instrument is pointed the other way.
+Counting-based genetics is built to find frequent single causes and is structurally blind to fungible,
+sub-threshold, coherence-borne mechanisms — the ones that only exist in combination. Statistical and
+machine-learning pipelines inherit that blindness and add their own: they estimate rather than eliminate,
+they cannot certify a negative, and they will always return *something*. Homeostat is the inverse on every
+axis — mechanism not frequency, roles not genes, elimination not estimation, two signs not one, honest
+abstention not a forced answer. It is an instrument built specifically for the case everything else was
+built to miss, and it rests on a decade of the author's own formal work on what *understanding* is,
+turned back onto the domain where understanding first evolved.
 
-## The engine is checked on known biology
+## Where it actually is (the honest status)
 
-Before it reads a person, the mechanism-finder is validated on cases where the answer is known. Handed
-the **LRRK2–NOD2–RIPK2** immune-signaling mechanism as anonymous tokens, from free data, with no gene
-names given, it recovers the real structure — RIPK2 and NOD2 as the confirmed core, LRRK2 as a genuinely
-weaker member, the promiscuous HLA hubs censored as noise — graded by how many independent windows agree.
-That recovery, a determinism and adversarial-abstention suite, a held-out-annotation recovery (p=0.015),
-and a transfer across sixteen mechanisms all pass with real demonstrations in
-[`docs/PROOF_POINTS.md`](docs/PROOF_POINTS.md) and
-[`validation/VALIDATION_RESULTS.md`](validation/VALIDATION_RESULTS.md). Where the ledger is not green, it
-says so.
+This matters, so it is plain: **the brain is built and proven; the senses are not yet wired.**
 
-## Honest limits
+- **Built and pinned** — the full reasoning engine: two-sign elimination with certified-⊥, the per-person
+  signed-ternary positioning, the discrimination-dimension (Jeeves) selector, and the encoding layer that
+  turns biological evidence into what the engine reads. Every *pure decision* is verified to a
+  mutation-complete specification, and the whole is covered by hand-written intent tests; 133 pass. The
+  complete theory is written out in full.
+- **Designed but not yet built** — the *renderers*: the plumbing that reads open biological databases
+  (Reactome, UniProt, Pfam, GO, BLAST) and the person's own history and turns them into the evidence the
+  engine consumes. Until those are wired, Homeostat cannot read a real person from real data end to end.
 
-The data that would actually settle these questions — each person's genes *and* their symptoms together,
-so a mechanism can be watched to move — is gated behind institutions and money. Homeostat works from the
-free shadows of it. So its output is a testable hypothesis, never a proven mechanism and never a
-diagnosis. That is a fact about what data is purchasable, not a flaw in the method — and the whole system
-is built to keep telling you which is which.
+So today it is a complete design with a working, proven engine, at the point where the remaining work is
+the biology-data plumbing. It is honest about being there, the same way it is honest about everything
+else — that discipline is the product, not a caveat on it.
 
-## Run it, or read further
+The other honest limit is deeper than code: the data that would *settle* these questions — each person's
+genes and symptoms together, watched over time as a mechanism moves — is gated behind institutions and
+money. Homeostat is built to work from the free shadows of that data, so its output is a testable
+hypothesis, never a proven mechanism and never a diagnosis. That is a fact about what data is purchasable,
+not a flaw in the method — and the whole system is built to keep telling you which is which.
 
-```
-PYTHONPATH=src python3 validation/read.py "your, symptoms, here"
-```
+## Read further
 
-1. [`docs/ETIOLOGY_ENGINE.md`](docs/ETIOLOGY_ENGINE.md) — the design of the whole stack. Start here.
-2. [`docs/PROOF_POINTS.md`](docs/PROOF_POINTS.md) — the validation ladder, honestly scored.
-3. [`docs/REGULATORY_DEFICIT_PROGRAM.md`](docs/REGULATORY_DEFICIT_PROGRAM.md) — the founding canon.
+- [`docs/THESIS.md`](docs/THESIS.md) — the full theory: what understanding is, and why it comes home to
+  biology. Start here if you want the *why*.
+- [`docs/SYSTEM_DESIGN.md`](docs/SYSTEM_DESIGN.md) — the engineering design and the current build state.
+- [`docs/REGULATORY_DEFICIT_PROGRAM.md`](docs/REGULATORY_DEFICIT_PROGRAM.md) — the founding canon.
 
-The reasoning engine is **Regenesis**. The data-geometry signal layer and the formal substrate it rests
-on are the author's own work, referenced from the design docs.
+The reasoning engine is **Regenesis** (deterministic, provenance-carrying story-understanding). The
+formal substrate it rests on — specification complexity, negative specification, significance-weighting,
+orthogonal ternary projection — is the author's own work, referenced from the design docs.

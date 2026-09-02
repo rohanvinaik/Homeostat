@@ -243,24 +243,28 @@ web + the person's own history for the dynamics," with population validation the
 
 ## 12. Build state — what is built, what is next
 
-- **Built (positive-sign, 2026-09-01, 106 tests green):** `web.py` (the fixed weighted-ternary relational web
-  + `kill_matrix`), `search.eliminate_to_survivor` / `loop.resolve_presentation` (seedless σ-trajectory,
-  H→0), `ground.py` (the SymbolicSpellCheck front door). The statistical genus is ripped (canon Act-2 scorers
-  gone). This is the **positive** half.
-- **Next (in priority order):**
-  1. **The negative-sign censor layer (μ⁻).** Physics-orthogonal exclusions from GO/Pfam/Reactome as
-     zero-tax censors + treatment-response as directional censors; certified-⊥ for "no disease." Score the
-     phenotype as σ(P, μ ∪ μ⁻). *(This is the piece the `CONCEPTUAL_AUDIT` found orphaned one level down — the
-     Regenesis `cannot`-twin exists in the universe design but not in the elimination engine.)*
-  2. **The OTP positioning core.** Port `position.py`'s `deviation_position` / `signature` / `discriminates`
-     as the per-person elimination layer (signed-ternary off the mined zero). Reconcile with `web.py`'s
-     reachability: reachability defines the *coupling web* (structure); signature-discrimination does the
-     *per-person elimination* on top of it.
-  3. **The discrimination-dimension selector (Jeeves).** The `STUCK`-branch: given plural survivors, rank
-     unmeasured dimensions by EIG (positive *and* negative), return the highest-value question.
-  4. **The web-build pipeline (§11):** repurpose `harmonizing` + wiki-ingest + BLAST over UniProt/GO/Reactome.
-  5. **The LRRK2 positive control (canon §13.3):** recover the LRRK2–NOD2–RIPK2 shadow as coherence, blind. If
-     it does not recover, the method is not working.
+**Built and pinned (2026-09-02, 133 tests green; every pure decision Detective-complete):**
+- **The engine (resolve-narrow):** `search.eliminate_two_sign` + `constraint_disposition` (two-sign
+  σ-elimination — positive constraints ∧ negative censors, certified-⊥); `position.py` (per-person
+  signed-ternary off the mined zero + the Discrimination Guarantee); `jeeves.py` (the EIG discrimination-
+  dimension selector); `clinic.read_presentation` (the end-to-end two-sign read); `ground.py` (the
+  SymbolicSpellCheck front door); `web.py` / `otp.py` / `signal.py` (the substrate).
+- **The encoding layer:** `event.py` — the L2 event contract (`Event`; `couple_verdict` cross-network
+  resolution; `events_to_web` positive; `events_to_censors` + `active_censors` role-scoped negative);
+  `clinic.read_from_events` (the encode→resolve spine, end to end).
+- Engine A (the node-birth / target-pinning loops) is **retired in code**; the statistical genus is ripped.
+
+**Next — the renderer phase (external I/O + object-led; the founder's biology enters here):**
+1. **The per-network renderers (§11):** each network renders its DB slice into `list[Event]` —
+   regulatory→Reactome (directed), evolutionary→BLAST, structural/genotype-deep→Pfam/GO/AlphaFold,
+   developmental & exposome→ordered narratives (Regenesis), metabolic-flux→pathway/flux. Founder-led: the
+   verb vocabulary, the source per network, and the caching/hash-pinning are the biology author's call.
+2. **Regenesis as the generate-wide half:** derive the implied candidate mechanisms + roles + trajectory
+   from the multi-network event story, feeding the resolve-narrow engine.
+3. **The LRRK2 positive control (canon §13.3):** recover the LRRK2–NOD2–RIPK2 shadow as coherence, blind —
+   the first real-data acceptance test. If it does not recover, the method is not working.
+
+Everything downstream of a renderer's `list[Event]` is built and pinned.
 
 ## 13. The laws (the discipline, mirrored)
 
