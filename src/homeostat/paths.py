@@ -93,3 +93,14 @@ GTEX_ATTRS_URL = (
     "https://storage.googleapis.com/adult-gtex/annotations/v8/metadata-files/"
     "GTEx_Analysis_v8_Annotations_SampleAttributesDS.txt"
 )
+
+# GWAS Catalog ontology-annotated associations (the trait-wiring calibration prior's substrate).
+# A zip of one TSV (~1.19M rows); we read MAPPED_GENE (col 15) + MAPPED_TRAIT (col 35, EFO) for the
+# per-gene distinct-trait pleiotropy node-weight. Gitignored, re-downloadable; sha256-pinned.
+GWAS_DIR = DATA / "gwas"
+GWAS_ZIP = GWAS_DIR / "gwas-catalog-associations_ontology-annotated-full.zip"
+GWAS_SHA = GWAS_DIR / "gwas_associations.sha256"
+GWAS_URL = (
+    "https://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/"
+    "gwas-catalog-associations_ontology-annotated-full.zip"
+)
