@@ -3,18 +3,18 @@
 The cascade is polarity-blind reachability; polarity is the OTP ternary propagated by sign-product,
 with disagreeing paths collapsing to the informational zero. A sink's verdict is its net drive:
 net-up = doomed, net-down = suppressed (the H4 refusal), informational-zero = indeterminate. A cycle
-(no source) is a different genre and yields nothing."""
+(no source) is a different genre and yields nothing. (The OTP merge + signed graph it rides on are
+pinned in test_topology.)"""
 
 from homeostat.event import Event
 from homeostat.otp import OPPOSE, ORTHOGONAL, SUPPORT
+from homeostat.topology import signed_adjacency
 from homeostat.tragedy import (
     Tragedy,
     doom_verdict,
     is_sink,
     net_signs,
-    otp_combine,
     read_tragedy,
-    signed_adjacency,
     sources,
 )
 
@@ -27,16 +27,6 @@ def _inh(a, b):
     return Event("regulatory", "inhibits", a, b, 1)
 
 
-# ---- the pure OTP merge ----------------------------------------------------------
-
-
-def test_otp_combine_agrees_or_falls_to_the_informational_zero():
-    assert otp_combine(SUPPORT, SUPPORT) == SUPPORT
-    assert otp_combine(OPPOSE, OPPOSE) == OPPOSE
-    assert otp_combine(SUPPORT, OPPOSE) == ORTHOGONAL  # disagreement -> no opinion
-    assert otp_combine(SUPPORT, ORTHOGONAL) == ORTHOGONAL
-
-
 # ---- the pure verdict ------------------------------------------------------------
 
 
@@ -46,18 +36,6 @@ def test_doom_verdict_reads_the_net_sign():
     assert doom_verdict(True, True, ORTHOGONAL) == "indeterminate"  # paths disagree -> abstain
     assert doom_verdict(False, True, SUPPORT) == "not-doom"  # not a sink
     assert doom_verdict(True, False, SUPPORT) == "not-doom"  # no cascade reaches it
-
-
-# ---- the signed adjacency --------------------------------------------------------
-
-
-def test_signed_adjacency_signs_by_verb_mixes_to_zero_drops_self_and_nonreg():
-    events = [_amp("A", "B"), _inh("A", "B"), _amp("A", "C"), _amp("B", "B")]
-    events.append(Event("physical", "binds", "A", "C", 1))
-    adj = signed_adjacency(events)
-    assert adj["A"]["B"] == ORTHOGONAL  # amplify + inhibit on the same pair -> informational zero
-    assert adj["A"]["C"] == SUPPORT  # amplify only; the physical edge is not regulatory
-    assert "B" not in adj  # B's only out-edge was a self-loop, dropped
 
 
 # ---- the OTP net-sign propagation ------------------------------------------------

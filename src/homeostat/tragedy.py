@@ -5,19 +5,18 @@ flaw — a source nothing upstream drives) that locks a downstream absorbing SIN
 ch.9's M3/M4: the flaw serves the doom; the outcome is the given, and reading the arc that makes it
 inevitable is the point. The genre is READ OFF the graph the events ARE — not inferred from diction.
 
-Two axes, kept apart (the significance-weighting set-theory conception + OTP):
+Two axes, kept apart (the significance-weighting set-theory conception + OTP; substrate in
+`homeostat.topology`):
 - **Reachability is polarity-BLIND** (κ = coverage = the forward-reachable SET; an edge is an edge).
-  So the cascade propagates over EVERY opinionated regulatory coupling — amplify AND inhibit — and
-  stops only at the **informational zero** (absence: no coupling), the one non-carrying OTP state.
+  The cascade propagates over EVERY opinionated regulatory coupling — amplify AND inhibit — stopping
+  only at the **informational zero** (absence: no coupling), the one non-carrying OTP state.
 - **Polarity is the OTP ternary that rides each edge** and composes by sign-PRODUCT along the path
-  (amplify=+1, inhibit=−1; two inhibitions = a net-up disinhibition). Drives merging at a node
-  OTP-combine: agreeing paths keep their sign, **disagreeing paths collapse to the informational
-  zero** — the topology declines to assert a doom it cannot coherently drive.
+  (two inhibitions = a net-up disinhibition); drives merging at a node OTP-combine, and disagreeing
+  paths collapse to the informational zero — the topology declines a doom it cannot drive.
 
-The verdict at a reached sink is that net sign: net-SUPPORT = ``doomed`` (driven up and locked);
-net-OPPOSE = ``suppressed`` (the real H4 refusal — a censor holds it); the informational zero =
-``indeterminate`` (paths disagree → abstain, never guess). A cascade with no source (a cycle) is a
-different genre (the vicious loop) and is declined by construction.
+The verdict at a reached sink is that net sign: net-SUPPORT = ``doomed``; net-OPPOSE = suppressed
+(the H4 refusal — a censor holds it down); the informational zero = ``indeterminate`` (abstain). A
+cascade with no source (a cycle) is a different genre (the vicious loop) and is declined here.
 """
 
 from __future__ import annotations
@@ -28,9 +27,7 @@ from dataclasses import dataclass
 from homeostat.event import Event
 from homeostat.kappa import reachable
 from homeostat.otp import OPPOSE, ORTHOGONAL, SUPPORT
-
-REGULATORY = "regulatory"
-_VERB_SIGN = {"amplifies": SUPPORT, "inhibits": OPPOSE}
+from homeostat.topology import otp_combine, signed_adjacency
 
 
 @dataclass(frozen=True)
@@ -42,30 +39,6 @@ class Tragedy:
     origin: str
     sink: str
     verdict: str
-
-
-def otp_combine(a: int, b: int) -> int:
-    """OTP merge of two ternary contributions to one node: their shared value if they AGREE, else
-    the informational zero ORTHOGONAL — two drives that disagree on sign leave the net with no view
-    (the Monty-Hall move: only a coherent, agreeing drive is an opinion). Pure over the ternary
-    alphabet. (Kept in the genre layer, not otp.py, which deliberately excludes combinators.)"""
-    return a if a == b else ORTHOGONAL
-
-
-def signed_adjacency(events: Iterable[Event]) -> dict[str, dict[str, int]]:
-    """Directed regulatory adjacency `{subject: {target: net_sign}}`, self-loops dropped. An edge's
-    sign is the OTP combination of its parallel regulatory verbs: pure amplify -> SUPPORT, pure
-    inhibit -> OPPOSE, a mix (the same pair both amplified AND inhibited) -> the informational zero
-    — an existing coupling whose POLARITY the data leaves indeterminate. Orchestration over
-    `otp_combine`; intent-tested.
-    """
-    adj: dict[str, dict[str, int]] = {}
-    for e in events:
-        if e.network == REGULATORY and e.subject != e.target and e.verb in _VERB_SIGN:
-            sign = _VERB_SIGN[e.verb]
-            row = adj.setdefault(e.subject, {})
-            row[e.target] = otp_combine(row[e.target], sign) if e.target in row else sign
-    return adj
 
 
 def reach_graph(signed_adj: dict[str, dict[str, int]]) -> dict[str, set[str]]:
