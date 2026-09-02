@@ -30,7 +30,14 @@ class Event:
     `verb` is the role-action class the renderer emits (amplify, differentiate, closes-off, …), held
     as data, never enumerated here. `subject`/`target` are the coupled atomic ids (gene / role).
     `sign` is the OTP ternary vote: +1 assert the coupling, -1 censor it, 0 abstain (the
-    informational zero).
+    informational zero). NOTE `sign` is coupling support/censor, NOT regulatory polarity —
+    activation vs inhibition rides the `verb` (amplifies/inhibits), so a real inhibitory edge is
+    still +1 support (it asserts the coupling exists), never a censor.
+
+    `mode` is an optional peer marker stacked on the base edge (the GSE set-theory/density op, not a
+    scalar): a channel the coupling acts through, e.g. ``"activity"`` / ``"abundance"``. The L3
+    role layer reads it; `events_to_web` ignores it (reads only subject/target/sign). ``""`` = no
+    marker (the mode-level informational zero). Held as data; never enumerated here.
     """
 
     network: str
@@ -38,6 +45,7 @@ class Event:
     subject: str
     target: str
     sign: int
+    mode: str = ""
 
 
 def couple_verdict(support: int, censor: int) -> str:

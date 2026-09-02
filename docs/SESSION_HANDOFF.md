@@ -22,16 +22,14 @@ pure decision Detective-complete): `search.eliminate_two_sign`, `position.py`, `
 Detective-COMPLETE; `row_to_event`/`signor_events`), turning SIGNOR rows → regulatory `Event`s. It already
 recovers `RIPK2 → TRAF6` cleanly (the edge Reactome buried in a complex). Commit `2848c1e`.
 
-## ★ THE ONE NEXT ACTION — get the founder's effect→sign policy, then run the first SIGNOR read
-The SIGNOR adapter takes an `effect_policy: Mapping[str,int]` (founder config — NOT defaulted; that is where
-the activity-vs-quantity call lives). The imperative: **get the founder's effect→sign policy (activity-only,
-or activity + quantity), then run the first SIGNOR → two-sign read toward the LRRK2 control.** The SIGNOR
-effect vocabulary + counts are in the last assistant turn (up/down-regulates{,-activity,-quantity...},
-form-complex→0, unknown→0). Do NOT author the policy yourself (compute-not-impose). The mechanical brick that
-needs no biology, buildable meanwhile: the **SIGNOR fetch/cache layer** (download `getData.php?organism=9606&
-format=csv`, one 21 MB TSV; cache under `paths.DATA`, gitignored, hash-pinned per `REFERENCE_MANIFEST`;
-User-Agent header required — bare urllib gets 403). The dump is already fetched at
-`<scratchpad>/signor_human.csv` (43,492 rows, 29 cols, tab-separated, no header).
+## ★ THE ONE NEXT ACTION — build the SIGNOR fetch/cache layer, then run the first read toward LRRK2
+The effect-policy is SETTLED and BUILT (2026-09-02): `signor.parse_effect` decomposes the `effect` grammar
+(direction→verb, mode→marker), `signor.py` emits regulatory `Event`s, both pure decisions Detective-COMPLETE.
+So the imperative is now the **SIGNOR fetch/cache layer** (mechanical, no biology): download
+`getData.php?organism=9606&format=csv` (one 21 MB TSV), cache under `paths.DATA` (gitignored, hash-pinned per
+`REFERENCE_MANIFEST`; User-Agent header required — bare urllib gets 403), stream rows → `signor_events` →
+`events_to_web` → the two-sign read toward the LRRK2 control. The dump is already fetched at
+`<scratchpad>/signor_human.csv` (43,492 rows, 29 cols, tab-separated, no header; 27,325 protein→protein).
 
 ## ★★ LOCKED DECISIONS (renderer phase) — with reasons, so they survive
 - **Source = SIGNOR, not Reactome.** *Why:* Reactome's reaction model is complex-centric — gene edges are
@@ -44,10 +42,18 @@ User-Agent header required — bare urllib gets 403). The dump is already fetche
   constraint-propagation-over-a-fixed-schema is exactly the fit. Harmonizing's job is the **entity
   normalization** (proteinfamily/complex/synonym → canonical gene atomics) + the template mechanism/NL field
   — NOT the directed edge (that's SIGNOR field access). Two layers.
-- **Atomics = distinct role-states** (`p-RIPK2` ≠ `RIPK2`); **scope = wider**; **cache = hash-pinned**;
-  effect map: `up/down-regulates*`→±1, `form complex`→0 (physical-binding network), `unknown`→0.
-- **Verb = SIGNOR `mechanism`** (phosphorylation/binding/…); could carry activity-vs-quantity as the verb so
-  the two stay distinguishable downstream even if both enter the regulatory network.
+- **Atomics = distinct role-states** (`p-RIPK2` ≠ `RIPK2`); **scope = wider**; **cache = hash-pinned**.
+- **Effect grammar → (sign, verb, mode), SETTLED + BUILT (2026-09-02).** direction→**verb** `amplifies`/
+  `inhibits` (the regulatory POLARITY); **`Event.sign` = +1 for EVERY SIGNOR edge** — sign is coupling
+  support/censor, NOT polarity, and SIGNOR only ever asserts a relation, so a real inhibition is `inhibits`/+1,
+  never a censor (a −1 would make `couple_verdict` falsely `killed`). Censors (−1) come from physics-orthogonal
+  exclusions / developmental closing-off / treatment-response, never from SIGNOR. mode (`activity`/`quantity`/
+  bare) → a peer `mode` marker on the SAME edge (`Event.mode`, added this session) — the GSE set-theory/density
+  op (κ-density, super-additive at bridges), NOT a scalar, NOT a separate network; quantity submodes fold into
+  `abundance`; bare = no marker (mode-level zero). `unknown`/`form complex` → skip. This CORRECTS the earlier
+  `±1` note (it conflated polarity with support/censor). Verbs `amplifies`/`inhibits` are the ETIOLOGY §3 L2
+  reserved directed verbs; mode-marker facts (`A modulates activity` / `A titrates abundance`) are the L3
+  role-firing layer's job, verbs founder-authored, centroids mined from SIGNOR's `mechanism` column.
 
 ## ★ THE REMAINING PIECES (SYSTEM_DESIGN §12; everything downstream of a renderer's `list[Event]` is built)
 1. effect-policy (founder) → run. 2. SIGNOR fetch/cache (mechanical). 3. harmonizing entity-normalization.
