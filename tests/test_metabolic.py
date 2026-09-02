@@ -1,6 +1,6 @@
 """Intent tests for the metabolic-flux adapter — Reactome metabolic-pathway co-membership.
 
-An undirected vote: sign=+1, verb "co-metabolizes", mode "", network "metabolic", both orderings.
+An undirected vote: sign=+1, verb "channels", mode "", network "metabolic", both orderings.
 Only genes in a pathway UNDER the Metabolism subtree count (the scoping is load-bearing). Entrez ids
 normalized to symbols; unmapped dropped."""
 
@@ -59,7 +59,7 @@ def test_co_metabolism_emits_both_orderings_for_metabolic_pathways_only():
     edges = {(e.subject, e.target) for e in events}
     assert edges == {("GPI", "HK1"), ("HK1", "GPI")}  # one pair, both orderings
     e = events[0]
-    assert (e.network, e.verb, e.sign, e.mode) == ("metabolic", "co-metabolizes", 1, "")
+    assert (e.network, e.verb, e.sign, e.mode) == ("metabolic", "channels", 1, "")
 
 
 def test_unmapped_entrez_is_dropped():

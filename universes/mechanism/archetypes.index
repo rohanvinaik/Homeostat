@@ -1,16 +1,14 @@
-# Homeostat mechanism universe — minimal proof (2026-08-31), per docs/ETIOLOGY_ENGINE.md §8.
-# Recognizes mechanistic ROLES over gene relational-signal facts (subject-verb-object), by the ROLE
-# VERB, never the gene token. Trigger column = the rules' OWN antecedent verbs (class centroids) —
-# NEVER gene names, NEVER padded surface synonyms.
-# name           | trigger verbs (class centroids)   | rules-file                | (concepts)
-sensor           | sense detect recognize            | rules/sensor.rules         |
-transducer       | relay propagate transduce         | rules/transducer.rules     |
-amplifier        | amplify enhance potentiate        | rules/amplifier.rules      |
-differentiator   | differentiate stratify conserve   | rules/differentiator.rules |
-coexpressor      | track mirror accompany            | rules/coexpressor.rules    |
-dominator        | dominate exceed surpass           | rules/dominator.rules      |
-binder           | bind couple attach                | rules/binder.rules         |
-wirer            | wire link associate               | rules/wirer.rules          |
-specificity      | flood swamp saturate              | rules/specificity.rules    |
-component        | amplify sense relay track bind wire differentiate dominate | rules/component.rules |
-zero             | lack miss omit                    | rules/zero_signal.rules    |
+# Homeostat mechanism universe — archetypes (the ROLES / characters), re-anchored to the FOUR network
+# verbs (2026-09-02). Gene-edge role recognition: a Form fires on the ROLE VERB (class centroid), never
+# the opaque gene token (STORY_LAYER.md; the no-hard-coded-gene→role cardinal rule). Reconciled from the
+# old-lens era (differentiate/track/dominate/wire — retired with the l2_encoder). Trigger column = class
+# centroids (WordNet-equivalence), NEVER gene names, NEVER padded surface synonyms.
+# name        | trigger verbs (class centroids) | rules-file              | (concepts)
+amplifier     | amplify enhance potentiate      | rules/amplifier.rules   |
+inhibitor     | inhibit suppress repress        | rules/inhibitor.rules   |
+binder        | bind couple attach              | rules/binder.rules      |
+homolog       | resemble mirror parallel        | rules/homolog.rules     |
+metabolizer   | channel                         | rules/metabolizer.rules |
+transducer    | amplify inhibit                 | rules/transducer.rules  |
+component     | amplify inhibit bind channel    | rules/component.rules   |
+zero          | lack miss omit                  | rules/zero_signal.rules |

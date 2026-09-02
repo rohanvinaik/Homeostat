@@ -1,2 +1,5 @@
-# The signal-transducer role (e.g. RIPK2/RIP2).
-if x relays signal then x becomes transducer
+# The transducer role — the middle of a causal chain: a gene amplified/inhibited by an upstream gene
+# AND itself acting on a downstream one relays the signal. The tragedy-cascade's plot runs through it.
+# y re-binds in SUBJECT position of antecedent 2 (not object), so the chain fires (contract §3).
+if x amplifies y and y amplifies z then y becomes transducer
+if x inhibits y and y inhibits z then y becomes transducer

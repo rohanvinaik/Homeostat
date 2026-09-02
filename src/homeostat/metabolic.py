@@ -3,7 +3,7 @@
 The metabolic-flux network (THESIS ch.8): a level below regulatory, the passive energy-state
 coupling where the summation theorem lives (control distributed across a pathway). Instantiated as
 co-membership in a Reactome METABOLIC pathway — two enzymes in one metabolic pathway are coupled.
-An UNDIRECTED vote (LAW 9): `Event("metabolic","co-metabolizes",A,B,+1,"")`, emitted in both
+An UNDIRECTED vote (LAW 9): `Event("metabolic","channels",A,B,+1,"")`, emitted in both
 orderings (an undirected vote supports a coupling in either direction).
 
 Scoping to the Metabolism subtree is LOAD-BEARING: unscoped pathway co-membership is dominated by
@@ -68,6 +68,6 @@ def co_metabolism_events(
     out: list[Event] = []
     for genes in by_pathway.values():
         for a, b in pair_up(list(genes)):
-            out.append(Event("metabolic", "co-metabolizes", a, b, 1, ""))
-            out.append(Event("metabolic", "co-metabolizes", b, a, 1, ""))
+            out.append(Event("metabolic", "channels", a, b, 1, ""))
+            out.append(Event("metabolic", "channels", b, a, 1, ""))
     return out

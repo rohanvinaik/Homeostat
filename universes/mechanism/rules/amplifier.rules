@@ -1,2 +1,2 @@
-# The signal-amplifier role (LRRK2 in one population; a DIFFERENT kinase in another — fungible).
-if x amplifies signal then x becomes amplifier
+# Regulatory UP: a gene that amplifies a signal is an amplifier (SIGNOR amplifies).
+if x amplifies y then x becomes amplifier
