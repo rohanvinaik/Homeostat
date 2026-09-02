@@ -1,16 +1,20 @@
-"""Intent tests for the tragedy genre — a native topology read over the regulatory web.
+"""Intent tests for the tragedy genre — a native OTP topology read over the regulatory web.
 
-A tragedy is an amplify-cascade from an origin (a source) into an uncensored sink (the doom). The
-H4 refusal downgrades an *inhibited* sink to "compensated"; a cascade with no source (a cycle) is a
-different genre and yields nothing. Self-loops never count (they propagate to no new node)."""
+The cascade is polarity-blind reachability; polarity is the OTP ternary propagated by sign-product,
+with disagreeing paths collapsing to the informational zero. A sink's verdict is its net drive:
+net-up = doomed, net-down = suppressed (the H4 refusal), informational-zero = indeterminate. A cycle
+(no source) is a different genre and yields nothing."""
 
 from homeostat.event import Event
+from homeostat.otp import OPPOSE, ORTHOGONAL, SUPPORT
 from homeostat.tragedy import (
     Tragedy,
     doom_verdict,
     is_sink,
+    net_signs,
+    otp_combine,
     read_tragedy,
-    regulatory_adjacency,
+    signed_adjacency,
     sources,
 )
 
@@ -23,53 +27,78 @@ def _inh(a, b):
     return Event("regulatory", "inhibits", a, b, 1)
 
 
-# ---- the pure decision -----------------------------------------------------------
+# ---- the pure OTP merge ----------------------------------------------------------
 
 
-def test_doom_verdict_names_the_three_states():
-    assert doom_verdict(True, True, False) == "doomed"  # uncensored terminal a cascade reaches
-    assert doom_verdict(True, True, True) == "compensated"  # H4: an inhibitor restrains the doom
-    assert doom_verdict(False, True, False) == "not-doom"  # not a sink
-    assert doom_verdict(True, False, False) == "not-doom"  # a sink no cascade reaches
+def test_otp_combine_agrees_or_falls_to_the_informational_zero():
+    assert otp_combine(SUPPORT, SUPPORT) == SUPPORT
+    assert otp_combine(OPPOSE, OPPOSE) == OPPOSE
+    assert otp_combine(SUPPORT, OPPOSE) == ORTHOGONAL  # disagreement -> no opinion
+    assert otp_combine(SUPPORT, ORTHOGONAL) == ORTHOGONAL
 
 
-# ---- the graph helpers -----------------------------------------------------------
+# ---- the pure verdict ------------------------------------------------------------
 
 
-def test_regulatory_adjacency_splits_by_verb_and_drops_self_loops():
-    # self-loop B->B and the physical edge are both dropped from the amplify adjacency
-    physical = Event("physical", "binds", "A", "B", 1)
-    events = [_amp("A", "B"), _amp("B", "B"), _inh("X", "B"), physical]
-    assert regulatory_adjacency(events, "amplifies") == {"A": {"B"}}
-    assert regulatory_adjacency(events, "inhibits") == {"X": {"B"}}
+def test_doom_verdict_reads_the_net_sign():
+    assert doom_verdict(True, True, SUPPORT) == "doomed"  # driven up and locked
+    assert doom_verdict(True, True, OPPOSE) == "suppressed"  # H4: a censor holds it down
+    assert doom_verdict(True, True, ORTHOGONAL) == "indeterminate"  # paths disagree -> abstain
+    assert doom_verdict(False, True, SUPPORT) == "not-doom"  # not a sink
+    assert doom_verdict(True, False, SUPPORT) == "not-doom"  # no cascade reaches it
 
 
-def test_sources_are_origins_with_no_upstream():
-    adj = {"A": {"B"}, "B": {"C"}}
-    assert sources(adj) == {"A"}  # B has an upstream (A); C is a pure sink, not a source
-    assert is_sink(adj, "C") and not is_sink(adj, "B")
+# ---- the signed adjacency --------------------------------------------------------
+
+
+def test_signed_adjacency_signs_by_verb_mixes_to_zero_drops_self_and_nonreg():
+    events = [_amp("A", "B"), _inh("A", "B"), _amp("A", "C"), _amp("B", "B")]
+    events.append(Event("physical", "binds", "A", "C", 1))
+    adj = signed_adjacency(events)
+    assert adj["A"]["B"] == ORTHOGONAL  # amplify + inhibit on the same pair -> informational zero
+    assert adj["A"]["C"] == SUPPORT  # amplify only; the physical edge is not regulatory
+    assert "B" not in adj  # B's only out-edge was a self-loop, dropped
+
+
+# ---- the OTP net-sign propagation ------------------------------------------------
+
+
+def test_net_signs_flip_on_inhibition_and_disinhibit_on_two():
+    assert net_signs(signed_adjacency([_amp("A", "B"), _amp("B", "C")]), "A")["C"] == SUPPORT
+    assert net_signs(signed_adjacency([_amp("A", "B"), _inh("B", "C")]), "A")["C"] == OPPOSE
+    # two inhibitions compose to a net-up drive (disinhibition)
+    assert net_signs(signed_adjacency([_inh("A", "B"), _inh("B", "C")]), "A")["C"] == SUPPORT
+
+
+def test_net_signs_collapse_disagreeing_paths_to_zero_and_survive_cycles():
+    # A->B->S (up) and A->C->S (down): S is driven both ways -> the informational zero
+    events = [_amp("A", "B"), _amp("B", "S"), _amp("A", "C"), _inh("C", "S")]
+    assert net_signs(signed_adjacency(events), "A")["S"] == ORTHOGONAL
+    # a cycle back to the pinned origin terminates and leaves the origin SUPPORT
+    assert net_signs(signed_adjacency([_amp("A", "B"), _amp("B", "A")]), "A")["A"] == SUPPORT
 
 
 # ---- the read --------------------------------------------------------------------
 
 
-def test_read_tragedy_locks_a_cascade_onto_an_uncensored_sink():
-    # A -> B -> C, C self-amplifies (a lock, still a sink); C is the uncensored doom.
-    events = [_amp("A", "B"), _amp("B", "C"), _amp("C", "C")]
-    assert read_tragedy(events) == [Tragedy("A", "C", "doomed")]  # B is a middle, never emitted
+def test_read_tragedy_dooms_a_net_up_sink():
+    assert read_tragedy([_amp("A", "B"), _amp("B", "C")]) == [Tragedy("A", "C", "doomed")]
 
 
-def test_read_tragedy_h4_refusal_compensates_an_inhibited_sink():
-    events = [_amp("A", "B"), _amp("B", "C"), _inh("Z", "C")]
-    assert read_tragedy(events) == [Tragedy("A", "C", "compensated")]
+def test_read_tragedy_suppresses_a_net_down_sink():
+    # the H4 refusal, fired on structure: the terminal is driven down, not doomed
+    assert read_tragedy([_amp("A", "B"), _inh("B", "C")]) == [Tragedy("A", "C", "suppressed")]
+
+
+def test_read_tragedy_abstains_when_the_arc_disagrees():
+    events = [_amp("A", "B"), _amp("B", "S"), _amp("A", "C"), _inh("C", "S")]
+    assert read_tragedy(events) == [Tragedy("A", "S", "indeterminate")]
 
 
 def test_read_tragedy_declines_a_cycle_with_no_origin():
-    events = [_amp("A", "B"), _amp("B", "A")]  # a loop — no source, so no tragedy (it is a comedy)
-    assert read_tragedy(events) == []
+    assert read_tragedy([_amp("A", "B"), _amp("B", "A")]) == []
 
 
-def test_read_tragedy_reports_each_origin_of_a_convergent_doom():
-    # two independent origins whose cascades both lock onto the same sink S
-    events = [_amp("P", "S"), _amp("Q", "S")]
-    assert read_tragedy(events) == [Tragedy("P", "S", "doomed"), Tragedy("Q", "S", "doomed")]
+def test_sources_and_is_sink():
+    reach = {"A": {"B"}, "B": {"C"}}
+    assert sources(reach) == {"A"} and is_sink(reach, "C") and not is_sink(reach, "B")
