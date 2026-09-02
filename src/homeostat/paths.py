@@ -59,3 +59,18 @@ HOMOLOGY_URL = (
     "https://ftp.ensembl.org/pub/release-112/tsv/ensembl-compara/homologies/homo_sapiens/"
     "Compara.112.protein_default.homologies.tsv.gz"
 )
+
+# Reactome metabolic pathways + NCBI gene_info (the metabolic-flux renderer's substrate).
+# Metabolic-flux = co-membership in a Reactome pathway under the Metabolism subtree (R-HSA-1430728);
+# scoping to that subtree is load-bearing (unscoped co-membership just re-states regulatory).
+# Three files: NCBI2Reactome (Entrez→pathway), the pathway hierarchy, gene_info (Entrez→symbol).
+METABOLIC_DIR = DATA / "metabolic"
+NCBI2REACTOME = METABOLIC_DIR / "NCBI2Reactome.txt"
+REACTOME_RELATION = METABOLIC_DIR / "ReactomePathwaysRelation.txt"
+GENE_INFO = METABOLIC_DIR / "Homo_sapiens.gene_info.gz"
+NCBI2REACTOME_SHA = METABOLIC_DIR / "NCBI2Reactome.sha256"
+REACTOME_RELATION_SHA = METABOLIC_DIR / "ReactomePathwaysRelation.sha256"
+GENE_INFO_SHA = METABOLIC_DIR / "Homo_sapiens.gene_info.sha256"
+NCBI2REACTOME_URL = "https://reactome.org/download/current/NCBI2Reactome.txt"
+REACTOME_RELATION_URL = "https://reactome.org/download/current/ReactomePathwaysRelation.txt"
+GENE_INFO_URL = "https://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/Mammalia/Homo_sapiens.gene_info.gz"

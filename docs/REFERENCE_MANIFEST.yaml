@@ -95,6 +95,24 @@
   sha256: 6ed96cc1472d6056ed8c7cc3205094c09410ec7fb59e93668a5b675f6a93652f
   cited_by: [src/homeostat/homology.py, src/homeostat/homology_fetch.py, src/homeostat/paths.py]
 
+- id: ncbi2reactome-9606
+  path: data/metabolic/NCBI2Reactome.txt
+  role: metabolic-flux renderer substrate — Reactome gene→pathway membership (Entrez id → lowest-level pathway stId; human rows filtered). Genes co-occurring in a pathway UNDER the Metabolism subtree (R-HSA-1430728) are emitted as undirected co-membership votes (LAW 9 tier 2). Gitignored, re-downloadable via homeostat.metabolic_fetch.ensure_all; sha256 pins the version built against.
+  sha256: 44aec2f3d6c0d6f03268fbdc66f95a14673e86da31682b7edbd71c6c6a1ecc8d
+  cited_by: [src/homeostat/metabolic.py, src/homeostat/metabolic_fetch.py, src/homeostat/paths.py]
+
+- id: reactome-pathways-relation
+  path: data/metabolic/ReactomePathwaysRelation.txt
+  role: metabolic-flux scoping — Reactome pathway hierarchy (parent stId → child stId); BFS from Metabolism (R-HSA-1430728) yields the 336-pathway metabolic subtree that scopes the co-membership network. Gitignored, re-downloadable; sha256 pins the version.
+  sha256: fd49a624d80c14eb37ae57a02e141d574d5ede3f60022bb99edbd909448a3f1e
+  cited_by: [src/homeostat/metabolic.py, src/homeostat/metabolic_fetch.py, src/homeostat/paths.py]
+
+- id: ncbi-gene-info-9606
+  path: data/metabolic/Homo_sapiens.gene_info.gz
+  role: harmonizing normalization input — NCBI gene_info Entrez id → gene symbol map, for the metabolic renderer (Reactome keys on Entrez). Gitignored, re-downloadable; sha256 pins the version.
+  sha256: 1a4522131924f33d5729ab9a0001df5d91038775f03efc1e98346dec41003327
+  cited_by: [src/homeostat/metabolic_fetch.py, src/homeostat/paths.py]
+
 - id: predecessor-study
   path: ~/Projects/Predecessor_Study
   role: SUBSUMED predecessor — salvage governed exclusively by docs/SALVAGE_MANIFEST.md; repo pointer, not hashed
