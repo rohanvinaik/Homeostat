@@ -39,6 +39,14 @@ SITES_VCF_URL = (
     "ALL.wgs.phase3_shapeit2_mvncall_integrated_v5c.20130502.sites.vcf.gz"
 )
 
+# SIGNOR human curated directed-signaling dump (the regulatory renderer's substrate).
+# One TSV (getData.php serves tab-separated despite format=csv), no header, 29 columns.
+# Re-downloadable; the sha256 sidecar pins the version built against (SIGNOR updates → drift).
+SIGNOR_DIR = DATA / "signor"
+SIGNOR_TSV = SIGNOR_DIR / "signor_human_9606.tsv"
+SIGNOR_SHA = SIGNOR_DIR / "signor_human_9606.sha256"
+SIGNOR_URL = "https://signor.uniroma2.it/getData.php?organism=9606&format=csv"
+
 # E/I/R outputs
 EIR = DATA / "e_i_r"
 SHARDS = EIR / "shards"

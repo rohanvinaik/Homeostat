@@ -71,6 +71,12 @@
   sha256: null
   cited_by: [src/homeostat/paths.py]
 
+- id: signor-human-9606
+  path: data/signor/signor_human_9606.tsv
+  role: regulatory-network renderer substrate — SIGNOR human curated directed causal relations (getData.php?organism=9606&format=csv; 43,492 rows / 29 cols, 27,325 protein→protein). Gitignored, re-downloadable via homeostat.signor_fetch.ensure; the sha256 pins the version the renderer was built against (SIGNOR updates periodically → drift).
+  sha256: d8df932cf406bb797813a08d9afa6f667b6031f0dbc94169ca7cc59fa2718f3a
+  cited_by: [src/homeostat/signor.py, src/homeostat/signor_fetch.py, src/homeostat/paths.py]
+
 - id: predecessor-study
   path: ~/Projects/Predecessor_Study
   role: SUBSUMED predecessor — salvage governed exclusively by docs/SALVAGE_MANIFEST.md; repo pointer, not hashed
