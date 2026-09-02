@@ -151,8 +151,11 @@ call, named as a bounded utility, never your default, never the method, never "t
    The web (roles + couplings) is proven deterministic mechanism (UniProt/GO/Reactome/Pfam), extracted
    once (LAW 3) — not a hand-written edge list, and seeding it from guesses (a PBS pile, a generic
    interactome, **SDIS's edges**) is the root of the 2026-08-30 death (canon §12.14, §15). SDIS is a
-   *characterization target*, never the object. The bright line: an edge is a proven mechanism
-   (authored/extracted), never a computed association. What is still open is only the **data** — the
+   *characterization target*, never the object. The bright line is **three-tier** (LAW 9): a *directed
+   proven mechanism* (SIGNOR — earns direction), an *undirected mechanistic vote* (co-expression/binding —
+   existence only, promiscuous hubs censored), or a *calibration prior* (GWAS — a node-weight, not an edge);
+   NEVER a computed association as the verdict-*object* (a frequency read as significance). What is still
+   open is only the **data** — the
    web-build pipeline (free public bioinformatics) and, for population *validation*, dynamic/state-resolved
    data (§12.4); the per-person read gets its dynamics from the person's own treatment-response history.
 4. Never reframe the coherence design as statistics-with-extra-steps. Never rank by a

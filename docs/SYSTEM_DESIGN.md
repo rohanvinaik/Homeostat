@@ -243,26 +243,33 @@ web + the person's own history for the dynamics," with population validation the
 
 ## 12. Build state — what is built, what is next
 
-**Built and pinned (2026-09-02, 133 tests green; every pure decision Detective-complete):**
+**Built and pinned (2026-09-02, 149 tests green; every pure decision Detective-complete):**
 - **The engine (resolve-narrow):** `search.eliminate_two_sign` + `constraint_disposition` (two-sign
   σ-elimination — positive constraints ∧ negative censors, certified-⊥); `position.py` (per-person
   signed-ternary off the mined zero + the Discrimination Guarantee); `jeeves.py` (the EIG discrimination-
   dimension selector); `clinic.read_presentation` (the end-to-end two-sign read); `ground.py` (the
   SymbolicSpellCheck front door); `web.py` / `otp.py` / `signal.py` (the substrate).
-- **The encoding layer:** `event.py` — the L2 event contract (`Event`; `couple_verdict` cross-network
+- **The encoding layer:** `event.py` — the L2 event contract (`Event`, now three-axis: `sign`
+  support/censor, `verb` polarity+role-class, `mode` a peer κ-density marker; `couple_verdict` cross-network
   resolution; `events_to_web` positive; `events_to_censors` + `active_censors` role-scoped negative);
   `clinic.read_from_events` (the encode→resolve spine, end to end).
+- **The FIRST renderer — regulatory, on SIGNOR:** `signor.py` (`parse_effect` decomposes SIGNOR's effect
+  grammar into direction→verb `amplifies`/`inhibits` + mode `activity`/`abundance`/bare; **every edge
+  `sign=+1`** — SIGNOR only asserts, so a real inhibition is `inhibits`/+1, never a censor); `signor_fetch.py`
+  (the I/O shell: download/cache/sha256-pin/stream, hash-pinned in `REFERENCE_MANIFEST`). Verified E2E on the
+  real 21 MB dump: 26,340 regulatory `Event`s → 19,026 couplings; the LRRK2–NOD2–RIPK2 axis is present.
 - Engine A (the node-birth / target-pinning loops) is **retired in code**; the statistical genus is ripped.
 
-**Next — the renderer phase (external I/O + object-led; the founder's biology enters here):**
-1. **The per-network renderers (§11):** each network renders its DB slice into `list[Event]` —
-   regulatory→Reactome (directed), evolutionary→BLAST, structural/genotype-deep→Pfam/GO/AlphaFold,
-   developmental & exposome→ordered narratives (Regenesis), metabolic-flux→pathway/flux. Founder-led: the
-   verb vocabulary, the source per network, and the caching/hash-pinning are the biology author's call.
+**Next — the remaining renderers + the generate-wide half (§11; the founder's biology enters here):**
+1. **The other per-network renderers (§11):** each renders its DB slice into `list[Event]` at its bright-line
+   tier (Law 9) — evolutionary→BLAST (undirected homology/fungibility), structural/genotype-deep→Pfam/GO/
+   AlphaFold, developmental & exposome→ordered narratives (Regenesis), metabolic-flux→pathway/flux,
+   co-expression/binding→undirected mechanistic votes, trait-wiring→calibration prior. Founder-led: the verb
+   vocabulary, source, and caching per network.
 2. **Regenesis as the generate-wide half:** derive the implied candidate mechanisms + roles + trajectory
    from the multi-network event story, feeding the resolve-narrow engine.
 3. **The LRRK2 positive control (canon §13.3):** recover the LRRK2–NOD2–RIPK2 shadow as coherence, blind —
-   the first real-data acceptance test. If it does not recover, the method is not working.
+   the first real-data acceptance test (needs ≥2 networks + Regenesis; the regulatory slice alone is not it).
 
 Everything downstream of a renderer's `list[Event]` is built and pinned.
 
@@ -280,10 +287,21 @@ Everything downstream of a renderer's `list[Event]` is built and pinned.
    negative dual: never over-censor to a false ⊥. Halt at the κ-knee.
 8. **Roles by semantic class on physically-real centroids** (folding/co-localization/chemistry), never token
    identity, never a learned embedding fit to the answer. Regenesis is the role engine — use it.
-9. **The bright line for the web:** proven deterministic mechanism (authored) vs computed association
-   (forbidden). Incomplete-but-not-wrong is legitimate; a statistic is not.
+9. **The bright line for the web is THREE-TIER, set by how much a witness may assert.** (i) *Directed proven
+   mechanism* (regulatory/SIGNOR) — object-eligible, EARNS direction. (ii) *Undirected mechanistic vote*
+   (co-expression, physical binding) — object-eligible for a coupling's EXISTENCE, never its direction;
+   promiscuous hubs killed by the specificity censor. (iii) *Calibration prior* (trait-wiring/GWAS) — a
+   node-weight, NOT an edge. Forbidden across all three: a computed association as the *object of the verdict*
+   (co-expression frequency AS significance, a correlation drawn as an arrow). Significance is κ, never a
+   vote's own frequency; incomplete-but-not-wrong is legitimate, a statistic-as-object is not.
 10. **Abstention is load-bearing.** Category incompleteness → informational zero → non-recovery, never a wrong
     placement (SymbolicSpellCheck). The data gates the *validation* claim, not the per-person read.
+11. **Reads a FROZEN world; touches NO creativity.** The engine reads the zero-time crystallization of
+    biology — where both arbitrary (intentional) and structured (evolutionary/regulatory) creativity are
+    already frozen into static structure — and reconstructs none of the process that produced it. It imposes
+    no prior it did not extract, fits no dynamics it cannot observe, admits no homunculus. This refusal IS the
+    guarantee: only a read that adds nothing of its own reflects the biology rather than the reader. κ is an
+    endogenous oracle (a theory of *reading*, not creating), which is exactly why it fits a frozen capture.
 
 ## 14. Primary sources (read these, not this summary)
 

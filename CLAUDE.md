@@ -34,9 +34,11 @@ guessed.** The web (which regulatory things couple to which, and each node's rol
 proven deterministic mechanism (UniProt/GO/Reactome/Pfam), extracted **once** — not learned from the
 person (you cannot fit a wiring diagram to one snapshot), not a hand-written edge list, and NEVER
 seeded from guesses (the PBS pile, the generic interactome, SDIS's edges — the recorded death §15,
-§12.14). **The bright line (the genus guard):** an edge enters only as *proven deterministic mechanism*
-(authored/extracted, incomplete-but-not-wrong), never as a *computed association* (a frequency/
-enrichment — the forbidden statistic). Node *birth* by population induction (Engine A) is **RETIRED**;
+§12.14). **The bright line (the genus guard) is THREE-TIER** (SYSTEM_DESIGN LAW 9): a *directed proven
+mechanism* (SIGNOR — earns direction), an *undirected mechanistic vote* (co-expression/binding —
+object-eligible for a coupling's EXISTENCE only, promiscuous hubs censored), or a *calibration prior*
+(GWAS — a node-weight, not an edge). NEVER a *computed association as the verdict-object* (a frequency/
+enrichment read as significance — the forbidden statistic). Node *birth* by population induction (Engine A) is **RETIRED**;
 node *death* (negative learning / near-miss) is promoted to the negative sign (LAW 3b);
 **consolidation** = safe-forget a κ=0 node (the idempotent bulk) survives. Per-person growth is
 **DIMENSIONAL** — discriminate by adding a *measurement dimension*, never by growing nodes (Peitho: the

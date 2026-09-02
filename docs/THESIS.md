@@ -62,6 +62,17 @@ touches the ground it grew from. That is why a genuinely coherent theory of inte
 biology and health: not because biology is a good application, but because biology is the *birthplace*, and a
 theory of intelligence that could not return to it would be a theory of the colonies only.
 
+One clarification governs everything that follows, and it is the *source* of the instrument's
+trustworthiness, not a limit on it. **This is a reader, not a creator.** The creativity that built the
+mechanism — four billion years of evolution, a lifetime of development, the arbitrary intent of a living
+choice — has *already happened*, and the instrument touches none of it. It reads the **frozen, zero-time
+crystallization** of that work: biology at one fixed time-point, where the creativity is arrested and the
+problem space is, for that instant, absolutely symbolic. The refusal to model, to impose a prior it did not
+extract, to admit any shadow of a homunculus, is not a constraint worked around — it is *the guarantee*:
+only a read that adds nothing of its own can be trusted as a reflection of what the biology actually says.
+Every element below serves reading that frozen world exactly, never reconstructing the process that produced
+it (chapter 11 closes on this).
+
 The rest of this document is the machinery, one element per chapter, each with its reason, weaving into a
 single read.
 
@@ -230,6 +241,18 @@ same structural reason: their effect exists only in composition. This is chapter
 significance side — the non-idempotence *is* the bridge structure, and the bridge structure *is* where the
 disease lives.
 
+One scoping note belongs here, because κ is doing something subtle that fixes its place in the whole design.
+κ is an **endogenous oracle** — marginal coverage computed over the derivation graph the read already holds —
+and that is exactly why it fits. It can see *structured* creativity, the kind whose probability-collapse
+happens *inside* a constraint system (evolution's selection, a regulatory network's physics — an oracle
+already in the graph), because a derivation graph is precisely such a system frozen. It cannot represent
+*arbitrary* creativity — a genuinely intentional, unpredictable act with no endogenous oracle to compute over
+— and it does not need to. At zero-time the distinction dissolves: the crystallization froze both kinds of
+creativity into the same static structure, and *reading is always endogenous* — the oracle is the frozen
+geometry itself. So the significance layer is not a theory of creating (which would have to sort the arbitrary
+from the structured, a problem the source papers leave genuinely open); it is a theory of *reading*, and
+reading is the whole job.
+
 ## 6. The substrate geometry — the informational zero, and DNA as an OTP code
 
 Every measure so far needs a representation with one unusual property: it must be able to say *nothing*, and
@@ -319,11 +342,19 @@ The networks, established with the founder as a clean set of mutually-orthogonal
   evolution are causatively linked, descent distance is a coherent geometry, and homologs are fungible role-
   fillers.
 
-Two structural facts fall out. First, **the genus is which network, not a per-edge tag**: a coupling witnessed
-by the regulatory network is mechanism-directed; a co-expression correlation is a statistical *association*,
-which is not even one of these networks — it is a read *across* atomics, prior-only by construction. The bright
-line between "proven mechanism" (object-eligible) and "computed association" (search-order prior only) becomes
-a property of *provenance-by-construction*. Second, **the negative sign is native and distributed**: development
+Two structural facts fall out. First, **the genus is which network, not a per-edge tag** — but the line is
+*three-tier*, not binary, and the tiers are set by how much a witness may assert. A **directed proven
+mechanism** (the regulatory network, SIGNOR) is object-eligible and *earns direction* — the arrow is real. An
+**undirected mechanistic vote** (co-expression, physical binding) is object-eligible for a coupling's
+*existence* but never its direction: co-expression is the shadow of a real coupling — a shared regulator,
+shared-environment co-activation, physical co-localization — whose direction is out-of-frame for the lens, so
+it contributes undirected support, and its promiscuous hubs are killed by the specificity censor rather than
+drawn as arrows. A **calibration prior** (trait-wiring, GWAS) is not an edge at all — a population-tuned weight
+on how load-bearing each node tends to be, tuning the search without ever asserting a coupling. What stays
+absolutely forbidden is the one thing the bright line was always about: a computed association taken as the
+*object of the verdict* — co-expression *frequency* read as significance, or a correlation drawn as a directed
+mechanism. Significance is κ over the derivation graph; a vote's own frequency is never significance. The genus
+is provenance-by-construction, now three-valued. Second, **the negative sign is native and distributed**: development
 gives censors (closing-off), the genotype-deep structural pole gives the physics-orthogonal censors (a membrane
 protein and a polymerase fold in mutually-incompatible electrochemical environments — a zero-tax, absolute
 exclusion), and cross-network *disagreement* is the near-miss that kills a rival. The program did not have to
@@ -377,9 +408,16 @@ The whole read assembles from the pieces, and the division of labor is the autho
 **generate wide, resolve narrow** — the exact Genesis × GSE architecture applied here:
 
 1. **Encode.** Each network renders its slice of the databases into **L2 relational events** — the closed
-   vocabulary already specified in the etiology-engine design (`AMPLIFIES/INHIBITS`, `COEXPRESSES`, `COTRAVELS`,
-   `DIFFERENTIATES`, `ABSENT`). A network's signed-ternary vote *is* an event, and its polarity is the event's
-   assertion: +1 witnesses the coupling, −1 censors it, 0 abstains. A network does not score — it **narrates**.
+   vocabulary specified in the etiology-engine design (`AMPLIFIES/INHIBITS`, `COEXPRESSES`, `COTRAVELS`,
+   `DIFFERENTIATES`, `ABSENT`). Three axes ride an event, and keeping them distinct is load-bearing. The
+   **sign** is the two-sign vote on the coupling's *existence*: +1 witnesses it, −1 *censors* it (a proven
+   exclusion), 0 abstains — and it is emphatically *not* the regulatory polarity, so a real inhibition is a
+   +1 witness whose *verb* is `INHIBITS`, never a −1 censor (a curated directed source only ever asserts;
+   censors come from physics-orthogonal exclusions, developmental closing-off, treatment-response). The
+   **verb** carries the regulatory polarity and the role-class the story fires on. A **mode** marker (e.g.
+   activity vs abundance) rides as a *peer* on the same edge — the GSE set-theory/density operator, so two
+   modes converging on one coupling raise its κ rather than scaling a number, super-additive exactly at the
+   bridges. A network does not score — it **narrates**.
 2. **Generate (wide).** Regenesis reads the multi-network event-stream as the mechanism-story and **derives the
    implied mechanism** — the coupled path from genotype-deep through the middle to phenotype, never stated in the
    events — recognizing roles by semantic class, reading the trajectory over the temporal networks, ranking by
@@ -421,6 +459,17 @@ narrow. The whole is small in code and large in theory — which is the correct 
 whose intelligence is in the *correctness of its data geometry*, not in the size of a model. There is no model;
 there was never going to be one. This is classical AI and data geometry, and the refusal of a statistical black
 box to supply meaning is not a constraint worked around — it is the specification.
+
+That refusal has a precise shape worth stating once more at the close, because it is the load-bearing
+commitment the whole instrument rests on. It is a **reader of a frozen world**. It touches *neither* kind of
+creativity — not the arbitrary, intentional creativity of a living choice, and not the structured,
+entropically-favorable creativity of gene regulation and evolution. Both have already happened; both are, at
+the zero-time capture, *frozen* into static structure, and the instrument reads that structure and nothing
+else. It imposes no prior it did not extract, fits no dynamics it cannot observe, and admits no homunculus to
+supply meaning the data does not carry. This is why the read can be trusted as a reflection of the biology
+rather than of the reader: a zero-time, endogenous-oracle read adds nothing of its own. The creativity is
+Gaia's, and it stays hers; the instrument's whole and only competence is to read, exactly, what four billion
+years crystallized — and to abstain, out loud, wherever the frozen record does not say.
 
 The honest boundary is stated plainly, because naming it is what makes the rest credible. The **formal core is
 proved** (σ's Blum-measure status and Kolmogorov independence, the teaching-dimension identity, the
