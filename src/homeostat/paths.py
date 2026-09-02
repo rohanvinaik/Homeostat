@@ -47,3 +47,15 @@ STRING_LINKS_URL = (
 STRING_INFO_URL = (
     "https://stringdb-downloads.org/download/protein.info.v12.0/9606.protein.info.v12.0.txt.gz"
 )
+
+# Ensembl Compara human homologies (the evolutionary / fungibility renderer's substrate).
+# One gzipped TSV (human vs all species; we keep only human WITHIN-species paralogs). Tab-separated,
+# header present; both endpoints carry an Ensembl protein id, normalized to symbols via the STRING
+# info map (shared). Gitignored, re-downloadable; the sha256 sidecar pins the version built against.
+HOMOLOGY_DIR = DATA / "homology"
+HOMOLOGY_TSV = HOMOLOGY_DIR / "Compara.112.protein_default.homologies.tsv.gz"
+HOMOLOGY_SHA = HOMOLOGY_DIR / "Compara.112.protein_default.homologies.sha256"
+HOMOLOGY_URL = (
+    "https://ftp.ensembl.org/pub/release-112/tsv/ensembl-compara/homologies/homo_sapiens/"
+    "Compara.112.protein_default.homologies.tsv.gz"
+)

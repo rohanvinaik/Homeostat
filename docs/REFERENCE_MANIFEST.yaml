@@ -89,6 +89,12 @@
   sha256: 144de4b0d98c6a7dfde6ddc2591cf88657f27b989eadff4f501450c3ed1f0f1c
   cited_by: [src/homeostat/string_fetch.py, src/homeostat/paths.py]
 
+- id: compara-homologies-9606-r112
+  path: data/homology/Compara.112.protein_default.homologies.tsv.gz
+  role: evolutionary/fungibility renderer substrate — Ensembl Compara release-112 human protein homologies (human vs all species; the renderer keeps only the 140,759 human WITHIN-species paralog rows as undirected fungibility votes, LAW 9 tier 2). Endpoints normalized to gene symbols via the shared STRING info map. Gitignored, re-downloadable via homeostat.homology_fetch.ensure; sha256 pins the version built against.
+  sha256: 6ed96cc1472d6056ed8c7cc3205094c09410ec7fb59e93668a5b675f6a93652f
+  cited_by: [src/homeostat/homology.py, src/homeostat/homology_fetch.py, src/homeostat/paths.py]
+
 - id: predecessor-study
   path: ~/Projects/Predecessor_Study
   role: SUBSUMED predecessor — salvage governed exclusively by docs/SALVAGE_MANIFEST.md; repo pointer, not hashed
