@@ -6,23 +6,6 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 DATA = REPO / "data"
 
-# Optional output namespace: HOMEOSTAT_TAG=_gnomad writes side-by-side variants of
-# the pile + gate outputs (e.g. eir_pbs_pile_gnomad.tsv.gz) without clobbering the
-# default (Pan-UKBB) results. Empty tag -> original filenames (backward compatible).
-TAG = os.environ.get("HOMEOSTAT_TAG", "")
-
-
-def tagged(name: str) -> Path:
-    """EIR / name, with TAG inserted before the extension when set.
-
-    'eir_pbs_pile.tsv.gz' -> 'eir_pbs_pile_gnomad.tsv.gz' when TAG='_gnomad'.
-    """
-    if not TAG:
-        return EIR / name
-    base, _dot, ext = name.partition(".")
-    return EIR / f"{base}{TAG}.{ext}"
-
-
 # Index genotype R (directly-observed tier — the raw array export, copied local).
 # The personal source path is NEVER committed — set it locally via the env var.
 GENOTYPE_DIR = DATA / "genotype"
@@ -46,12 +29,3 @@ SIGNOR_DIR = DATA / "signor"
 SIGNOR_TSV = SIGNOR_DIR / "signor_human_9606.tsv"
 SIGNOR_SHA = SIGNOR_DIR / "signor_human_9606.sha256"
 SIGNOR_URL = "https://signor.uniroma2.it/getData.php?organism=9606&format=csv"
-
-# E/I/R outputs
-EIR = DATA / "e_i_r"
-SHARDS = EIR / "shards"
-SCAN_PROGRESS = EIR / "scan_progress.json"
-CANDIDATES = EIR / "candidates.tsv.gz"
-SUMMARY = EIR / "summary.json"
-
-AUTOSOMES = [str(c) for c in range(1, 23)]
