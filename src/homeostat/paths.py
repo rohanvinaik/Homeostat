@@ -84,6 +84,7 @@ GTEX_TPM = GTEX_DIR / "GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_tpm.gct.gz
 GTEX_ATTRS = GTEX_DIR / "GTEx_Analysis_v8_Annotations_SampleAttributesDS.txt"
 GTEX_TPM_SHA = GTEX_DIR / "gene_tpm.sha256"
 GTEX_ATTRS_SHA = GTEX_DIR / "sample_attributes.sha256"
+GTEX_CACHE_DIR = GTEX_DIR / "cache"  # user-amortized: scoped expression, streamed once per gene-set
 GTEX_TPM_URL = (
     "https://storage.googleapis.com/adult-gtex/bulk-gex/v8/rna-seq/"
     "GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_tpm.gct.gz"

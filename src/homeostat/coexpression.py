@@ -15,10 +15,14 @@ The GTEx render (position per tissue, co-deviation for scoped genes, emit `Event
 
 from __future__ import annotations
 
+import hashlib
+import json
 import math
 import statistics
-from collections.abc import Mapping, Sequence
+from collections.abc import Iterable, Mapping, Sequence
+from pathlib import Path
 
+from homeostat import gtex_fetch, paths
 from homeostat.event import Event
 from homeostat.otp import ternary
 
@@ -109,3 +113,35 @@ def coexpression_events(
                 elif verdict == "counter-varies":
                     out.append(Event(COEXPRESSION, "opposes", a, b, 1, tissue))
     return out
+
+
+def cache_key(genes: Iterable[str]) -> str:
+    """Deterministic cache key for a scoped read — a sha256 prefix over the sorted, de-duped gene
+    set. Params-independent (the cache holds the raw scoped expression; events recompute). Pure."""
+    return hashlib.sha256(json.dumps(sorted(set(genes))).encode()).hexdigest()[:16]
+
+
+def read_coexpression(
+    genes: Iterable[str],
+    tol_log: float = 1.0,
+    min_support: int = 5,
+    consistency: float = 0.8,
+    cache_dir: Path = paths.GTEX_CACHE_DIR,
+) -> list[Event]:
+    """User-amortized read: stream the GTEx matrix ONCE per gene-set (caching the scoped expression
+    under `cache_dir`), then compute events for any params from the cache. The stream is what's
+    amortized; the sample→tissue map is small, loaded each call. I/O — exercised by the real run.
+    """
+    scope = sorted(set(genes))
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    cache_file = cache_dir / f"expr_{cache_key(scope)}.json"
+    _, attrs = gtex_fetch.ensure_all()
+    if cache_file.exists():
+        cached = json.loads(cache_file.read_text())
+        sample_ids, expr = cached["sample_ids"], cached["expr"]
+    else:
+        tpm = gtex_fetch.ensure(paths.GTEX_TPM_URL, paths.GTEX_TPM, paths.GTEX_TPM_SHA)
+        sample_ids, expr = gtex_fetch.load_expression(scope, tpm)
+        cache_file.write_text(json.dumps({"sample_ids": sample_ids, "expr": expr}))
+    sample_tissue = gtex_fetch.load_sample_tissue(attrs)
+    return coexpression_events(sample_ids, expr, sample_tissue, tol_log, min_support, consistency)

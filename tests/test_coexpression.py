@@ -5,12 +5,18 @@ A sample counts only where both genes are off baseline (informational zero drops
 perturbations, and consistently aligned (co-varies) / opposed (counter-varies) / mixed."""
 
 from homeostat.coexpression import (
+    cache_key,
     codeviation,
     codeviation_verdict,
     coexpression_events,
     tissue_ternary,
 )
 from homeostat.event import Event
+
+
+def test_cache_key_is_deterministic_over_the_gene_set():
+    assert cache_key(["B", "A", "A"]) == cache_key(["A", "B"])  # sorted + deduped -> same key
+    assert cache_key(["A", "B"]) != cache_key(["A", "C"])  # a different scope -> a different key
 
 
 def test_codeviation_counts_joint_perturbations_and_alignment():
