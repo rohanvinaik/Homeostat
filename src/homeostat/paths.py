@@ -74,3 +74,21 @@ GENE_INFO_SHA = METABOLIC_DIR / "Homo_sapiens.gene_info.sha256"
 NCBI2REACTOME_URL = "https://reactome.org/download/current/NCBI2Reactome.txt"
 REACTOME_RELATION_URL = "https://reactome.org/download/current/ReactomePathwaysRelation.txt"
 GENE_INFO_URL = "https://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/Mammalia/Homo_sapiens.gene_info.gz"
+
+# GTEx v8 bulk RNA-seq (the co-expression renderer's substrate — PER-SAMPLE TPM for co-deviation).
+# `tpm` = the gene×sample TPM matrix (.gct.gz: `#1.2`, a dims line, a sample header, a row per
+# gene); `attrs` = the sample annotations (SAMPID -> SMTSD tissue). v8 matches the 56200×54 median
+# baselines. Gitignored, re-downloadable; sha256 sidecars pin it. The matrix is ~1.63 GB.
+GTEX_DIR = DATA / "gtex"
+GTEX_TPM = GTEX_DIR / "GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_tpm.gct.gz"
+GTEX_ATTRS = GTEX_DIR / "GTEx_Analysis_v8_Annotations_SampleAttributesDS.txt"
+GTEX_TPM_SHA = GTEX_DIR / "gene_tpm.sha256"
+GTEX_ATTRS_SHA = GTEX_DIR / "sample_attributes.sha256"
+GTEX_TPM_URL = (
+    "https://storage.googleapis.com/adult-gtex/bulk-gex/v8/rna-seq/"
+    "GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_tpm.gct.gz"
+)
+GTEX_ATTRS_URL = (
+    "https://storage.googleapis.com/adult-gtex/annotations/v8/metadata-files/"
+    "GTEx_Analysis_v8_Annotations_SampleAttributesDS.txt"
+)
