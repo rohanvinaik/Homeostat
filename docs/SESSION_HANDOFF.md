@@ -1,16 +1,24 @@
-# SESSION_HANDOFF — renderer phase underway (2026-09-02)
+# SESSION_HANDOFF — story layer underway (2026-09-02)
 
 *Written to the compaction-drift discipline (`~/Projects/rohan-vinaik.github.io/papers/Core Documents/
 AI_architecture_papers/compaction_drift_overconfidence_notes.md` — a PERMANENT REFERENCE, never edit it):
 one imperative next action, constraints stated WITH their reasons, pointers back at verifiable sources, a
-reconstruction test. Governing docs: `docs/SYSTEM_DESIGN.md` (engineering) + `docs/THESIS.md` (theory).*
+reconstruction test. Governing docs: `docs/SYSTEM_DESIGN.md` (engineering) + `docs/THESIS.md` (theory) +
+`docs/STORY_LAYER.md` (the Regenesis generate-wide design).*
 
 ## ⚠ READ THIS FIRST — provenance beats any summary
-The verifiable record is **git log + the current source + these docs**, not a post-compact summary. Two
-stale-by-design traps a summary may re-inject, both already killed:
-- "Engine A / node-birth / grow the graph" — RETIRED in code. One clinical engine, fixed prior web, two-sign.
-- "Reactome for the regulatory renderer" — SWITCHED to SIGNOR (reason below). If a summary steers you at
-  Reactome-with-complex-decomposition, it is stale.
+The verifiable record is **git log + the current source + these docs**, not a post-compact summary.
+Stale-by-design traps a summary may re-inject, ALL already killed:
+- "Regenesis is a PORT of story-understanding into biology" — WRONG. It is the SAME engine; biology is what
+  it was always reading. The narrative-meaning theory IS the disease semantics (THESIS ch.9, STORY_LAYER.md).
+- "co-metabolizes" / "cometabolizes" as the metabolic verb — RETIRED. GSE mangles the hyphen and drops the
+  non-word. The metabolic verb is **"channels"** (real WordNet verb, firing-confirmed). Stale if you see it.
+- The old-lens mechanism universe (differentiator/coexpressor/dominator/wirer/sensor; literal-object rules
+  like `x amplifies signal`) — RETIRED with the l2_encoder. The universe is now GENE-EDGE rules over the four
+  network verbs (`x amplifies y`). Do NOT restore literal-object Forms.
+- "Engine A / node-birth / grow the graph" — RETIRED. One clinical engine, fixed prior web, two-sign.
+- "Reactome for the REGULATORY renderer" — regulatory = SIGNOR (Reactome is complex-centric). Reactome IS
+  used, but ONLY for the metabolic network (pathway co-membership). Don't cross them.
 
 ## ★ WHERE WE ARE (verify: `git log --oneline`; GitHub `origin/main` is clean and current)
 The whole **mechanical engine + encoding spine is built, pinned, pushed** (139 tests, ruff+ty clean; every
@@ -34,17 +42,54 @@ hash-pinned in `REFERENCE_MANIFEST`):
   1.44M couplings; **3,098 supported by ALL FOUR independent networks**. Also this session: the old
   statistical cluster (nodes/pbs/gnomad_pile/eir_cohort/l2_encoder) is TRASHED (Serena-verified isolated).
 
-## ★ THE ONE NEXT ACTION — the Regenesis generate-wide engagement (Socratic, founder-reserved)
-The COUPLING-network layer (events_to_web-facing) is complete. The remaining canonical networks —
-**developmental, exposome** (temporal), **genotype-deep, phenotype** (poles) — are Regenesis/role/temporal/
-per-person facing, NOT gene-gene couplings; forcing them into `events_to_web` would be drift. The founder
-reserved this phase for **Socratic dialogue**: how the frozen multi-network web/event-stream becomes roles +
-implied mechanism + the read toward the blind LRRK2 control (§13.3). So the next action is to OPEN that
-Socratic engagement, pointing Regenesis at `prior_web.build_prior_web()`. (Deferred coupling network:
-**co-expression** — the highest-drift-risk vote, GTEx-vs-proxy source + computed-association care, to handle
-carefully, not autonomously.) Data access confirmed live: SIGNOR, STRING, Ensembl, Reactome, NCBI all 200.
+**THE STORY LAYER (Regenesis generate-wide) is UNDERWAY — the story is FOUND and half-built** (150 tests;
+settled Socratically; THESIS ch.9 rewritten; `docs/STORY_LAYER.md` written):
+- **The story: NOT a port — the SAME engine.** The narrative-meaning theory (`~/Projects/rohan-vinaik.github.
+  io/papers/Core Documents/New_Work/NARRATIVE_MEANING.md`) IS the disease semantics: shadow = M3 (sub-threshold
+  signals significant only in concert), convergence = H3 (orthogonal wrongs that sum), certified-⊥ = H4
+  (abstention), mis-fit tracing = Baymax, generate/resolve = H2 (Dr. House). A mechanism is a GENRE (a
+  meaning-mechanism, not a plot-shape). genres.index = plots · archetypes.index = roles.
+- **`story.py` (the L2→L3 bridge) BUILT + pinned** — events → opaque-token SVO sentences + sidecar
+  (opaque→real). Opacity forces roles from STRUCTURE (GSE can't import gene-name knowledge). Renders the RAW
+  events (not collapsed couplings) so convergence is preserved.
+- **`universes/mechanism/` (the ROLES / archetypes) RECONCILED + FIRING-CONFIRMED on real biology.** Gene-edge
+  rules over the four verbs: amplifier/inhibitor/binder/homolog(fungibility)/metabolizer/transducer(chain-
+  middle)/component(H3 edge-convergence)/zero. FIRED on the real LRRK2/inflammatory axis (68 events, opaque
+  tokens): recovered BIRC2 = top component (κ 17.97), RIPK1 = transducer (the textbook TNF relay), BIRC3 =
+  fungible homolog of XIAP — 29 role-facts + 52 self-written mechanism-rules, ZERO gene names in the reasoning.
 
-## ★★ LOCKED DECISIONS (renderer phase) — with reasons, so they survive
+## ★ THE ONE NEXT ACTION — author `universes/mechanism/genres.index` (the mechanism-genres), FIRING-confirmed
+The ROLE layer is done + validated; the GENRE layer is next. Author `genres.index` + `.rules` for the four
+mechanism-genres, each carrying its M/H meaning-mechanism (STORY_LAYER.md §3): **tragedy** (dysregulatory
+cascade → locked doom; composes on the transducer-chain that already fires), **ironic-comedy** (a reinforcing
+vicious cycle), **allegory** (isomorphic-role / different-genes = fungibility, `common_frame`), **epic-quest**
+(resolution via a distant bridge). AUTHOR each, then FIRE it via `story.render_story(scoped_events)` →
+`understand(kind="text", universe_root=".../universes/mechanism", universe_only=True)` on the real LRRK2 story
+— **0 derivations = a WIRING failure (missing trigger centroid), NEVER trusted as abstention** (cardinal
+rule). Metabolic verb = "channels". Then the wiring (`understand` → generate-wide→resolve-narrow: candidates →
+`eliminate_two_sign`) and the **blind LRRK2 control** (canon §13.3). Data access live (SIGNOR/STRING/Ensembl/
+Reactome/NCBI all 200); Regenesis is JVM-free (`understand_batch` mass-fires, no one-JVM concern).
+
+## ★★ LOCKED DECISIONS — with reasons, so they survive
+
+**Story layer (2026-09-02):**
+- **Regenesis is the SAME engine, not a port.** *Why:* the narrative-meaning theory (built blind to this
+  project) IS the disease semantics — the shadow is literally M3, convergence H3, abstention H4. Reframing it
+  as "story-understanding applied to biology" loses the fixed point and invites re-inventing a parallel frame
+  library. Point it at `universes/mechanism/`; do not build a second frame set.
+- **Gene-edge rendering, not literal-object.** *Why:* `story.py` renders `Gene1 amplifies Gene2` (gene
+  object), which fires role Forms (`if x amplifies y then x becomes amplifier`), same-subject convergence
+  (`x amplifies y and x binds y → component`, FIRES), and causal chains (`x amplifies y and y amplifies z → y
+  transducer`, y re-binds in SUBJECT position, FIRES). The old literal objects (`x amplifies signal`) were for
+  the trashed lens encoder and CANNOT express chains. Firing-confirmed on the live engine.
+- **Metabolic verb = "channels".** *Why:* firing showed "co-metabolizes" mangles (GSE splits the hyphen) and
+  "cometabolizes" is dropped (not a word). "channels" (substrate channeling) is a real WordNet verb that
+  parses + fires. Changed in `metabolic.py` (was co-metabolizes).
+- **Fire before trusting (cardinal).** *Why:* 0 derivations is a WIRING failure (missing trigger centroid),
+  not abstention. Trigger column = class centroids, NEVER padded synonyms, NEVER gene names, NEVER rewrite
+  input to hit a verb. Author a Form THEN fire it on real data.
+
+**Renderer phase:**
 - **Source = SIGNOR, not Reactome.** *Why:* Reactome's reaction model is complex-centric — gene edges are
   buried inside named complexes (`PAMP:NOD:RIP2:NEMO`), the catalyst is a complex (TRAF6 ligase), and the
   modification happens to a component *inside* the complex, so you'd need recursive complex decomposition.
@@ -68,11 +113,15 @@ carefully, not autonomously.) Data access confirmed live: SIGNOR, STRING, Ensemb
   reserved directed verbs; mode-marker facts (`A modulates activity` / `A titrates abundance`) are the L3
   role-firing layer's job, verbs founder-authored, centroids mined from SIGNOR's `mechanism` column.
 
-## ★ THE REMAINING PIECES (SYSTEM_DESIGN §12; everything downstream of a renderer's `list[Event]` is built)
-1. effect-policy (founder) → run. 2. SIGNOR fetch/cache (mechanical). 3. harmonizing entity-normalization.
-4. the other network renderers (evolutionary→BLAST, structural/genotype-deep→Pfam/GO/AlphaFold,
-   developmental & exposome→harmonizing over template narratives, metabolic-flux→pathway). 5. the **LRRK2
-   positive control** (canon §13.3) — recover LRRK2–NOD2–RIPK2 as coherence, blind: the acceptance test.
+## ★ THE REMAINING PIECES (small — the intelligence is in the frames + geometry, not the code)
+1. **`genres.index`** (the mechanism-genres: tragedy / ironic-comedy / allegory / epic-quest — the NEXT
+   action, firing-confirmed).
+2. **The wiring**: `understand()` over the real story → the generate-wide→resolve-narrow bridge (Regenesis
+   candidates → `search.eliminate_two_sign` over the person's positioned deviations → verdict / certified-⊥).
+3. **The blind LRRK2 control** (canon §13.3) — recover LRRK2–NOD2–RIPK2 as coherence, blind: the acceptance
+   test. (The role read ALREADY recovers RIPK1 as transducer / BIRC2 as component on the axis.)
+4. Later: the temporal networks (developmental/exposome) + the poles (genotype-deep/phenotype) + the deferred
+   co-expression vote — Regenesis/temporal/per-person facing, after the four-network read is proven.
 
 ## ★ PRIVACY — MUST SURVIVE (a real incident this session, fully remediated)
 The founder's actual conditions and an ADHD/meds disclosure leaked into README + THESIS + the first handoff;
@@ -88,8 +137,12 @@ plane wifi). The only remaining limit is structural, not connectivity: the §12.
 cohort — and the design deliberately works from the free public "shadows", which are all up.
 
 ## RECONSTRUCTION TEST
-From `SYSTEM_DESIGN.md` + `THESIS.md` + this file, a fresh session should recover: (a) the mechanical engine
-+ encoding spine is built/pinned/pushed; (b) the renderer phase is underway, SIGNOR adapter built; (c) source
-= SIGNOR (Reactome is complex-centric), parser = harmonizing (not GSE); (d) next action = get the founder's
-effect→sign policy then run toward LRRK2; (e) the privacy rule. If it cannot, re-read the two governing docs
-and `git log` before doing anything — do NOT re-derive from a summary.
+From `SYSTEM_DESIGN.md` + `THESIS.md` + `STORY_LAYER.md` + this file, a fresh session should recover: (a) the
+engine + encoding spine + FOUR coupling-network renderers + `prior_web` are built/pinned/pushed; (b) the story
+layer is underway — `story.py` (L2→L3 opaque-token bridge) built, `universes/mechanism/` ROLES reconciled +
+firing-confirmed on real biology (BIRC2 = top component, RIPK1 = transducer, recovered blind); (c) Regenesis
+is the SAME engine (not a port), the disease-shadow IS M3, convergence IS H3, abstention IS H4; (d) next action
+= author `genres.index` and FIRE it (0-derivations = a wiring failure, never abstention), then the wiring +
+blind LRRK2 control; (e) metabolic verb = "channels", NOT co-metabolizes; gene-edge rules, not literal-object;
+(f) the privacy rule. If it cannot, re-read the governing docs + `git log` before acting — do NOT re-derive
+from a summary.
