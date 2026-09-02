@@ -18,18 +18,31 @@ pure decision Detective-complete): `search.eliminate_two_sign`, `position.py`, `
 `clinic.read_presentation`/`read_from_events`, `event.py` (the L2 contract: `Event`, `couple_verdict`,
 `events_to_web`, role-scoped `events_to_censors`/`active_censors`), `ground.py`, `web/otp/signal`.
 
-**This session's renderer work:** the FIRST renderer adapter is built — `signor.py` (`row_disposition`
-Detective-COMPLETE; `row_to_event`/`signor_events`), turning SIGNOR rows → regulatory `Event`s. It already
-recovers `RIPK2 → TRAF6` cleanly (the edge Reactome buried in a complex). Commit `2848c1e`.
+**FOUR coupling networks + the prior-web assembly are BUILT, pinned, verified E2E** (146 tests; every pure
+decision Detective-COMPLETE; each network = a `*.py` renderer + `*_fetch.py` I/O shell, data gitignored +
+hash-pinned in `REFERENCE_MANIFEST`):
+- **regulatory** — `signor.py` (SIGNOR, DIRECTED; earns arrows). `sign=+1` always (support, not polarity —
+  polarity is the verb amplifies/inhibits); mode = activity/abundance peer marker.
+- **physical** — `string.py` (STRING physical binding, UNDIRECTED vote; evidence bright line experimental|
+  database → emit, textmining-only → skip). ENSP→symbol via `string_fetch.load_alias_map`.
+- **evolutionary** — `homology.py` (Ensembl Compara human paralogs, UNDIRECTED vote; fungibility). Measured
+  12.8% overlap with reg/phys → genuinely orthogonal.
+- **metabolic** — `metabolic.py` (Reactome co-membership scoped to the Metabolism subtree via BFS, UNDIRECTED
+  vote). Entrez→symbol via NCBI gene_info. Scoping is load-bearing.
+- **`prior_web.py`** — the single assembly point: `all_events()` renders all four; `build_prior_web()` =
+  `events_to_web(..., DIRECTED_NETWORKS={"regulatory"})`. `python -m homeostat.prior_web` → 1.5M events →
+  1.44M couplings; **3,098 supported by ALL FOUR independent networks**. Also this session: the old
+  statistical cluster (nodes/pbs/gnomad_pile/eir_cohort/l2_encoder) is TRASHED (Serena-verified isolated).
 
-## ★ THE ONE NEXT ACTION — build the SIGNOR fetch/cache layer, then run the first read toward LRRK2
-The effect-policy is SETTLED and BUILT (2026-09-02): `signor.parse_effect` decomposes the `effect` grammar
-(direction→verb, mode→marker), `signor.py` emits regulatory `Event`s, both pure decisions Detective-COMPLETE.
-So the imperative is now the **SIGNOR fetch/cache layer** (mechanical, no biology): download
-`getData.php?organism=9606&format=csv` (one 21 MB TSV), cache under `paths.DATA` (gitignored, hash-pinned per
-`REFERENCE_MANIFEST`; User-Agent header required — bare urllib gets 403), stream rows → `signor_events` →
-`events_to_web` → the two-sign read toward the LRRK2 control. The dump is already fetched at
-`<scratchpad>/signor_human.csv` (43,492 rows, 29 cols, tab-separated, no header; 27,325 protein→protein).
+## ★ THE ONE NEXT ACTION — the Regenesis generate-wide engagement (Socratic, founder-reserved)
+The COUPLING-network layer (events_to_web-facing) is complete. The remaining canonical networks —
+**developmental, exposome** (temporal), **genotype-deep, phenotype** (poles) — are Regenesis/role/temporal/
+per-person facing, NOT gene-gene couplings; forcing them into `events_to_web` would be drift. The founder
+reserved this phase for **Socratic dialogue**: how the frozen multi-network web/event-stream becomes roles +
+implied mechanism + the read toward the blind LRRK2 control (§13.3). So the next action is to OPEN that
+Socratic engagement, pointing Regenesis at `prior_web.build_prior_web()`. (Deferred coupling network:
+**co-expression** — the highest-drift-risk vote, GTEx-vs-proxy source + computed-association care, to handle
+carefully, not autonomously.) Data access confirmed live: SIGNOR, STRING, Ensembl, Reactome, NCBI all 200.
 
 ## ★★ LOCKED DECISIONS (renderer phase) — with reasons, so they survive
 - **Source = SIGNOR, not Reactome.** *Why:* Reactome's reaction model is complex-centric — gene edges are
