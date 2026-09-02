@@ -27,7 +27,7 @@ mechanism-resolution over the multi-network geometry of biology.*
 6. **The substrate geometry** — the informational zero, and DNA as an OTP code
 7. **The disease as a shadow** — sub-threshold combination, made an object
 8. **The multi-network substrate** — biology's banks, and the fixed point
-9. **The temporal read** — story-understanding as the role-and-trajectory engine
+9. **The temporal read** — not a port; the same engine, turned home
 10. **The instantiation** — generate wide, resolve narrow
 11. **Conclusion** — the fixed point, and the honest boundary
 
@@ -374,33 +374,94 @@ the instrument is OTP-native reading an OTP-native substrate. That the temporal 
 and the cross-network operator needed no new machinery, is the stability property of a fixed point showing
 itself: the theory reached its birthplace and found its own tools already installed.
 
-## 9. The temporal read — story-understanding as the role-and-trajectory engine
+## 9. The temporal read — not a port; the same engine, turned home
 
-Two of the networks — developmental and exposome — are temporal, and a temporal network does not emit a
-position; it emits a **path**. The naïve options are "position or velocity," and both are too thin. The correct
-representation is a **narrative**, and the reason is Winston's Strong Story hypothesis: understanding *is* the
-capacity to read a sequence as a causal narrative and derive what it implies but never states. Genesis is
-Winston's implementation; **Regenesis** is the author's deterministic, provenance-carrying port; and reading
-static data as an evolving narrative that encodes function is the *literal definition* of what it does.
+The move this chapter records took a decade to see and a sentence to state: **the story-understanding
+engine is not carried *into* biology — biology is what it was always reading.** Genesis is Winston's
+implementation of the Strong Story hypothesis — understanding *is* the capacity to read a sequence as a
+causal narrative and derive what it implies but never states; Regenesis is the author's deterministic,
+provenance-carrying realization of it. The reflex is to call its use here a *port*, a narrative tool aimed
+at a new domain. It is not. The theory of *how meaning arises from narrative* (`NARRATIVE_MEANING.md`),
+built from close-readings done with no thought of medicine, turns out to *be* the semantics of the disease
+read — term for term. The compass never moved; it took building the genes to notice.
 
-Biology does not merely tolerate this framing — it *is* narrative. Development is the cleanest story in nature:
-an orchestrated plot (the homeobox as the ordering), character fates sealed (germ layers), and plot points that
-are literally negative specification (a cell closing a door it will never reopen). The exposome is a life-story;
-the illness itself is a story — this deviated, then that coupled, then the state tipped, a meta-stable hold-
-then-break that is an *arc*, not a number. So a temporal network's contribution is a Regenesis read over its
-ordered events, which derives — natively, in one operation — the path, the anticipated continuation (the
-"loaded clue"), the causal rules the trajectory wrote itself (induction), and the closing-offs (negative
-specification). "Position or velocity" dissolves because a story carries both, plus the causal structure that
-makes them mean anything.
+**First, the temporality — because "frozen" is not "atemporal."** The read is zero-time: it does not run
+the dynamics forward. But the *structure* it reads is temporal — a directed regulatory edge is a causal
+claim (A acts, *then* B responds), the mechanism is a causal *chain*, and the whole is an **ouroboros**:
+biology is a cycle (the protein-count feedback reaching back up and down the line), so at the read-moment
+we stand at a point on the ring, or every point at once, but the ring is ordered. The frozen read is the
+*Iliad*'s few days near the end of a ten-year war — a slice that carries the whole arc's meaning without
+the golden apple or the sack of Troy. And the outcome being *known* does not drain the meaning; it is the
+*source* of it. Greek tragedy and Shakespeare announce the doom up front. The patient *presents* the doom —
+the phenotype is the given ending — and the story is the causal arc that makes it inevitable. Reading that
+arc is the entire point.
 
-This produces the second, sharper fixed point. Regenesis was already in this architecture as the **role
-engine** — roles recognized by *semantic-class firing* over the genotype-deep structural signatures, a frame
-firing on the class centroid and never the token, so LRRK2 and a different kinase in a founder isolate both
-fire the same role. Now it is *also* the **trajectory engine** for the temporal networks. These are not two
-uses — they are one operation, because role-recognition and trajectory-reading are the same thing: *derive what
-static data implies as an evolving structure.* Roles are the "who" of the story; the trajectory is the "what
-happened." Story-understanding does both, and the honest-abstention that makes the certified ⊥ possible is
-Genesis returning *not-entailed* where nothing follows — the same discipline, one more time.
+**The founding object is a sacrifice frame.** The disease-as-shadow — a coherent state cast by many weak,
+sub-threshold signals in concert, stored in none of them — is not *like* the narrative-meaning theory's M3;
+it *is* M3. Read the Gettysburg principle with genes in mind: *alone the individual is "pointless and
+ignorable"; significance is conferred by serving something larger than the self.* That is the sub-threshold
+signal exactly — below threshold, individually what a single-variant test correctly calls nothing, made
+significant only through **concerted devotion to a transcendent referent**, the phenotype it helps cast. The
+guard travels with it: a loss that serves nothing transcendent "is just a loss" — H4, *"sometimes it's just
+autoimmune."* And the convergence that raises a coupling is H3 — *truth is the integration of orthogonal
+wrongs that sum* — each network a partial, blind alone, orthogonal, summing to the shadow (the 12.8% / 29.4%
+orthogonality measured across the built networks *is* H3 with a number on it). The founding metaphor was
+written while close-reading Lincoln.
+
+**Two guards make it a reader and not a romanticism machine, and both are already specified.** H4 —
+*abstention from meaning* — is the immune system against forcing a mechanism-story where the truth is a
+plain mechanistic fact; a meaning-extractor without it "finds sacrifice in a grocery list," and its clinical
+twin over-diagnoses. Its discriminator is **recover-vs-import**: a non-literal read is *hallucination* when
+it imports structure that isn't there, and *truer-than-literal* when it recovers structure the surface has
+voided — the shadow no element-wise instrument can see. And the **Baymax principle** answers the question the
+project exists for — *how do you trace sub-threshold signals interacting in unexpected, deep ways?* You run
+frames that **do not fit** the presenting phenotype (the care-frame on a conflict-spine; the inflammation
+mechanism under an ADHD phenotype), and you run them *boldly* — because a **symbolic mis-fit is a derivation
+you can read**, re-derivable byte-identical, not an LLM's un-reproducible lucky guess. The mis-fit frame
+reads the layer the fitting frame occludes, deterministically. That is the Grail quest made mechanical:
+trace the clue, let it change the model, follow it to the next.
+
+**So the mechanism is a *genre*, and a genre is a meaning-mechanism, not a plot-shape.** The plot-catalogues
+(Polti, Booker) enumerate shapes; the layer beneath is *why a shape means anything*, and that is what a
+computable frame must carry. A dysregulatory cascade is a **tragedy** — a fatal flaw (the deficit)
+propagating inevitably to a locked, meta-stable doom. Two systems reinforcing each other's dysfunction is an
+**ironic comedy** — a vicious cycle where every compensation compounds. A mechanism realized by different
+genes but the same relational architecture is an **allegory** — which is *fungibility*, and it is Regenesis's
+`common_frame` (the invariant the several casts share). A disease-prone architecture resolved by a roundabout,
+non-obvious intervention (stimulants reaching inflammation) is an **epic quest** — resolution by a distant
+*bridge*, the κ-super-additive move, the hero arriving from the unexpected direction. Two of the genres are
+*reading*-operations, not mechanism-shapes: the **detective story** *is* the resolve engine ("eliminate the
+impossible; whatever remains is the truth" is two-sign candidate-elimination verbatim, the certified-⊥ its
+"no crime here"), and the **Grail quest** is the whole read — the meaning in the journey, not the grail; the
+goal matters only because it *drives the intentionality* that constrains the search (σ_sem > 0), while
+reaching it is immaterial to what was learned.
+
+**This fixes the shape of the instrument.** Regenesis's own front door takes two indices — `genres.index`
+and `archetypes.index` — and they map without a seam: the **genres** are the meaning-mechanisms (tragedy,
+vicious-comedy, allegory, quest); the **archetypes** are the roles (amplifier, sensor, transducer, bridge,
+component, fungible-filler), recognized by *semantic-class firing* on the network verbs — a frame firing on
+the class centroid and never the gene token, so LRRK2 and a founder-isolate paralog both fire the same role.
+A disease *is* a cast of role-archetypes arranged in a genre-architecture: `recognize` reads which, `understand`
+imparts the mechanism the couplings never state, the detective engine resolves it, and honest abstention —
+Genesis returning *not-entailed* where nothing follows — is the certified-⊥, one more time. Generate wide (the
+meaning), resolve narrow (the verdict); Dr. House abducing boldly and then running the differential that most
+cleanly kills — H2, our architecture, named by the source.
+
+**And the telos is shared, not only the mechanism.** The narrative-meaning theory's ethical endpoint is the
+*indecorous engine* — "the refusal to let a quiet sin stay quiet," the machine whose function is to *force
+engagement with the abdication that proceduralism would hide*. That is, word for word, the clinical imperative
+here. The patient dismissed as idiopathic, functional, *medically unexplained* is the quiet sin; population
+medicine's objectivity-as-anesthesia is the laundering; and the system that **engages** (won't dismiss),
+**derives** (the sub-threshold mechanism the surface won't state), takes **embodied responsibility** (the
+shadow is *real*), and **abstains** (H4) is the actually-moral system against the parrot. Homeostat is the
+indecorous engine refusing to tell someone *it's all in your head.*
+
+The tell that this was always the home is in the readings themselves. A theory of how meaning arises, built
+with no thought of medicine, keeps landing on **life and death** — the terror of contingency, the sacrifice,
+the doom made obligation — and on **Dr. House and Baymax**, the two most compelling healthcare minds in the
+culture. They were not chosen for a medical project; they surfaced because meaning-under-mortality is the
+deep water, and medicine is where we live in it. It is not a port. It is the same engine — romantic notions
+and all — reaching its birthplace and finding its own tools already installed.
 
 ## 10. The instantiation — generate wide, resolve narrow
 
