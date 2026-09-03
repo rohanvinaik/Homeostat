@@ -269,19 +269,19 @@ The live set above was traced deterministically: `scratchpad/trace_wiring.py` (A
 `clinic.read_from_events` (the apex read), `ground.ground` (the front door). 28 `tests/test_*.py` cover
 every live module; every pure decision is Detective-pinned under `tests/detective/`.
 
-## 9. NOT in this map — archive / toss candidates (⛔; founder to confirm before any cut)
+## 9. Archived residue (`docs/archive/`, 2026-09-04)
 
-By the definition at the top, these are unreachable from the live design. **Not deleted unilaterally** —
-they are your records; confirm archive-vs-delete per group (proposed: `git mv` to `docs/archive/`).
+By the definition at the top, these were unreachable from the live design — the rejected/superseded
+residue, `git mv`-archived (reversible, history kept):
+- **`docs/archive/runs/*`** — experiment logs of the RIPPED statistical genus (EIR cohort, PBS pile,
+  gnomAD/panUKBB, phase-2 proposer/verifier, sig-descent, LD block/thin, annotation-recovery); the engine
+  they document was trashed (`19cf5d1`, `2fa895c`).
+- **`PHASE2_SIGNIFICANCE_SEARCH`** (⛔ self-marked superseded), **`CONCEPTUAL_AUDIT`** (the pre-refounding
+  orphaning audit — the defect the re-founding fixed), **`SALVAGE_MANIFEST`** (the re-founding transition).
 
-- **`docs/runs/*` (~30 files, 2026-08-28…30)** — experiment logs of the RIPPED statistical genus (EIR
-  cohort, PBS pile, gnomAD/panUKBB replication, phase-2 proposer/verifier, sig-descent, LD block/thin,
-  annotation-recovery). The engine they document was trashed (`19cf5d1`, `2fa895c`).
-- **Pre-refounding docs (each to confirm, dates straddle the 09-01 re-founding):** `CONCEPTUAL_AUDIT`,
-  `PHASE2_SIGNIFICANCE_SEARCH`, `PROOF_POINTS`, `PROBE_STATE`, `SALVAGE_MANIFEST`, `DENSITY_PROTOCOL`,
-  `DATA_ACCESS_LANDSCAPE`, `REGULATORY_DEFICIT_PROGRAM`, `decisions/*`. **Current canon:** `THESIS`,
-  `SYSTEM_DESIGN`, `ETIOLOGY_ENGINE`, `STORY_LAYER`, `THEORY_OF_THE_CASE`, `PROTEIN_ROLE_GEOMETRY`, this file.
-- **`signal.py`** — archive only if the genotype-tier input is not the intended positions producer (L3).
-- **The unused multi-feature signature in `structural.py`** — kept per founder (future extreme blocker);
-  listed for completeness, NOT a toss candidate.
+KEPT as canon / current / records (NOT residue): `THESIS`, `SYSTEM_DESIGN`, `ETIOLOGY_ENGINE`,
+`STORY_LAYER`, `THEORY_OF_THE_CASE`, `PROTEIN_ROLE_GEOMETRY`, `REGULATORY_DEFICIT_PROGRAM` (the program),
+`DENSITY_PROTOCOL` (the lens-addition recipe), `PROBE_STATE` / `PROOF_POINTS` / `DATA_ACCESS_LANDSCAPE`
+(records), `decisions/*`, this file; `signal.py` (the pending genotype-tier feed); the unused multi-feature
+signature (future extreme blocker).
 ```
