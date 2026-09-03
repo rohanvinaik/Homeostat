@@ -1,9 +1,26 @@
-# SESSION_HANDOFF — six banks + the native genre/interpretive layer (2026-09-03)
+# SESSION_HANDOFF — structural pole DONE + ARCHITECTURE.md is now the map (2026-09-04)
 
 *Written to the compaction-drift discipline (`~/Projects/rohan-vinaik.github.io/papers/Core Documents/
 AI_architecture_papers/compaction_drift_overconfidence_notes.md` — a PERMANENT REFERENCE, never edit it):
 one imperative next action, constraints WITH reasons, pointers to verifiable sources, a reconstruction
 test. Governing docs: `docs/SYSTEM_DESIGN.md` · `docs/THESIS.md` · `docs/STORY_LAYER.md`.*
+
+**★★★ READ FIRST: `ARCHITECTURE.md` (repo root).** The as-built wiring map, traced from source (AST +
+language server, 2026-09-04): layer contracts, the two typed contracts (`Event`/`ClinicalResult`), the
+read spine, all 11 laws mechanized to where each is enforced, a gated build order, a status ledger. It IS
+the live system — anything not in it is archived residue (`docs/archive/`, its §9). **Grounding order:
+ARCHITECTURE.md + `git log` + the governing docs FIRST; this handoff LAST (rule 2 below).**
+
+**New since the body of this handoff (2026-09-04):** (1) the **structural pole is BUILT** — a
+fundamental-blocker ELIMINATOR on fungibility (confidence-gated `structural_class`/`structural_compatibility`
+wired in `fungibility.py`; membrane-integral vs soluble → bar; abstains on moderate; NEVER promotes — the
+Socratic resolution: a filter *cleans*, the story engine *decides*; global similarity is not
+pathway-fungibility. Full: `PROTEIN_ROLE_GEOMETRY.md` §★DESIGN UPDATE). A multi-feature global signature is
+built but UNUSED (rejected decider frame, kept for a future extreme fold-class blocker). (2) Ensembl CDS
+fetch built (per-gene REST + bulk). (3) Rejected-design docs archived to `docs/archive/`. (4) 207 tests
+green, all pushed. **Next per ARCHITECTURE.md build order: the positions PRODUCER → the DRIVER
+(generate-wide→resolve-narrow) → the blind LRRK2 control.** The body below predates the pole; where it
+disagrees with ARCHITECTURE.md, ARCHITECTURE.md wins.
 
 ## ★★★ HOW TO GROUND — the gate the traps below CANNOT replace (read this, then obey it)
 This handoff is **tokens** — conclusions. Grounding is the **meaning** — the re-derivation of each
