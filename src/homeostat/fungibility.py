@@ -11,15 +11,19 @@ resolves *which* meaning), two paralogs are fungible where their relational posi
 converge on the SAME partners across INDEPENDENT confirming banks (regulatory/physical/metabolic).
 Convergence across orthogonal banks is improbable-and-coherent (H3, orthogonal partials summing,
 pointed at IDENTITY not coupling), so fungibility is EARNED by the geometry, never asserted at the
-token. Paralogs that resemble but whose paths diverge (subfunctionalized) are NOT folded.
+token. Paralogs that resemble but whose paths diverge (subfunctionalized) are NOT folded -- and a
+CONFIDENT structural conflict (structural.py: multi-pass membrane vs fully soluble) BARS the merge
+outright, the physics-orthogonal veto on role-resolution: two proteins in different confident
+structural classes cannot be one role, however many banks converge.
 """
 
 from __future__ import annotations
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 
 from homeostat.event import Event
+from homeostat.structural import structural_class, structural_compatibility
 
 SEED_BANK = "evolutionary"
 SEED_VERB = "resembles"
@@ -75,14 +79,17 @@ def banks_converged(a: str, b: str, partners: dict[str, dict[str, set[str]]]) ->
     return count
 
 
-def fungibility_verdict(banks_converged: int) -> str:
-    """The pure fungibility decision from the count of converging independent banks. Named codes,
-    never bools:
+def fungibility_verdict(banks_converged: int, structural: str = "indeterminate") -> str:
+    """The pure fungibility decision from bank convergence AND the structural gate. Named codes:
+    - ``"subfunctionalized"`` — `structural == "incompatible"`: a CONFIDENT structural conflict bars
+      the merge REGARDLESS of convergence (the physics-orthogonal veto; checked first);
     - ``"seed-only"`` (0) — only the resemblance; the traversal did not confirm, so DO NOT fold;
     - ``"coincidental"`` (1) — one bank converges: could be chance, not improbable-and-coherent;
     - ``"fungible"`` (≥2) — orthogonal banks converge (H3): the merge is earned by the geometry.
-    Pure over one non-negative int.
+    Pure over `(int, str)`; `structural` defaults to abstention (the informational zero, no bar).
     """
+    if structural == "incompatible":
+        return "subfunctionalized"
     if banks_converged >= 2:
         return "fungible"
     if banks_converged == 1:
@@ -90,16 +97,28 @@ def fungibility_verdict(banks_converged: int) -> str:
     return "seed-only"
 
 
-def read_fungibility(events: Iterable[Event]) -> list[Fungible]:
+def read_fungibility(
+    events: Iterable[Event], proteins: Mapping[str, str] | None = None
+) -> list[Fungible]:
     """Read the fungibility layer: for each paralog seed, the verdict earned by how many independent
-    confirming banks its traversal converges across. Reports EVERY seed with its verdict (the
-    ``"fungible"`` ones are the role-equivalences the read may fold). Orchestration over the pinned
-    `fungibility_verdict` + `paralog_seeds` / `partners_by_bank` / `banks_converged`; intent-tested.
+    confirming banks its traversal converges across, gated by structure. Reports every
+    seed with its verdict (the ``"fungible"`` ones are the role-equivalences the read may fold).
+
+    `proteins` (gene -> AA sequence) enables the structural gate: a seed whose two proteins are in
+    DIFFERENT confident classes is barred ``"subfunctionalized"`` regardless of convergence. Absent
+    (or a gene missing), the gate abstains -- convergence-only, back-compatible. Orchestration over
+    the pinned `fungibility_verdict` / `structural_compatibility`; intent-tested.
     """
     evs = list(events)
     partners = partners_by_bank(evs)
+    seqs = proteins or {}
     out: list[Fungible] = []
     for a, b in sorted(paralog_seeds(evs)):
         n = banks_converged(a, b, partners)
-        out.append(Fungible(a, b, fungibility_verdict(n), n))
+        structural = "indeterminate"
+        if a in seqs and b in seqs:
+            structural = structural_compatibility(
+                structural_class(seqs[a]), structural_class(seqs[b])
+            )
+        out.append(Fungible(a, b, fungibility_verdict(n, structural), n))
     return out

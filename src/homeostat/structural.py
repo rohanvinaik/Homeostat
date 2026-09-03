@@ -1,27 +1,26 @@
-"""homeostat.structural -- the biophysics base bank: a physics-orthogonal COMPARTMENT CENSOR.
+"""homeostat.structural -- the biophysics base: a CONFIDENCE-GATED structural-class read.
 
-The deepest, most trustworthy bank. It emits NEGATIVE-sign coupling events from deterministic
-sequence biophysics, so a pair of genes whose derived cellular compartments cannot co-exist has its
-coupling VETOED: `couple_verdict` returns "killed" when any network censors an edge another asserts,
-and "censor" when the physics rules it out alone. This is the edge-fence of
-docs/PROTEIN_ROLE_GEOMETRY.md -- not a fold, not an imported structure, not a role classifier, just
-the founder's "environments that can't co-exist can't couple", read off the sequence.
+Its job in the story math: bar two proteins from resolving to the SAME fungible role when they are
+physically incompatible -- the subfunctionalized-paralog case (fungibility.py). Not a coupling veto,
+not a fold, not an imported structure: a CLASS read off the sequence that speaks only when
+CONFIDENT and otherwise abstains (the OTP informational zero).
 
-Everything here is a PURE decision over a sequence, Detective-pinnable on synthetic strings before
-any data. The physical constants are established, not learned: the Kyte-Doolittle hydropathy scale
-(Kyte & Doolittle, J Mol Biol 1982) and the standard genetic code. The one biological modelling
-choice -- how an N-terminal signal marks secretion -- sits in `has_signal_peptide`, flagged
-as the knob to refine; the compatibility rule is the founder's mechanism (disjoint compartments
-cannot meet).
+The lesson that shaped it (fire-before-trust): an earlier version hard-called an ambiguous read (one
+N-terminal hydrophobic window -> "secreted") and false-vetoed real cytoplasmic proteins. The fix is
+not more data nor a weaker statistic -- it is Homeostat's own confidence discipline: propagate only
+CONFIDENT facts, abstain on ambiguity. From pure sequence two classes are confident -- multi-pass
+integral membrane (>= MEMBRANE_MIN_SPANS spans) and fully soluble (0 spans); the ambiguous middle
+(1-2 spans: single-pass vs an internal patch) abstains. Constants are established physics (Kyte &
+Doolittle 1982; the genetic code), never learned. The thresholds are the biological knob.
 """
 
 from __future__ import annotations
 
-from collections.abc import Mapping
-
-from homeostat.event import Event
-
-STRUCTURAL = "structural"
+TM_WINDOW = 19
+TM_THRESHOLD = 1.6
+# A confident integral-membrane protein is MULTI-pass: a single hydrophobic window is as likely an
+# internal patch of a soluble protein (the LRRK2/NOD2 false positive), not confident. The knob.
+MEMBRANE_MIN_SPANS = 3
 
 # Kyte-Doolittle hydropathy (positive = hydrophobic). Established physical constants, not learned.
 KYTE_DOOLITTLE: dict[str, float] = {
@@ -115,14 +114,6 @@ CODON_TABLE: dict[str, str] = {
     "GGG": "G",
 }
 
-# Transmembrane defaults: a 19-residue window; mean hydropathy >= 1.6 spans a lipid bilayer.
-# The signal-peptide h-region is shorter and scanned only over the N-terminus.
-TM_WINDOW = 19
-TM_THRESHOLD = 1.6
-SIGNAL_WINDOW = 8
-SIGNAL_THRESHOLD = 1.6
-SIGNAL_NTERM = 30
-
 
 def translate(cds: str) -> str:
     """Translate an in-frame coding sequence to protein, stopping at the first stop codon.
@@ -162,8 +153,8 @@ def _window_means(aa: str, window: int) -> list[float]:
 def tm_segments(aa: str, window: int = TM_WINDOW, threshold: float = TM_THRESHOLD) -> int:
     """Count membrane spans: maximal runs of windows whose mean hydropathy >= `threshold`.
 
-    Pure over `(str, int, float)`. Overlapping windows form a single run -> one segment;
-    a sequence shorter than the window has no window and returns 0. Deterministic, no orientation.
+    Pure over `(str, int, float)`. Overlapping windows form a single run -> one segment; a sequence
+    shorter than the window has no window and returns 0. Deterministic, no orientation.
     """
     means = _window_means(aa, window)
     segments = 0
@@ -178,78 +169,34 @@ def tm_segments(aa: str, window: int = TM_WINDOW, threshold: float = TM_THRESHOL
     return segments
 
 
-def has_signal_peptide(aa: str) -> bool:
-    """Whether an N-terminal secretory signal is present. Pure over `str`.
+def structural_class(aa: str) -> str:
+    """The CONFIDENCE-GATED structural class of a protein -- the code the fungibility gate reads.
 
-    THE BIOLOGICAL KNOB (refine, do not trust blindly): a deterministic proxy for a cleavable
-    signal peptide -- a `SIGNAL_WINDOW`-residue stretch of mean hydropathy >= `SIGNAL_THRESHOLD` in
-    the first `SIGNAL_NTERM` residues. It stands in for "this protein is translocated / secreted"; a
-    fuller model (n/h/c regions, the -3/-1 cleavage rule; von Heijne) is the obvious refinement.
-    """
-    nterm = aa[:SIGNAL_NTERM]
-    return any(m >= SIGNAL_THRESHOLD for m in _window_means(nterm, SIGNAL_WINDOW))
-
-
-def exposure(aa: str) -> str:
-    """Classify the compartment the protein's sequence exposes it to -- the code the fence reads.
-
-    Pure over `str`.
-    - "membrane"      -- >= 1 span: a spanner is exposed to BOTH sides, so it meets anything.
-    - "secreted"      -- 0 spans AND an N-terminal signal: translocated, extracellular/luminal only.
-    - "cytoplasmic"   -- 0 spans, no signal: not translocated, intracellular only.
-    - "indeterminate" -- too short to read a window: the informational zero, never a fence.
+    Pure over `str`. Only confident calls speak; the ambiguous middle abstains.
+    - "membrane"  -- >= MEMBRANE_MIN_SPANS spans: a confident MULTI-pass integral membrane protein.
+    - "soluble"   -- 0 spans: confidently NOT integral-membrane (not secreted-vs-cytosol).
+    - "uncertain" -- 1..MEMBRANE_MIN_SPANS-1 spans, or too short: the informational zero.
     """
     if len(aa) < TM_WINDOW:
-        return "indeterminate"
-    if tm_segments(aa) >= 1:
+        return "uncertain"
+    spans = tm_segments(aa)
+    if spans >= MEMBRANE_MIN_SPANS:
         return "membrane"
-    if has_signal_peptide(aa):
-        return "secreted"
-    return "cytoplasmic"
+    if spans == 0:
+        return "soluble"
+    return "uncertain"
 
 
-def compartment_verdict(exposure_a: str, exposure_b: str) -> str:
-    """The fence decision for one pair from their exposure codes. Pure over `(str, str)`; symmetric.
+def structural_compatibility(class_a: str, class_b: str) -> str:
+    """Whether two proteins' confident classes let them be the SAME role. Pure; symmetric.
 
-    - "incompatible"  -- exactly {"secreted", "cytoplasmic"}: disjoint compartments that never meet,
-      so the coupling is physically impossible -> emit the censor (a proof-quality veto).
-    - "compatible"    -- a membrane spanner (meets either side), or a shared compartment (both
-      secreted / both cytoplasmic): the physics does not forbid it, so emit nothing.
-    - "indeterminate" -- either side unread: abstain, the informational zero.
+    - "incompatible"  -- DIFFERENT confident classes (membrane vs soluble): an integral multi-pass
+      membrane protein and a fully soluble one cannot be one role -> BAR the fungibility merge.
+    - "compatible"    -- the same confident class (both membrane / both soluble): no barrier.
+    - "indeterminate" -- either class "uncertain": abstain, the informational zero, never a bar.
     """
-    if exposure_a == "indeterminate" or exposure_b == "indeterminate":
+    if class_a == "uncertain" or class_b == "uncertain":
         return "indeterminate"
-    if exposure_a == "membrane" or exposure_b == "membrane":
-        return "compatible"
-    if {exposure_a, exposure_b} == {"secreted", "cytoplasmic"}:
+    if class_a != class_b:
         return "incompatible"
     return "compatible"
-
-
-def structural_events(proteins: Mapping[str, str]) -> list[Event]:
-    """Emit the compartment-censor events for a scoped gene -> protein-sequence map.
-
-    For every unordered gene pair whose exposures are `compartment_verdict`-"incompatible", emit a
-    negative-sign `Event` in BOTH orderings (the fence is symmetric; both orderings guarantee it
-    contradicts whichever ordering a positive bank drew). `events_to_web` then resolves any edge a
-    positive network also asserts to "killed" and drops it. Exposure is computed once per gene, then
-    paired; sorted for determinism. Provenance verb "isolates" is data, not a fired role -- a censor
-    is read by sign, never verb.
-    """
-    exps = {gene: exposure(seq) for gene, seq in proteins.items()}
-    genes = sorted(exps)
-    events: list[Event] = []
-    for i, a in enumerate(genes):
-        for b in genes[i + 1 :]:
-            if compartment_verdict(exps[a], exps[b]) == "incompatible":
-                events.append(Event(STRUCTURAL, "isolates", a, b, -1))
-                events.append(Event(STRUCTURAL, "isolates", b, a, -1))
-    return events
-
-
-def read_structural(proteins: Mapping[str, str]) -> dict[str, object]:
-    """Convenience read: the per-gene exposure map plus the emitted censor events. I/O-free."""
-    return {
-        "exposure": {gene: exposure(seq) for gene, seq in proteins.items()},
-        "censors": structural_events(proteins),
-    }

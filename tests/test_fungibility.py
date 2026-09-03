@@ -84,3 +84,28 @@ def test_read_fungibility_one_bank_is_coincidental():
 def test_read_fungibility_resemblance_without_convergence_is_seed_only():
     events = [_res("A", "B"), _amp("A", "X"), _amp("B", "Y"), _chan("A", "X"), _chan("B", "Y")]
     assert read_fungibility(events) == [Fungible("A", "B", "seed-only", 0)]  # paths diverge
+
+
+# ---- the structural gate ---------------------------------------------------------
+
+_MEMBRANE = "L" * 25 + "D" * 20 + "I" * 25 + "D" * 20 + "V" * 25  # >= 3 spans: confident membrane
+_SOLUBLE = "D" * 60  # 0 spans: confidently soluble
+
+
+def test_fungibility_verdict_structural_conflict_bars_the_merge():
+    assert (
+        fungibility_verdict(2, "incompatible") == "subfunctionalized"
+    )  # bar overrides convergence
+    assert fungibility_verdict(0, "incompatible") == "subfunctionalized"  # even with no convergence
+    assert fungibility_verdict(2, "compatible") == "fungible"  # compatible does not change it
+    assert fungibility_verdict(2, "indeterminate") == "fungible"  # abstain never bars
+
+
+def test_read_fungibility_structural_conflict_subfunctionalizes_despite_convergence():
+    events = [_res("A", "B"), _amp("A", "C"), _amp("B", "C"), _bind("A", "C"), _bind("B", "C")]
+    # A confidently membrane, B confidently soluble: barred despite 2 converging banks.
+    barred = read_fungibility(events, {"A": _MEMBRANE, "B": _SOLUBLE})
+    assert barred == [Fungible("A", "B", "subfunctionalized", 2)]
+    # both soluble: compatible, the earned convergence stands.
+    kept = read_fungibility(events, {"A": _SOLUBLE, "B": _SOLUBLE})
+    assert kept == [Fungible("A", "B", "fungible", 2)]

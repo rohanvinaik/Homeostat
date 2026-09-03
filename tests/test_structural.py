@@ -1,28 +1,25 @@
-"""Intent tests for the structural biophysics bank -- the physics-orthogonal compartment censor.
+"""Intent tests for the structural biophysics base -- the confidence-gated structural-class read.
 
-Authored from intent, not characterization: a protein sequence reads to a compartment exposure by
-deterministic Kyte-Doolittle hydropathy, and two genes whose exposures are disjoint (one secreted,
-one cytoplasmic) can never meet, so their coupling is censored (a negative-sign Event the two-sign
-engine resolves to "killed"). Synthetic sequences chosen so each biophysical class is unambiguous.
+Authored from intent, not characterization: from pure sequence, a MULTI-pass hydrophobic profile is
+confidently integral-membrane and a zero-span profile is confidently soluble; the ambiguous middle
+(1-2 spans -- a single-pass TM or an internal patch) abstains. Two proteins in different confident
+classes cannot be one fungible role (incompatible); same class or any abstention does not bar.
 """
 
 from homeostat.structural import (
-    STRUCTURAL,
-    compartment_verdict,
-    exposure,
-    has_signal_peptide,
-    structural_events,
+    structural_class,
+    structural_compatibility,
     tm_segments,
     translate,
 )
 
-# A clean membrane spanner: a 25-residue leucine run (KD 3.8) flanked by acidic loops (KD -3.5).
-MEMBRANE = "D" * 10 + "L" * 25 + "D" * 10
-# A secreted protein: a short N-terminal hydrophobic h-region (10 L), too short to span, then polar.
-SECRETED = "L" * 10 + "D" * 40
-# A cytoplasmic protein: hydrophilic throughout, no N-terminal signal.
-CYTOPLASMIC = "D" * 40
-# Too short to read one transmembrane window.
+# Three hydrophobic runs separated by acidic gaps wider than a window -> 3 confident spans.
+MULTIPASS = "L" * 25 + "D" * 20 + "I" * 25 + "D" * 20 + "V" * 25
+# Hydrophilic throughout: zero spans -> confidently not integral-membrane.
+SOLUBLE = "D" * 60
+# One internal hydrophobic span: could be single-pass TM or an internal patch -> not confident.
+SINGLE = "D" * 15 + "L" * 25 + "D" * 15
+# Too short to read one window.
 SHORT = "ML"
 
 
@@ -36,40 +33,21 @@ def test_translate_reads_triplets_stops_and_drops_bad_codons():
 def test_tm_segments_counts_maximal_hydrophobic_runs():
     assert tm_segments("D" * 40) == 0  # hydrophilic: no span
     assert tm_segments("L" * 25) == 1  # one long hydrophobic helix is one segment
-    assert tm_segments("L" * 25 + "D" * 20 + "I" * 25) == 2  # two spans separated by a loop
+    assert tm_segments(MULTIPASS) == 3  # three spans separated by wide loops
     assert tm_segments("ML") == 0  # shorter than one window
 
 
-def test_signal_peptide_needs_an_nterminal_hydrophobic_hregion():
-    assert has_signal_peptide(SECRETED) is True
-    assert has_signal_peptide(CYTOPLASMIC) is False
+def test_structural_class_speaks_only_when_confident():
+    assert structural_class(MULTIPASS) == "membrane"  # >= 3 spans: confident multi-pass
+    assert structural_class(SOLUBLE) == "soluble"  # 0 spans: confidently not integral-membrane
+    assert structural_class(SINGLE) == "uncertain"  # 1 span: ambiguous -> abstain
+    assert structural_class(SHORT) == "uncertain"  # too short -> abstain
 
 
-def test_exposure_classes():
-    assert exposure(MEMBRANE) == "membrane"  # span present -> exposed both sides
-    assert exposure(SECRETED) == "secreted"  # signal, no span -> extracellular only
-    assert exposure(CYTOPLASMIC) == "cytoplasmic"  # no signal, no span -> intracellular only
-    assert exposure(SHORT) == "indeterminate"  # nothing to read -> informational zero
-
-
-def test_compartment_verdict_fences_only_disjoint_compartments():
-    assert compartment_verdict("secreted", "cytoplasmic") == "incompatible"
-    assert compartment_verdict("cytoplasmic", "secreted") == "incompatible"  # symmetric
-    assert (
-        compartment_verdict("membrane", "cytoplasmic") == "compatible"
-    )  # spanner meets either side
-    assert compartment_verdict("membrane", "secreted") == "compatible"
-    assert compartment_verdict("secreted", "secreted") == "compatible"  # shared compartment
-    assert compartment_verdict("cytoplasmic", "cytoplasmic") == "compatible"
-    assert compartment_verdict("indeterminate", "cytoplasmic") == "indeterminate"  # abstain
-
-
-def test_structural_events_emits_symmetric_censor_for_incompatible_pairs_only():
-    censors = structural_events({"S": SECRETED, "C": CYTOPLASMIC})
-    # both orderings of the one disjoint pair, each a negative-sign structural censor
-    assert len(censors) == 2
-    assert {(e.subject, e.target) for e in censors} == {("C", "S"), ("S", "C")}
-    assert all(e.sign == -1 and e.network == STRUCTURAL for e in censors)
-
-    # a membrane spanner meets either side: no fence
-    assert structural_events({"M": MEMBRANE, "C": CYTOPLASMIC}) == []
+def test_structural_compatibility_bars_only_confident_conflicts():
+    assert structural_compatibility("membrane", "soluble") == "incompatible"
+    assert structural_compatibility("soluble", "membrane") == "incompatible"  # symmetric
+    assert structural_compatibility("membrane", "membrane") == "compatible"  # same confident class
+    assert structural_compatibility("soluble", "soluble") == "compatible"
+    assert structural_compatibility("uncertain", "soluble") == "indeterminate"  # abstain
+    assert structural_compatibility("membrane", "uncertain") == "indeterminate"
