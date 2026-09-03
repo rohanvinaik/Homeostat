@@ -76,6 +76,17 @@ two are new SHAPES:
   meaning engine, `story.py` the opaque-token L2→L3 bridge into it. Genres are native; roles are Regenesis.
 
 ## ★ THE ONE NEXT ACTION — build the genotype-deep pole (design SETTLED), banks-first
+
+**→ CANONICAL DESIGN (paper, 2026-09-04): `docs/PROTEIN_ROLE_GEOMETRY.md`.** RESOLVED this session: the
+genotype/structural pole is a **CENSOR BANK on node ROLE** — deterministic sequence-biophysics → *negative*
+constraints (MUST-NOTs) over the existing `universes/mechanism/` roles (amplifier / binder / component /
+homolog / inhibitor / metabolizer / transducer / zero_signal), native to `search.eliminate_two_sign`. It
+does NOT predict a fold and imports no measured structure; structure-prediction + the fenced solver = a
+**separate project**, out of scope. **Role-fence first**, edge-fence (compartment-incompatible couplings)
+later. GenomeVault grounding is DONE (Z₂×Z₂ lenses; StWk = −(PuPy×AmKe); lens-disagreement → 46× DNase,
+p<1e-15 — reported). Remaining grounding gate before fixing the censor's output shape (paper §10.1): read how
+`eliminate_two_sign` / `position` represent a role candidate + how the existing negative-sign / candidate-
+censor compiler is wired — the fence must be expressible in exactly the terms the eliminator already eats.
 Banks-first is load-bearing (founder): the driver reasons over a BOUNDED universe, so a *pole* — which
 REDEFINES the semantic bounds, not just adds to them — must exist before the driver. Order after: developmental
 (FIRST censor bank — the native negative sign; commitment = a cell closing off transcription) → exposome →
