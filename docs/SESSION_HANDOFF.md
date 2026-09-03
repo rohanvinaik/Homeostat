@@ -5,6 +5,24 @@ AI_architecture_papers/compaction_drift_overconfidence_notes.md` — a PERMANENT
 one imperative next action, constraints WITH reasons, pointers to verifiable sources, a reconstruction
 test. Governing docs: `docs/SYSTEM_DESIGN.md` · `docs/THESIS.md` · `docs/STORY_LAYER.md`.*
 
+## ★★★ HOW TO GROUND — the gate the traps below CANNOT replace (read this, then obey it)
+This handoff is **tokens** — conclusions. Grounding is the **meaning** — the re-derivation of each
+conclusion's PURPOSE. **Meaning is not in the tokens (M1, this project's own thesis).** So reading this
+document does NOT ground you; it hands you destinations. The failure that keeps recurring is NOT
+fact-drift (the traps handle that) — it is **operationalization-drift**: taking a correct conclusion
+("allegory = fungibility") and building a wrong DESIGN from it ("find two tragedies"), because a
+conclusion under-determines its design and the prior fills the gap. Reading a conclusion is teleporting
+to the destination; grounding is re-walking the path. THREE rules, non-negotiable:
+1. **PURPOSE GATE — before you operationalize/build ANY element, write its PURPOSE in your own words
+   (what it is FOR in the thesis) and cite the PRIMARY source that establishes it (a THESIS chapter,
+   NARRATIVE_MEANING reading, the actual data file — NOT this handoff). If you cannot state the purpose,
+   you have NOT grounded: stop and derive. This is the Socratic "what is the POINT of X" as a gate.**
+2. **READ ORDER — derive the state from the PRIMARY sources + `git log` FIRST; read this handoff LAST,
+   as a CHECK on your derivation. If they disagree, the sources win. Reading the handoff first frames
+   every later read as confirmation, not derivation — it poisons grounding.**
+3. **The traps below catch FACT-drift only. Operationalization-drift is generative (a new wrong design
+   each time) and cannot be enumerated. Only the purpose gate covers it.**
+
 ## ⚠ READ THIS FIRST — provenance beats any summary
 The verifiable record is **git log + current source + these docs**, not a post-compact summary.
 Stale-by-design traps a summary WILL try to re-inject — ALL already killed this session:
@@ -57,17 +75,31 @@ two are new SHAPES:
 - **Roles** (`universes/mechanism/`, fired via Regenesis `understand`) still live — Regenesis is the role +
   meaning engine, `story.py` the opaque-token L2→L3 bridge into it. Genres are native; roles are Regenesis.
 
-## ★ THE ONE NEXT ACTION — finish the deferred banks, then the driver, then the control
-Order (banks first — the driver's generate-wide is only as rich as its banks): **genotype-deep pole**
-(structural: sequence→codon→fold→function, Pfam/GO/AlphaFold — satisfies no-hard-coded-gene→role by
-construction) → **developmental** (the FIRST bank that emits CENSORS — the native negative sign; commitment =
-a cell closing off transcription) → **exposome** → **phenotype pole** (with the driver — it's the read's
-input, not a coupling bank). THEN the **driver** (a `converge`-shaped loop, ported near-1:1 from Detective's
-CLI — the exact-learning harness: `_converge_impl` → `eliminate_two_sign`, `converge_next_action` → `jeeves`,
-`certificate_standing` → `clinical_verdict`; every primitive already exists, it's orchestration + where
-fungibility folds + trait-wiring biases + co-expression enters). THEN the **blind LRRK2 control** (canon
-§13.3). Each bank: surface its ONE design fork Socratically, build, Detective-pin the pure decision, FIRE on
-real data. **Harmonizer** (gene-symbol dialects across banks) is needed at the driver's convergence layer.
+## ★ THE ONE NEXT ACTION — build the genotype-deep pole (design SETTLED), banks-first
+Banks-first is load-bearing (founder): the driver reasons over a BOUNDED universe, so a *pole* — which
+REDEFINES the semantic bounds, not just adds to them — must exist before the driver. Order after: developmental
+(FIRST censor bank — the native negative sign; commitment = a cell closing off transcription) → exposome →
+phenotype pole (with the driver). THEN the **driver** (a `converge`-shaped loop ported near-1:1 from
+Detective's CLI: `_converge_impl`→`eliminate_two_sign`, `converge_next_action`→`jeeves`, `certificate_standing`
+→`clinical_verdict` — orchestration; where fungibility folds + trait-wiring biases + co-expression enters;
+**Harmonizer** wires gene-symbol dialects here). THEN the **blind LRRK2 control** (canon §13.3).
+
+**GENOTYPE-DEEP POLE — SETTLED design (structure WITHOUT structure):** NOT AlphaFold, NOT curated Pfam/GO.
+*Why (derive it, don't just read it):* crystallography is in-vitro diffraction ≠ in-vivo; a recorded structure
+imports someone's lossy, possibly-wrong measurement — using it forfeits the no-hard-coded / no-imported-prior
+guarantee. Instead the **deterministic part of the fold falls out of the raw NUCLEOTIDE SEQUENCE's biophysics
+read against its environment gradient** (the "inverse Romeo": a protein by any *other* name carries *fewer*
+bits — the right encoding of the gene IS its structure-map; traced by data-geometry traversal, Jordan-vs-
+Jordan for folding). **v1 = the PURELY-DETERMINISTIC biophysical fingerprint** (founder's own scoping — NOT
+the full fold, which is the horizon), two readouts, each a PURE decision Detective-pinnable on synthetic
+sequences before any data: (1) **base-pairing STABILITY** — GC/AT, H-bond count, Hoogsteen → dynamism /
+transcribability (the GenomeVault p=1e-15 result); (2) **HYDROPHOBICITY-profile environment traversal** —
+codon→AA→hydrophobicity along the sequence → transmembrane topology / the stepwise electrochemical shifts →
+which ALSO yields the physics-orthogonal **censor** (two genes whose *derived* environments can't co-exist
+can't couple). Data-layer after: **Ensembl CDS FASTA** (verify the real format first). **★ FIRST GROUNDING
+for next session: READ THE GenomeVault PROJECT DIRECTLY** (the biophysics kernel — AT/GC/Hoogsteen → functional
+enrichment — was proven there; find + read it before designing the readouts). Each bank: PURPOSE-gate → design
+fork Socratically → build → Detective-pin the pure decision → FIRE on real data.
 
 ## ★★ LOCKED DECISIONS — with reasons, so they survive
 - **Genres are NATIVE topology reads, not Regenesis frames.** *Why:* Regenesis's genre substrate is a
@@ -90,6 +122,11 @@ real data. **Harmonizer** (gene-symbol dialects across banks) is needed at the d
 - **Trait-wiring = a NODE-WEIGHT (pleiotropy), not an edge.** *Why:* LAW 9 tier-3 — GWAS tunes the search
   order (never a coupling, never significance). Distinct-trait pleiotropy = a cheap bridge-prior κ confirms.
   This is Law 1's one sanctioned use of a population statistic.
+- **Genotype-deep pole = structure WITHOUT structure (deterministic sequence biophysics), NOT AlphaFold/
+  curated.** *Why:* recorded structure = in-vitro crystallography ≠ in-vivo, a lossy possibly-wrong prior;
+  importing it forfeits the guarantee. The deterministic fold-part falls out of nucleotide biophysics read
+  against the environment gradient (GenomeVault-proven kernel). v1 = the biophysical fingerprint (stability +
+  hydrophobicity-environment), the founder's "purely deterministic" part; the full fold is the horizon.
 - **Fire before trusting; verify data formats from PRIMARY sources.** *Why:* GTEx filenames, GWAS MAPPED_GENE
   grammar (`", "` multi / `" - "` intergenic, NOT bare hyphen — MIR9-2HG stays whole) were verified against
   the real files/manifests, not a prior. 0 output = a wiring failure, never trusted as abstention.
