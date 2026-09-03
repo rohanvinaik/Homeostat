@@ -88,24 +88,39 @@ def test_read_fungibility_resemblance_without_convergence_is_seed_only():
 
 # ---- the structural gate ---------------------------------------------------------
 
-_MEMBRANE = "L" * 25 + "D" * 20 + "I" * 25 + "D" * 20 + "V" * 25  # >= 3 spans: confident membrane
-_SOLUBLE = "D" * 60  # 0 spans: confidently soluble
+# multi-pass membrane vs fully soluble: many features disagree -> composite "incompatible".
+_MEMBRANE = "L" * 25 + "D" * 20 + "I" * 25 + "D" * 20 + "V" * 25
+_SOLUBLE = "D" * 60
 
 
-def test_fungibility_verdict_structural_conflict_bars_the_merge():
+def test_fungibility_verdict_structural_gate():
+    # a confident conflict bars, regardless of convergence (checked first)
+    assert fungibility_verdict(2, "incompatible") == "subfunctionalized"
+    assert fungibility_verdict(0, "incompatible") == "subfunctionalized"
+    # a confident match is the 4th confirming bank: +1
     assert (
-        fungibility_verdict(2, "incompatible") == "subfunctionalized"
-    )  # bar overrides convergence
-    assert fungibility_verdict(0, "incompatible") == "subfunctionalized"  # even with no convergence
-    assert fungibility_verdict(2, "compatible") == "fungible"  # compatible does not change it
-    assert fungibility_verdict(2, "indeterminate") == "fungible"  # abstain never bars
+        fungibility_verdict(1, "compatible") == "fungible"
+    )  # promoted: 1 coupling bank + structure
+    assert fungibility_verdict(0, "compatible") == "coincidental"  # structure alone is one signal
+    assert fungibility_verdict(2, "compatible") == "fungible"  # already fungible, stays
+    # abstain adds nothing
+    assert fungibility_verdict(1, "indeterminate") == "coincidental"
+    assert fungibility_verdict(2, "indeterminate") == "fungible"
 
 
 def test_read_fungibility_structural_conflict_subfunctionalizes_despite_convergence():
     events = [_res("A", "B"), _amp("A", "C"), _amp("B", "C"), _bind("A", "C"), _bind("B", "C")]
-    # A confidently membrane, B confidently soluble: barred despite 2 converging banks.
+    # membrane vs soluble: a confident conflict, barred despite 2 converging banks.
     barred = read_fungibility(events, {"A": _MEMBRANE, "B": _SOLUBLE})
     assert barred == [Fungible("A", "B", "subfunctionalized", 2)]
-    # both soluble: compatible, the earned convergence stands.
+    # both soluble (identical): compatible; the earned convergence stands.
     kept = read_fungibility(events, {"A": _SOLUBLE, "B": _SOLUBLE})
     assert kept == [Fungible("A", "B", "fungible", 2)]
+
+
+def test_read_fungibility_structural_match_promotes_a_one_bank_pair():
+    events = [_res("A", "B"), _amp("A", "C"), _amp("B", "C")]  # one coupling bank -> coincidental
+    assert read_fungibility(events) == [Fungible("A", "B", "coincidental", 1)]
+    # both soluble -> structural match -> the 4th bank promotes it to fungible
+    promoted = read_fungibility(events, {"A": _SOLUBLE, "B": _SOLUBLE})
+    assert promoted == [Fungible("A", "B", "fungible", 1)]

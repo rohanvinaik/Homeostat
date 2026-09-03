@@ -11,10 +11,11 @@ resolves *which* meaning), two paralogs are fungible where their relational posi
 converge on the SAME partners across INDEPENDENT confirming banks (regulatory/physical/metabolic).
 Convergence across orthogonal banks is improbable-and-coherent (H3, orthogonal partials summing,
 pointed at IDENTITY not coupling), so fungibility is EARNED by the geometry, never asserted at the
-token. Paralogs that resemble but whose paths diverge (subfunctionalized) are NOT folded -- and a
-CONFIDENT structural conflict (structural.py: multi-pass membrane vs fully soluble) BARS the merge
-outright, the physics-orthogonal veto on role-resolution: two proteins in different confident
-structural classes cannot be one role, however many banks converge.
+token. Paralogs that resemble but whose paths diverge (subfunctionalized) are NOT folded -- and the
+STRUCTURAL SIGNATURE (structural.py, a multi-feature deterministic read) is the fourth voice: a
+confident structural CONFLICT bars the merge (physics-orthogonal veto), a confident MATCH is a +1
+confirming bank (measured orthogonal to the coupling banks), abstention is silent -- the two faces
+of one signature.
 """
 
 from __future__ import annotations
@@ -23,7 +24,7 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 
 from homeostat.event import Event
-from homeostat.structural import structural_class, structural_compatibility
+from homeostat.structural import signature_compatibility
 
 SEED_BANK = "evolutionary"
 SEED_VERB = "resembles"
@@ -83,16 +84,17 @@ def fungibility_verdict(banks_converged: int, structural: str = "indeterminate")
     """The pure fungibility decision from bank convergence AND the structural gate. Named codes:
     - ``"subfunctionalized"`` — `structural == "incompatible"`: a CONFIDENT structural conflict bars
       the merge REGARDLESS of convergence (the physics-orthogonal veto; checked first);
-    - ``"seed-only"`` (0) — only the resemblance; the traversal did not confirm, so DO NOT fold;
-    - ``"coincidental"`` (1) — one bank converges: could be chance, not improbable-and-coherent;
-    - ``"fungible"`` (≥2) — orthogonal banks converge (H3): the merge is earned by the geometry.
-    Pure over `(int, str)`; `structural` defaults to abstention (the informational zero, no bar).
+    - a `structural == "compatible"` match adds +1 — structure is the 4th CONFIRMING bank (measured
+      orthogonal to the coupling banks; min_agree=3 keeps it selective);
+    - then the count threshold: ``"fungible"`` (≥2), ``"coincidental"`` (1), ``"seed-only"`` (0).
+    Pure over `(int, str)`; `structural` defaults to abstention (the informational zero, no vote).
     """
     if structural == "incompatible":
         return "subfunctionalized"
-    if banks_converged >= 2:
+    n = banks_converged + (1 if structural == "compatible" else 0)
+    if n >= 2:
         return "fungible"
-    if banks_converged == 1:
+    if n == 1:
         return "coincidental"
     return "seed-only"
 
@@ -117,8 +119,6 @@ def read_fungibility(
         n = banks_converged(a, b, partners)
         structural = "indeterminate"
         if a in seqs and b in seqs:
-            structural = structural_compatibility(
-                structural_class(seqs[a]), structural_class(seqs[b])
-            )
+            structural = signature_compatibility(seqs[a], seqs[b])
         out.append(Fungible(a, b, fungibility_verdict(n, structural), n))
     return out

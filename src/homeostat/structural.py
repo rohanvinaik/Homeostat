@@ -287,3 +287,42 @@ def signature_verdict(agreements: list[str], min_agree: int = 2) -> str:
     if sum(1 for a in agreements if a == "agree") >= min_agree:
         return "compatible"
     return "indeterminate"
+
+
+# Per-feature (tol_close, tol_far), MINED from the genome-wide paralog-seed |diff| distribution
+# (p25 / p90 over 72,788 seeds, Ensembl release-112 CDS). Reproducible, not authored.
+SIGNATURE_TOLERANCES: dict[str, tuple[float, float]] = {
+    "composition": (0.199, 0.434),
+    "gravy": (0.052, 0.354),
+    "net_charge": (0.007, 0.052),
+    "aromaticity": (0.006, 0.035),
+    "tm_spans": (0.0, 3.0),
+}
+# A confident MATCH needs >= this many features agreeing (the founder's aggressive filter: the
+# 96/74408 three-bank tail is well-scoped, not over-filtered -- "all signal, noise out").
+SIGNATURE_MIN_AGREE = 3
+
+
+def signature_compatibility(aa_a: str, aa_b: str, min_agree: int = SIGNATURE_MIN_AGREE) -> str:
+    """Multi-feature structural compatibility -> compatible / incompatible / abstain.
+
+    Each feature is a bank; per feature the two proteins confidently agree/disagree/abstain vs a
+    mined tolerance, and the OTP composite (`signature_verdict`) resolves it -- Monty Hall: one
+    confident disagreement excludes. Pure over `(str, str)`; membrane is one of the five banks.
+    Emergent classes -- no labels authored.
+    """
+    comp = composition_distance(composition(aa_a), composition(aa_b))
+    agreements = [
+        feature_agreement(comp, *SIGNATURE_TOLERANCES["composition"]),
+        feature_agreement(abs(gravy(aa_a) - gravy(aa_b)), *SIGNATURE_TOLERANCES["gravy"]),
+        feature_agreement(
+            abs(net_charge(aa_a) - net_charge(aa_b)), *SIGNATURE_TOLERANCES["net_charge"]
+        ),
+        feature_agreement(
+            abs(aromaticity(aa_a) - aromaticity(aa_b)), *SIGNATURE_TOLERANCES["aromaticity"]
+        ),
+        feature_agreement(
+            float(abs(tm_segments(aa_a) - tm_segments(aa_b))), *SIGNATURE_TOLERANCES["tm_spans"]
+        ),
+    ]
+    return signature_verdict(agreements, min_agree)
