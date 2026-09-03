@@ -97,9 +97,11 @@ transcribability (the GenomeVault p=1e-15 result); (2) **HYDROPHOBICITY-profile 
 codon→AA→hydrophobicity along the sequence → transmembrane topology / the stepwise electrochemical shifts →
 which ALSO yields the physics-orthogonal **censor** (two genes whose *derived* environments can't co-exist
 can't couple). Data-layer after: **Ensembl CDS FASTA** (verify the real format first). **★ FIRST GROUNDING
-for next session: READ THE GenomeVault PROJECT DIRECTLY** (the biophysics kernel — AT/GC/Hoogsteen → functional
-enrichment — was proven there; find + read it before designing the readouts). Each bank: PURPOSE-gate → design
-fork Socratically → build → Detective-pin the pure decision → FIRE on real data.
+for next session (before designing the readouts): READ THE GenomeVault PROJECT DIRECTLY** — canonical
+`~/Projects/GenomeVault` (PascalCase; also lowercase `genomevault` / `_enhanced` / `_recovery` variants —
+disambiguate which holds the current biophysics kernel). The AT/GC/Hoogsteen → functional-enrichment (p=1e-15)
+result was PROVEN there; ground in its actual code/method, not this summary of it. Each bank: PURPOSE-gate →
+design fork Socratically → build → Detective-pin the pure decision → FIRE on real data.
 
 ## ★★ LOCKED DECISIONS — with reasons, so they survive
 - **Genres are NATIVE topology reads, not Regenesis frames.** *Why:* Regenesis's genre substrate is a
