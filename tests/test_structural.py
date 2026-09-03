@@ -7,6 +7,13 @@ classes cannot be one fungible role (incompatible); same class or any abstention
 """
 
 from homeostat.structural import (
+    aromaticity,
+    composition,
+    composition_distance,
+    feature_agreement,
+    gravy,
+    net_charge,
+    signature_verdict,
     structural_class,
     structural_compatibility,
     tm_segments,
@@ -51,3 +58,41 @@ def test_structural_compatibility_bars_only_confident_conflicts():
     assert structural_compatibility("soluble", "soluble") == "compatible"
     assert structural_compatibility("uncertain", "soluble") == "indeterminate"  # abstain
     assert structural_compatibility("membrane", "uncertain") == "indeterminate"
+
+
+# ---- the multi-feature signature -------------------------------------------------
+
+
+def test_composition_is_a_frequency_vector():
+    comp = composition("AACD")  # A=2/4, C=1/4, D=1/4
+    assert comp[0] == 0.5 and comp[1] == 0.25 and comp[2] == 0.25  # A, C, D in AA_ORDER
+    assert abs(sum(comp) - 1.0) < 1e-9
+    assert composition("") == tuple(0.0 for _ in range(20))  # empty -> zeros, not a crash
+
+
+def test_composition_distance_is_zero_for_equal_and_grows_apart():
+    assert composition_distance(composition("AAAA"), composition("AAAA")) == 0.0
+    assert composition_distance(composition("AAAA"), composition("DDDD")) == 2.0  # disjoint -> max
+
+
+def test_scalar_features():
+    assert gravy("IIII") == 4.5  # isoleucine hydropathy
+    assert gravy("DDDD") == -3.5  # aspartate
+    assert net_charge("KKKK") == 1.0 and net_charge("DDDD") == -1.0
+    assert net_charge("KKDD") == 0.0  # balanced
+    assert aromaticity("FWYA") == 0.75  # 3 of 4 aromatic
+
+
+def test_feature_agreement_is_confidence_gated():
+    assert feature_agreement(0.1, 0.2, 0.5) == "agree"  # within the close tolerance
+    assert feature_agreement(0.6, 0.2, 0.5) == "disagree"  # beyond the far tolerance
+    assert feature_agreement(0.3, 0.2, 0.5) == "abstain"  # the ambiguous middle
+
+
+def test_signature_verdict_is_otp_monty_hall():
+    assert signature_verdict(["agree", "disagree", "agree"]) == "incompatible"  # one exclusion wins
+    assert (
+        signature_verdict(["agree", "agree", "abstain"]) == "compatible"
+    )  # >= 2 agree, none oppose
+    assert signature_verdict(["agree", "abstain", "abstain"]) == "indeterminate"  # too few agree
+    assert signature_verdict([]) == "indeterminate"  # nothing to go on

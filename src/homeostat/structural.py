@@ -200,3 +200,90 @@ def structural_compatibility(class_a: str, class_b: str) -> str:
     if class_a != class_b:
         return "incompatible"
     return "compatible"
+
+
+# ---------------------------------------------------------------------------
+# The multi-feature structural signature (generalizes membrane/soluble to ALL structure).
+# Each deterministic sequence feature is a bank; per feature two proteins confidently agree,
+# disagree, or abstain vs a MINED tolerance; the OTP composite resolves identity (Monty Hall:
+# one confident disagreement excludes). Emergent classes -- no functional labels authored.
+# Feature extractors are pure; the tolerances are mined from the genome-wide distribution.
+# ---------------------------------------------------------------------------
+
+AA_ORDER = "ACDEFGHIKLMNPQRSTVWY"
+_POSITIVE = frozenset("KR")
+_NEGATIVE = frozenset("DE")
+_AROMATIC = frozenset("FWY")
+
+
+def composition(aa: str) -> tuple[float, ...]:
+    """20-dim amino-acid frequency vector in AA_ORDER (sums to 1; empty -> zeros). Pure.
+
+    The dominant identity signal: chaperone vs tubulin vs polymerase differ compositionally.
+    """
+    n = len(aa)
+    if n == 0:
+        return tuple(0.0 for _ in AA_ORDER)
+    counts = dict.fromkeys(AA_ORDER, 0)
+    for c in aa:
+        if c in counts:
+            counts[c] += 1
+    return tuple(counts[c] / n for c in AA_ORDER)
+
+
+def composition_distance(a: tuple[float, ...], b: tuple[float, ...]) -> float:
+    """L1 distance between two composition vectors (0..2). Pure over equal-length tuples."""
+    return sum(abs(x - y) for x, y in zip(a, b, strict=True))
+
+
+def gravy(aa: str) -> float:
+    """GRAVY: mean Kyte-Doolittle hydropathy over all residues (unknown = 0.0). Pure; 0 on empty."""
+    if not aa:
+        return 0.0
+    return sum(KYTE_DOOLITTLE.get(c, 0.0) for c in aa) / len(aa)
+
+
+def net_charge(aa: str) -> float:
+    """Net charge per residue: (K+R - D-E)/len at neutral pH (His ignored). Pure; 0 on empty."""
+    if not aa:
+        return 0.0
+    pos = sum(1 for c in aa if c in _POSITIVE)
+    neg = sum(1 for c in aa if c in _NEGATIVE)
+    return (pos - neg) / len(aa)
+
+
+def aromaticity(aa: str) -> float:
+    """Fraction of aromatic residues (F, W, Y). Pure; 0 on empty."""
+    if not aa:
+        return 0.0
+    return sum(1 for c in aa if c in _AROMATIC) / len(aa)
+
+
+def feature_agreement(diff: float, tol_close: float, tol_far: float) -> str:
+    """Confidence-gated per-feature agreement from the |value difference| `diff`. Pure.
+
+    - "agree"   -- diff <= tol_close: confidently the same on this feature.
+    - "disagree"-- diff >= tol_far: confidently different (a Monty-Hall exclusion signal).
+    - "abstain" -- the ambiguous middle: the informational zero.
+    The two tolerances are MINED from the genome-wide feature distribution, never authored.
+    """
+    if diff <= tol_close:
+        return "agree"
+    if diff >= tol_far:
+        return "disagree"
+    return "abstain"
+
+
+def signature_verdict(agreements: list[str], min_agree: int = 2) -> str:
+    """OTP composite over per-feature agreements -> structural compatibility. Pure. Monty Hall:
+
+    - "incompatible"  -- ANY feature confidently disagrees (one confident exclusion excludes).
+    - "compatible"    -- >= `min_agree` features agree AND none disagree (multi-signal identity).
+    - "indeterminate" -- too few confident agreements: the informational zero.
+    `min_agree` is the match threshold set by the orthogonality measurement (not yet mined).
+    """
+    if "disagree" in agreements:
+        return "incompatible"
+    if sum(1 for a in agreements if a == "agree") >= min_agree:
+        return "compatible"
+    return "indeterminate"
