@@ -8,8 +8,43 @@ Homeostat, with fold-prediction, health, and biochemistry research relegated to 
 defensible home for expensive statistical or neural methods — if such a residual survives at all.*
 
 **Author of record:** Rohan Vinaik · **Status:** Theory of the instrument, 2026-09-04 · self-contained ·
-the structural pole is **designed here, not yet built**. · **Companion docs:** `THESIS.md` (the governing
-thesis), `SYSTEM_DESIGN.md`, `ETIOLOGY_ENGINE.md`, `STORY_LAYER.md`.
+the structural pole is **BUILT 2026-09-04** — see the Design Update below. · **Companion docs:**
+`THESIS.md` (the governing thesis), `SYSTEM_DESIGN.md`, `ETIOLOGY_ENGINE.md`, `STORY_LAYER.md`.
+
+---
+
+## ★ DESIGN UPDATE — BUILT, and reframed (2026-09-04)
+
+The body below is the *exploration*; this block is where it landed. The pole was built, fired on the real
+LRRK2 axis, and — through a Socratic correction — reframed from what the body describes.
+
+**The structural pole is a fundamental-blocker ELIMINATOR on FUNGIBILITY, not a censor bank on role.** Its
+one job is to *clean the possibility space*: remove a paralog-merge only when the two proteins are
+FUNDAMENTALLY, physically incompatible (a confident membrane-integral vs fully-soluble conflict — they
+cannot co-localize, cannot be one role), and ABSTAIN on everything else (the informational zero). It
+**never promotes** — a filter that promotes is making the confident+correct *decision*, which is the story
+engine's job, not the filter's. The positive pathway signal is carried by the coupling-bank convergence
+(fungibility's existing ≥2-bank rule); structure only excludes the impossible.
+
+Why the reframe (both founder-surfaced, Socratically):
+1. **The filter's purpose is elimination, not decision.** `eliminate_two_sign`, the certified ⊥, the
+   informational zero — the engine shrinks the space to a small VALID set and lets the story-understanding
+   read reason over the survivors. A promoting filter reaches across that boundary.
+2. **Global structural similarity is NOT pathway-fungibility.** The role is a LOCAL determinant (an active
+   site); a small iron-transporter and hemoglobin can be fungible for iron-response despite differing
+   globally. A global-feature MATCH can't validly confirm a shared pathway-role — only a FUNDAMENTAL
+   physical blocker can validly exclude.
+
+Built (Detective-pinned, gate-green, 0-promotions/0-regressions on the axis): the confidence-gated class
+read (`structural.py::structural_class` / `structural_compatibility`), the Ensembl CDS fetch (per-gene REST
++ bulk `cds.all.fa.gz`), wired as the eliminator in `fungibility.py`. A multi-feature global signature
+(composition / GRAVY / charge / … + `signature_compatibility`) is built but UNUSED — the global-composite-
+for-fungibility frame was the rejected decider; the feature extractors could later feed an *extreme fold-
+class blocker* read (elimination-only), but nothing wires them now.
+
+**Superseded — do NOT rebuild from the body:** "censor bank on node ROLE"; the "role-fence first / edge-
+fence later" seam fork (§6.3); the coupling-edge censor; any positive/confirming role for structure. §7's
+classical/neural boundary still stands; the rest of the body is reconciled at finalization.
 
 ---
 

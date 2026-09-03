@@ -77,16 +77,18 @@ two are new SHAPES:
 
 ## ★ THE ONE NEXT ACTION — build the genotype-deep pole (design SETTLED), banks-first
 
-**→ CANONICAL DESIGN (paper, 2026-09-04): `docs/PROTEIN_ROLE_GEOMETRY.md`.** RESOLVED this session: the
-genotype/structural pole is a **CENSOR BANK on node ROLE** — deterministic sequence-biophysics → *negative*
-constraints (MUST-NOTs) over the existing `universes/mechanism/` roles (amplifier / binder / component /
-homolog / inhibitor / metabolizer / transducer / zero_signal), native to `search.eliminate_two_sign`. It
-does NOT predict a fold and imports no measured structure; structure-prediction + the fenced solver = a
-**separate project**, out of scope. **Role-fence first**, edge-fence (compartment-incompatible couplings)
-later. GenomeVault grounding is DONE (Z₂×Z₂ lenses; StWk = −(PuPy×AmKe); lens-disagreement → 46× DNase,
-p<1e-15 — reported). Remaining grounding gate before fixing the censor's output shape (paper §10.1): read how
-`eliminate_two_sign` / `position` represent a role candidate + how the existing negative-sign / candidate-
-censor compiler is wired — the fence must be expressible in exactly the terms the eliminator already eats.
+**→ CANONICAL DESIGN (paper, 2026-09-04): `docs/PROTEIN_ROLE_GEOMETRY.md` — see its ★ DESIGN UPDATE at top.**
+BUILT this session: the structural pole is a **fundamental-blocker ELIMINATOR on FUNGIBILITY** — a
+confidence-gated class read (`structural.py::structural_class` / `structural_compatibility`) that removes a
+paralog merge ONLY on a confident physical impossibility (membrane-integral vs fully-soluble), abstains on
+everything moderate, and NEVER promotes. Structure CLEANS (excludes the impossible); the coupling-bank
+convergence + the story engine carry the positive. Wired in `fungibility.py`; Ensembl CDS fetch (per-gene
+REST + bulk `cds.all.fa.gz`) built; Detective-pinned; fired on the LRRK2 axis (0 promotions, 0 regressions).
+NOT a censor-on-role, NOT an edge-fence, NOT a confirmer — those were explored and rejected. GenomeVault
+grounding DONE (Z₂×Z₂ lenses; StWk = −(PuPy×AmKe); 46× DNase p<1e-15, reported). A multi-feature global
+signature is built but UNUSED (rejected decider frame; extractors could later feed an extreme fold-class
+blocker). Immediate remaining work (founder, 2026-09-04): discard the rest of the rejected-design NOISE,
+then the re-do on the proper final architecture + a clarification/finalization pass.
 Banks-first is load-bearing (founder): the driver reasons over a BOUNDED universe, so a *pole* — which
 REDEFINES the semantic bounds, not just adds to them — must exist before the driver. Order after: developmental
 (FIRST censor bank — the native negative sign; commitment = a cell closing off transcription) → exposome →
