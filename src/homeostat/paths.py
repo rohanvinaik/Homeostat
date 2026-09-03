@@ -112,3 +112,13 @@ GWAS_URL = (
 ENSEMBL_REST = "https://rest.ensembl.org"
 STRUCTURAL_DIR = DATA / "structural"
 STRUCTURAL_CDS_DIR = STRUCTURAL_DIR / "cds"
+
+# Ensembl bulk CDS FASTA (all transcripts, release 112 -- matches Compara 112). The genome-wide
+# substrate for the structural signature: header carries `gene_symbol:<SYM>`; keep the longest CDS
+# per gene (a deterministic canonical choice). Gitignored, re-downloadable; sha256-pinned.
+CDS_ALL = STRUCTURAL_DIR / "Homo_sapiens.GRCh38.cds.all.fa.gz"
+CDS_ALL_SHA = STRUCTURAL_DIR / "cds_all.sha256"
+CDS_ALL_URL = (
+    "https://ftp.ensembl.org/pub/release-112/fasta/homo_sapiens/cds/"
+    "Homo_sapiens.GRCh38.cds.all.fa.gz"
+)

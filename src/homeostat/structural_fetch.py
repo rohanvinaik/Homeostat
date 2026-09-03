@@ -8,13 +8,18 @@ user-amortized). I/O-only; `fetch_cds` hits the network. GRCh38, current Ensembl
 
 from __future__ import annotations
 
+import gzip
 import json
+import re
 import urllib.request
 from collections.abc import Iterable
 from pathlib import Path
 
 from homeostat import paths
-from homeostat.util import atomic_write_text
+from homeostat.util import atomic_write_text, sha256
+
+_SYMBOL_RE = re.compile(r"gene_symbol:(\S+)")
+_CHUNK = 1 << 20
 
 _UA = "homeostat/0.1 (github.com/rohanvinaik/Homeostat)"
 _TIMEOUT = 30
@@ -76,3 +81,58 @@ def ensure(genes: Iterable[str], cache_dir: Path = paths.STRUCTURAL_CDS_DIR) -> 
         atomic_write_text(path, cds + "\n")
         out[symbol] = cds
     return out
+
+
+def _download(url: str, dest: Path, timeout: int = 600) -> Path:
+    """Download `url` to `dest` (binary, chunked, atomic .part). Ensembl needs a User-Agent."""
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    part = dest.with_suffix(dest.suffix + ".part")
+    req = urllib.request.Request(url, headers={"User-Agent": _UA})
+    with urllib.request.urlopen(req, timeout=timeout) as resp, open(part, "wb") as out:  # noqa: S310
+        while chunk := resp.read(_CHUNK):
+            out.write(chunk)
+    part.replace(dest)
+    return dest
+
+
+def ensure_bulk(
+    url: str = paths.CDS_ALL_URL, dest: Path = paths.CDS_ALL, sha: Path = paths.CDS_ALL_SHA
+) -> Path:
+    """Return the cached bulk CDS FASTA, downloading it once (~30 MB) and sha256-pinning it."""
+    if not dest.exists():
+        _download(url, dest)
+        atomic_write_text(sha, sha256(dest) + "\n")
+    return dest
+
+
+def load_proteins_bulk(
+    genes: Iterable[str] | None = None, path: Path = paths.CDS_ALL
+) -> dict[str, str]:
+    """Stream the bulk CDS FASTA -> `{gene_symbol: protein_aa}`, keeping the LONGEST CDS per gene.
+
+    Longest-CDS is the deterministic canonical choice (no transcript-priority table). `genes` (if
+    given) filters to those symbols. Translates via `structural.translate`. Reads the file once.
+    """
+    from homeostat.structural import translate
+
+    want = set(genes) if genes is not None else None
+    best: dict[str, str] = {}
+    sym: str | None = None
+    buf: list[str] = []
+    with gzip.open(path, "rt", encoding="utf-8") as fh:
+        for line in fh:
+            if line.startswith(">"):
+                if (
+                    sym
+                    and (want is None or sym in want)
+                    and len("".join(buf)) > len(best.get(sym, ""))
+                ):
+                    best[sym] = "".join(buf)
+                m = _SYMBOL_RE.search(line)
+                sym = m.group(1) if m else None
+                buf = []
+            else:
+                buf.append(line.strip())
+    if sym and (want is None or sym in want) and len("".join(buf)) > len(best.get(sym, "")):
+        best[sym] = "".join(buf)
+    return {g: translate(c) for g, c in best.items()}
