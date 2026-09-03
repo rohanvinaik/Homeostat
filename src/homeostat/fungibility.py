@@ -12,10 +12,11 @@ converge on the SAME partners across INDEPENDENT confirming banks (regulatory/ph
 Convergence across orthogonal banks is improbable-and-coherent (H3, orthogonal partials summing,
 pointed at IDENTITY not coupling), so fungibility is EARNED by the geometry, never asserted at the
 token. Paralogs that resemble but whose paths diverge (subfunctionalized) are NOT folded -- and the
-STRUCTURAL SIGNATURE (structural.py, a multi-feature deterministic read) is the fourth voice: a
-confident structural CONFLICT bars the merge (physics-orthogonal veto), a confident MATCH is a +1
-confirming bank (measured orthogonal to the coupling banks), abstention is silent -- the two faces
-of one signature.
+STRUCTURAL ELIMINATOR (structural.py) removes a merge only on a FUNDAMENTAL physical blocker
+(membrane-integral vs soluble cannot be one role), abstaining on everything moderate. Structure
+CLEANS the space -- it excludes the impossible, is the informational zero elsewhere, and NEVER
+promotes: the coupling convergence carries the positive signal, the story engine decides over the
+survivors. (Global similarity is not pathway-fungibility -- the role is a LOCAL site.)
 """
 
 from __future__ import annotations
@@ -24,7 +25,7 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 
 from homeostat.event import Event
-from homeostat.structural import signature_compatibility
+from homeostat.structural import structural_class, structural_compatibility
 
 SEED_BANK = "evolutionary"
 SEED_VERB = "resembles"
@@ -81,20 +82,18 @@ def banks_converged(a: str, b: str, partners: dict[str, dict[str, set[str]]]) ->
 
 
 def fungibility_verdict(banks_converged: int, structural: str = "indeterminate") -> str:
-    """The pure fungibility decision from bank convergence AND the structural gate. Named codes:
-    - ``"subfunctionalized"`` — `structural == "incompatible"`: a CONFIDENT structural conflict bars
-      the merge REGARDLESS of convergence (the physics-orthogonal veto; checked first);
-    - a `structural == "compatible"` match adds +1 — structure is the 4th CONFIRMING bank (measured
-      orthogonal to the coupling banks; min_agree=3 keeps it selective);
-    - then the count threshold: ``"fungible"`` (≥2), ``"coincidental"`` (1), ``"seed-only"`` (0).
-    Pure over `(int, str)`; `structural` defaults to abstention (the informational zero, no vote).
+    """The pure fungibility decision: bank convergence, gated by the structural ELIMINATOR. Codes:
+    - ``"subfunctionalized"`` -- `structural == "incompatible"`: a FUNDAMENTAL physical blocker
+      (cannot be one role, e.g. membrane-integral vs soluble) removes the merge, any convergence;
+    - else the count threshold: fungible (>=2), coincidental (1), seed-only (0).
+    Structure CLEANS (excludes the impossible, else abstains) and NEVER promotes: a match or an
+    abstention leaves the count untouched. Pure over `(int, str)`; `structural` defaults to abstain.
     """
     if structural == "incompatible":
         return "subfunctionalized"
-    n = banks_converged + (1 if structural == "compatible" else 0)
-    if n >= 2:
+    if banks_converged >= 2:
         return "fungible"
-    if n == 1:
+    if banks_converged == 1:
         return "coincidental"
     return "seed-only"
 
@@ -119,6 +118,8 @@ def read_fungibility(
         n = banks_converged(a, b, partners)
         structural = "indeterminate"
         if a in seqs and b in seqs:
-            structural = signature_compatibility(seqs[a], seqs[b])
+            structural = structural_compatibility(
+                structural_class(seqs[a]), structural_class(seqs[b])
+            )
         out.append(Fungible(a, b, fungibility_verdict(n, structural), n))
     return out
