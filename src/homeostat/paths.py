@@ -104,3 +104,11 @@ GWAS_URL = (
     "https://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/"
     "gwas-catalog-associations_ontology-annotated-full.zip"
 )
+
+# Ensembl REST (the structural biophysics bank's substrate -- per-gene CDS on demand, GRCh38).
+# Not a bulk download: for a scoped gene set, look up the canonical transcript per HGNC symbol
+# (lookup/symbol), then its CDS FASTA (sequence/id?type=cds). User-amortized -- each gene's CDS
+# is cached once under data/structural/cds/<SYMBOL>.fa (gitignored). Re-fetchable; Ensembl -> drift.
+ENSEMBL_REST = "https://rest.ensembl.org"
+STRUCTURAL_DIR = DATA / "structural"
+STRUCTURAL_CDS_DIR = STRUCTURAL_DIR / "cds"
