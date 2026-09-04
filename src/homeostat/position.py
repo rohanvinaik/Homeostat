@@ -23,6 +23,7 @@ from dataclasses import dataclass
 from statistics import median
 
 from homeostat.otp import ternary
+from homeostat.signal import Tier
 
 
 @dataclass(frozen=True)
@@ -32,12 +33,15 @@ class Position:
     `sign` is the OTP ternary (+1 above the mined zero / -1 below / 0 the informational zero).
     `depth` is |signed deviation| (magnitude, 0.0 on abstention); `dimension` names the axis; `zero`
     is the mined baseline this position is read against (None when no baseline was available).
+    `tier` is the observation's verification grade (VERIFIED can certify; REPORTED banks nothing
+    toward a certified verdict), riding to `clinical_verdict` so the read names its trust boundary.
     """
 
     dimension: str
     sign: int
     depth: float
     zero: float | None
+    tier: Tier = Tier.VERIFIED
 
 
 def deviation(value: float | None, zero: float | None) -> float | None:
@@ -53,15 +57,17 @@ def deviation(value: float | None, zero: float | None) -> float | None:
     return value - zero
 
 
-def position(dimension: str, value: float | None, zero: float | None, tol: float) -> Position:
+def position(
+    dimension: str, value: float | None, zero: float | None, tol: float, tier: Tier = Tier.VERIFIED
+) -> Position:
     """Place a reading on its deviation dimension: ``sign = ternary(deviation, tol)`` and
     ``depth = |deviation|`` (0.0 on abstention). A None reading or None baseline yields the
-    informational zero (sign 0, depth 0.0). Composition over the pinned `deviation` + `otp.ternary`;
-    intent-tested.
+    informational zero (sign 0, depth 0.0). `tier` carries the reading's verification grade onto the
+    Position. Composition over the pinned `deviation` + `otp.ternary`; intent-tested.
     """
     dev = deviation(value, zero)
     depth = abs(dev) if dev is not None else 0.0
-    return Position(dimension, ternary(dev, tol), depth, zero)
+    return Position(dimension, ternary(dev, tol), depth, zero, tier)
 
 
 def mine_zero(values: list[float | None]) -> float | None:
