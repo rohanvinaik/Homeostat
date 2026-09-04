@@ -1,10 +1,13 @@
 # Homeostat — Architecture (as-built wiring map)
 
-**Status:** Canonical engineering map, traced from source at `300aff5` (2026-09-05). Companion to
+**Status:** Canonical engineering map, traced from source at `2ed5038` (2026-09-05). Companion to
 `docs/THESIS.md` and `docs/SYSTEM_DESIGN.md` (the *why*; this is the *what and how*). Every claim below
 was traced with the language server — `get_symbols_overview` for the inventory, `find_referencing_symbols`
 for the call graph — not from memory. **It is the definition of the live system: anything not reachable
-from an apex read here is, by construction, parked or archived residue (see §9–§10).**
+from an apex read here is, by construction, parked or archived residue (see §9–§10).** Re-traced in full
+at `2ed5038`: the **INPUT LAYER** (`relevance.py` + `person.py`) is now built and wired (§2 L7, §4c), which
+promoted the marker producer from PARKED to LIVE (§L3, §8) and gave `trait_wiring`'s parsers their first
+live consumer — the deltas since the `300aff5` trace.
 
 **Legend:** ✅ built and pinned (Detective-complete + intent-tested) · 🔧 built, refinement flagged ·
 🅿️ built + pinned but PARKED (reachable only from tests — no live consumer yet) · ⬜ designed, not built ·
@@ -23,9 +26,9 @@ the meter and reported, never ground truth. It reads a FROZEN world and adds not
 its significance is κ (coverage of the shadow), never a statistic (Law 1). The answer is a **story
 resolved to ranked mechanisms, never a ranked gene** (the subject-fallacy, cut `5c30e65`).
 
-**Scale (counts primary-sourced, not remembered):** 46 modules · 43 `tests/test_*.py` · **448 tests**, of
+**Scale (counts primary-sourced, not remembered):** 48 modules · 45 `tests/test_*.py` · **462 tests**, of
 which **81 are Detective-generated** across 48 `tests/detective/*` synth files. Clean tree, `main`,
-2 unpushed.
+3 unpushed.
 
 ---
 
@@ -34,6 +37,8 @@ which **81 are Detective-generated** across 48 `tests/detective/*` synth files. 
 ```
    FRONT DOOR   ✅ ground — symptom text → concept | abstain (SymbolicSpellCheck, no guess)
    ──────────────────────────────────────────────────────────────────────────────────────
+   L7  INPUT    ✅ person.read_person — ONE TURN of the operator/computer call-and-response:
+                   diagnosis → relevant subspace (relevance.py) · labs → shadow · then driver.drive
    APEX         ✅ driver.drive — the COMPOSED read: scope → eliminate → STORY → resolve-narrow → σ_sem
                 ✅ clinic.read_from_events — the elimination-only read (pre-story core; still live)
    ──────────────────────────────────────────────────────────────────────────────────────
@@ -53,8 +58,9 @@ which **81 are Detective-generated** across 48 `tests/detective/*` synth files. 
    L0  SUBSTRATE✅ otp (ternary) · web (RelationalWeb/kill_matrix/cone) · kappa · signal(tier) · paths/util
    ──────────────────────────────────────────────────────────────────────────────────────
    THE COMPOSED READ (driver.drive): relevance-scope (directed ancestor cone) → two-sign elimination
-   (polarity + role censors) → STORY-read → resolve-narrow ranking of MECHANISMS → σ_sem completeness.
-   Zero judgment in the glue.
+   (polarity + role censors) → STORY-read → resolve-narrow ranking of MECHANISMS → σ_sem completeness →
+   operator ledger. The diagnosis subspace enters as `relevant=` (restricts mechanism SOURCES, option B —
+   the observed shadow stays sacrosanct); operator `hypotheses=` enter PREFER-only. Zero judgment in glue.
 ```
 
 The engine's judgment lives in exactly two places: the elimination read over the web, and the
@@ -111,8 +117,11 @@ Each bank = a pure renderer (`X.py`) + an IO shell (`X_fetch.py`; data gitignore
 | trait-wiring | (iii) calibration prior — a NODE-WEIGHT, not an edge | `trait_wiring.py` 🅿️ | `trait_wiring_fetch.py` | GWAS pleiotropy count per gene |
 
 - **`prior_web.py`** — `all_events` assembles the 4 global edge banks → `build_prior_web` → `RelationalWeb`;
-  `_main` is the assemble-the-web entry point. The 2 scoped banks are NOT here (they enter per-gene-set at
-  the driver — `coexpression.read_coexpression` and `trait_wiring` have **zero live consumers**, 🅿️).
+  `_main` is the assemble-the-web entry point. The 2 scoped banks are NOT here (they enter per-gene-set
+  downstream). `coexpression.read_coexpression` still has **zero live consumers** (🅿️). `trait_wiring` is
+  now **SPLIT**: its parsers (`parse_genes`/`parse_traits`/`MAPPED_*`) are LIVE — consumed by the input
+  layer's `relevance.trait_gene_index` (§L7) — while the pleiotropy-count function `trait_wiring.trait_wiring`
+  (the node-weight) is still parked, awaiting GWAS relevance-seeding (incr.3c).
 - **Forbidden across all three (Law 9):** a computed association AS the object of a verdict. Significance is κ.
 - **Gate PASSED:** every renderer's pure decision pinned; each global bank fired on its real dump.
 
@@ -131,8 +140,9 @@ Each bank = a pure renderer (`X.py`) + an IO shell (`X_fetch.py`; data gitignore
 - **The MARKER producer** (`producer.signals_to_positions`): `signal → reference_center_spread → parse_marker
   → place`; ungroundable / non-numeric / unreferenced signals honestly dropped. Its reference is a GIVEN
   published demographic interval (the one sanctioned population read — the shadow, never the mechanism),
-  served by **`reference_fetch.py`** (HMDB serum, PARSE-LOCAL). **Built & pinned but PARKED** (🅿️ — zero
-  production consumers; `clinic`/`driver` still take a positions object; it enters at the driver).
+  served by **`reference_fetch.py`** (HMDB serum, PARSE-LOCAL). **✅ LIVE** (promoted from PARKED at
+  `f6d3cc4`) — the input layer's `person.read_person` (§L7) calls it to turn the operator's labs into the
+  shadow. `clinic`/`driver` still ALSO accept a pre-built positions object directly.
 - **⬜ The genotype/state producer:** genotype → `dict[node, Position]` via the consequence-vector prior
   (the genotype pole below) — designed, not built.
 - **Gate PASSED:** `discriminates`/`position`/`mine_zero`/`place`/`make_differential`/`signals_to_positions`
@@ -194,6 +204,31 @@ Each bank = a pure renderer (`X.py`) + an IO shell (`X_fetch.py`; data gitignore
 - **Gate PASSED:** `consequence_vector`/`consequence_similarity`/`bendability`/`yr_ry_balance` pinned
   (`test_consequence`, `test_biophysics`).
 
+### L7 INPUT — ✅ `relevance.py`, `person.py` (the operator interface — the call-and-response turn)
+- **OWNS:** the first turn of the operator/computer interface (Detective's CLI, transposed). Most users
+  hold a DIAGNOSIS, not a genome; a diagnosis is a lossy operator-domain label. The input layer turns
+  `(diagnosis, labs, hypotheses)` into one `driver.drive` read; the returned `DriverRead` carries the
+  mechanism-level Jeeves DO-THIS — the machine's counter-ask the operator answers next turn.
+- **`relevance.py`** — the RELEVANCE FILTER (diagnosis → the possibly-relevant subspace). `trait_gene_index`
+  (the GWAS-catalog trait→gene reference, over `trait_wiring`'s parsers) · `relevant_subspace(diagnosis,
+  trait_index, fungible)` = the diagnosis's canonical genes WIDENED by earned fungibility · `fungible_map`
+  (the earned-`"fungible"` adjacency from `read_fungibility` verdicts — the widening input). A TESTED
+  relevance, never significance: it says "look HERE", and κ inside does the significance — if nothing in the
+  subspace explains the shadow, `drive` returns certified-⊥ (the label falls out, like a wrong hypothesis).
+  Detective-COMPLETE (`fungible_map` COMPLETE modulo 4 crash-only unproven-equivalent).
+- **`person.py`** — `read_person(diagnosis, labs, events, verb_sign, trait_index, *, demographics, reference,
+  vocab, proteins=None, hypotheses=(), band=0.0)` — the assembly: `subspace = relevant_subspace(diagnosis, …,
+  fungible_map(read_fungibility(events)))` · `positions = signals_to_positions(labs, …)` (the marker
+  producer, now LIVE) · `return drive(events, positions, verb_sign, proteins=…, hypotheses=…, band=…,
+  relevant=subspace)`. Judgment-free orchestration; intent + integration-tested.
+- **THE INTERFACE PRINCIPLE (option B):** the diagnosis enters ONLY as `drive(relevant=)` — it restricts the
+  eligible mechanism SOURCES, never the observed shadow (a label never censors an observation). A single-gene
+  subspace resolves self-confirmingly → the σ_sem>0 guard returns DEGENERATE (Law 7), never a spurious
+  RESOLVED. `read_person` is ONE turn; the full loop (measure I_solve → new lab → read again) is a remaining
+  task (§7.6). Both entries are reachable from tests only — no CLI/render/`__init__` export yet.
+- **Gate PASSED:** `trait_gene_index`/`relevant_subspace`/`fungible_map` pinned (`test_relevance`);
+  `read_person` integration-tested end-to-end through the real `drive` (`test_person`).
+
 ---
 
 ## 3. The typed contracts — everything flows through these
@@ -247,9 +282,9 @@ never a default.
 
 ---
 
-## 4. The two apex reads
+## 4. The three entry points
 
-There are **two entry points**, both currently reachable only from tests (no CLI/`__init__` export yet —
+There are **three entry points**, all currently reachable only from tests (no CLI/`__init__` export yet —
 `__init__.py` exposes only `__version__`):
 
 **(a) `clinic.read_from_events` — the elimination-only read (the pre-story core).**
@@ -263,23 +298,55 @@ Positions-object-led, no directed-cone scoping, no polarity censor, no story. Us
 
 **(b) `driver.drive` — the composed read (the apex, the Dr. House protocol).**
 ```
-drive(events, positions, verb_sign, active_roles=(), probes=(), proteins=None, min_weight=0.0):
+drive(events, positions, verb_sign, active_roles=(), probes=(), proteins=None,
+      hypotheses=(), min_weight=0.0, band=0.0, relevant=None):
+  # --- REQUIRE (hard: certified two-sign elimination) ---
   web       = events_to_web(events, DIRECTED_NETWORKS)
   directed  = the direction≠0 sub-web
   observed  = observed_symptoms(positions)
-  scoped    = induced_subweb(directed, ancestor_cone(directed, observed))   # RELEVANCE (directed cone)
+  scoped    = induced_subweb(directed, ancestor_cone(directed, observed, min_weight))  # RELEVANCE (cone)
   observed_scoped, dropped = split observed by in-cone
-  candidates, constraints  = kill_matrix(scoped, observed_scoped)
-  signed    = polarity.signed_adjacency(events, verb_sign)
+  candidates, constraints  = kill_matrix(scoped, observed_scoped, min_weight)
+  if relevant is not None: candidates = [c for c in candidates if c in relevant]  # option B (SOURCES only)
+  signed    = polarity.signed_adjacency(events, verb_sign)                  # REAL events only (no hyps)
   censors   = {polarity: polarity_censors(signed, candidates, obs_signs)} ∪ active_censors(...)
-  traj      = eliminate_two_sign(candidates, constraints, censors)          # REQUIRE (two-sign)
+  traj      = eliminate_two_sign(candidates, constraints, censors)          # → survivor / ⊥ / plurality
   probe     = select_probe(...) if stuck
   verdict   = clinical_verdict(bottom, resolved, falsifiable, has_probe)
-  story     = read_story(scoped_events, observed_scoped, proteins)          # PREFER (the story)
-  → DriverRead(verdict, story, probe, traj, censors, dropped)
+  # --- PREFER (soft: story + resolve-narrow; operator hypotheses join HERE only) ---
+  hyp       = list(hypotheses)
+  story     = read_story(scoped_events + hyp, observed_scoped, proteins)     # the STORY (genres + account)
+  ranked    = rank_clusters(story_clusters(story.genres), obs_signs,
+                            ternary_adjacency(events+hyp), signed_adjacency(events+hyp, verb_sign))
+  if relevant is not None: ranked = [(cl, s) for cl, s in ranked if cl.entities & relevant]
+  # --- COMPLETENESS (σ_sem) + OPERATOR LEDGER ---
+  plurality    = top_band([s for _, s in ranked], band)                      # the surviving near-tie
+  discriminant = cluster_discriminant(plurality entity-sets)                 # mechanism-level Jeeves node
+  completeness = read_completeness(len(ranked), len(plurality), discriminant)
+  ledger       = operator_ledger(hyp, {full observed signs}, verb_sign)      # each hypothesis judged
+  → DriverRead(verdict, story, ranked, completeness, probe, traj, censors, dropped, ledger)
 ```
 The glue holds no branch that inspects a gene, a weight, or a threshold (Law 11). REQUIRE is the two-sign
-elimination (unchanged); PREFER is the story-read, which **replaced the old gene ranking** (cut `5c30e65`).
+elimination; PREFER is the story-read + resolve-narrow ranking, which **replaced the old gene ranking**
+(cut `5c30e65`). Operator `hypotheses` reach ONLY the PREFER read (`read_story` + `rank_clusters`) — never
+`kill_matrix` or the polarity censor's `signed` — so an operator can never fabricate a certified mechanism
+("screw the operators, correctness stays in the code"). `relevant` (the diagnosis subspace) gates the
+elimination candidates (REQUIRE) and the surfaced clusters (PREFER); the observed shadow is never filtered
+by it (option B — a label never censors an observation). *Note the aliased import:* `drive` uses
+`topology.signed_adjacency as ternary_adjacency` (the nested-dict producer, for `cluster_coherence`)
+alongside `polarity.signed_adjacency` (the adjacency-list producer, for the censor + meter) — see §5's note.
+
+**(c) `person.read_person` — the operator-interface turn (the input layer, §L7).**
+```
+read_person(diagnosis, labs, events, verb_sign, trait_index, *, demographics, reference, vocab,
+            proteins=None, hypotheses=(), band=0.0):
+  subspace  = relevant_subspace(diagnosis, trait_index, fungible_map(read_fungibility(events, proteins)))
+  positions = signals_to_positions(labs, demographics, reference, vocab)     # the marker producer (LIVE)
+  → drive(events, positions, verb_sign, proteins=…, hypotheses=…, band=…, relevant=subspace)
+```
+The operator-facing wrapper: it builds the shadow from the labs and the relevant subspace from the
+diagnosis, then defers every mechanism decision to `drive`. One TURN of the call-and-response (§L7). Used
+by `test_person`.
 
 ---
 
@@ -420,10 +487,13 @@ structurally cannot emit this read.
    `completeness` σ_sem read wired in (`2118c48`). Every pure decision Detective-pinned.
    ✅ **incr.3a/b DONE:** the operator-injected hypothesis (`operator.py`, `0f7473a`) and the mechanism-level
    Jeeves (`resolve.cluster_discriminant`, `300aff5`). ⬜ **incr.3c GWAS seeding** deferred to step 5.
-5. ⬜ **The input layer** — clean-etiology diagnosis → form-cassette (degenerate) + multimodal diagnosis →
-   relevance filter feeding the resolve engine (this is where **GWAS relevance-seeding** lives, ordering
-   generate-wide); the marker producer + genotype pole projected into the live read; the scoped banks
-   (coexpr/trait) entering per-gene-set.
+5. 🔧 **The input layer** — 2 of ~4 increments built (§2 L7, §4c). ✅ **incr.1** (`relevance.py`, `93a135a`):
+   the diagnosis → relevant-subspace filter. ✅ **incr.2** (`person.read_person`, `f6d3cc4`): the assembly +
+   `drive(relevant=)` option B — which promoted the marker producer to LIVE. ⬜ **incr.3** notes →
+   directionality (treatment-response → a negative-sign censor; `SYSTEM_DESIGN §7`) · ⬜ **incr.3c** GWAS
+   relevance-seeding (the `trait_wiring` pleiotropy count ordering generate-wide) · ⬜ **incr.4** the
+   clean-etiology form-cassette (degenerate efficiency) · ⬜ the genotype pole + scoped banks (coexpr/trait)
+   projected into the live read.
 6. ⬜ **The greenfield-workflow baseline + a rendering of `DriverRead`** — a few realistic workflows → drive
    → story, the functional-validation oracle. No CLI/render exists yet.
 7. ⬜ **The blind LRRK2 control** — recover LRRK2–NOD2–RIPK2 as coherence, blind (≥2 networks + Regenesis).
@@ -438,9 +508,9 @@ structurally cannot emit this read.
 | `signal.py` (verification tier) | ✅ | Tier GATES certification (full-C); `test_certification` |
 | L1 event contract | ✅ | `couple_verdict`/`events_to_web`/`events_to_censors`/`active_censors` pinned |
 | L2 banks — 4 global edge | ✅ | pinned; each fired on its real dump (SIGNOR/STRING/Compara/Reactome) |
-| L2 banks — 2 scoped (coexpr/trait) | 🅿️ | built + pinned; **no live consumer** — enter at the driver |
+| L2 banks — 2 scoped (coexpr/trait) | 🅿️ | coexpr parked; `trait_wiring` **parsers now LIVE** via §L7 relevance, pleiotropy fn still parked |
 | L3 position + `differential` | ✅ | `discriminates`/`mine_zero`/`place` pinned; `Position` carries tier + differential |
-| marker producer + HMDB reference | 🅿️ | `producer.signals_to_positions` + `reference_fetch` pinned; **not wired** |
+| marker producer + HMDB reference | ✅ **LIVE** | `signals_to_positions` wired into `person.read_person`; `reference_fetch` pinned |
 | genotype consequence vector | 🅿️ | `consequence.py` + `biophysics.py` pinned; producer/projection at driver |
 | L4 engine (search/clinic/jeeves) | ✅ | certified-⊥, DEGENERATE/ASK/ABSTAIN + full-C pinned; `test_two_sign`/`test_certification` |
 | L4 polarity censor | ✅ | `polarity_censors`/`signed_adjacency`/`net_polarities` pinned; `test_polarity` |
@@ -457,8 +527,10 @@ structurally cannot emit this read.
 | **L6 σ_sem completeness** (`completeness.py`) | ✅ **LIVE** | `resolution_entropy`/`spec_completeness`/`top_band` Detective-COMPLETE; `read_completeness` wired into `drive` |
 | **incr.3a operator hypothesis** (`operator.py`) | ✅ **LIVE** | `edge_outcome` value-COMPLETE; `operator_ledger` → `DriverRead.operator`; PREFER-only, never elimination |
 | **incr.3b mechanism-level Jeeves** (`resolve.cluster_discriminant`) | ✅ **LIVE** | Detective-COMPLETE; the `SpecCompleteness.i_solve` node |
+| **L7 input — relevance filter** (`relevance.py`) | ✅ **LIVE** | `trait_gene_index`/`relevant_subspace`/`fungible_map` Detective-COMPLETE; `test_relevance` |
+| **L7 input — `person.read_person`** (the interface turn) | ✅ **LIVE** | assembly wired to `drive(relevant=)`; integration-tested `test_person` |
 | resolve incr.3c GWAS seeding | ⬜ | deferred to the input layer (generate-wide home) |
-| input layer / greenfield baseline / CLI-render | ⬜ | designed, not built |
+| input layer incr.3 (notes) / incr.4 (cassette) / greenfield baseline / CLI-render | ⬜ | designed, not built |
 | Blind LRRK2 control | ⬜ | the acceptance test |
 
 ---
@@ -466,21 +538,28 @@ structurally cannot emit this read.
 ## 9. Reachability method & the parked set
 
 Traced with the language server: `get_symbols_overview` for the inventory, `find_referencing_symbols` for
-the call graph, from the two apex reads (`clinic.read_from_events`, `driver.drive`) + `prior_web._main`
-(assemble the web) + `ground.ground` (front door). 43 `tests/test_*.py` (448 tests) cover every live module;
-every pure decision on the live elimination + story + resolve + completeness + operator path is
-Detective-pinned under `tests/detective/` (48 synth files, 81 tests) — the incr.2 `cluster_coherence` debt
-is closed (`801448b`), and each incr.3 pin caught real killables Detective's search had mis-filed as
-candidate-equivalent (the residual-reading discipline, `0f7473a`/`300aff5`).
+the call graph, from the three entry points (`person.read_person` → `driver.drive`; `clinic.read_from_events`)
++ `prior_web._main` (assemble the web) + `ground.ground` (front door). 45 `tests/test_*.py` (462 tests)
+cover every live module; every pure decision on the live input + elimination + story + resolve + completeness
++ operator path is Detective-pinned under `tests/detective/` (48 synth files, 81 tests) — the incr.2
+`cluster_coherence` debt is closed (`801448b`), and each incr.3 pin caught real killables Detective's search
+had mis-filed as candidate-equivalent (the residual-reading discipline, `0f7473a`/`300aff5`).
 
 **PARKED (🅿️ — built + pinned, but reachable ONLY from tests; no live consumer):** these are apex leaves
 awaiting the wiring in §7.5–§7.6, NOT dead code:
 - `driver.rank_candidates`, `driver.proximity_coherence`, `web.node_convergence` — the **old gene-ranking
   PREFER path** (the subject-fallacy). Superseded by the story-read + resolve-narrow; kept as scaffolding.
   **Candidate for removal** now that `resolve` is live (the mechanism ranker replaced the gene ranker).
-- `producer.signals_to_positions` + `reference_fetch` (marker producer), `consequence.py`/`biophysics.py`
-  (genotype pole), `coexpression.read_coexpression`, `trait_wiring` (scoped banks) — the input paths.
+  *(Verified tests-only at this trace: `rank_candidates`/`proximity_coherence`/`node_convergence` each have
+  zero production callers.)*
+- `consequence.py`/`biophysics.py` (genotype pole), `coexpression.read_coexpression`, and
+  `trait_wiring.trait_wiring` (the pleiotropy node-weight — note its PARSERS are now LIVE via §L7 relevance) —
+  the still-unwired input paths.
 - `structural` multi-feature signature (rejected decider frame; kept for a future extreme blocker).
+
+**NEWLY LIVE since the `300aff5` trace** (was PARKED, now wired via the input layer): `producer.signals_to_-
+positions` + `reference_fetch` (the marker producer — `person.read_person` builds the shadow with it) and
+`trait_wiring`'s parsers `parse_genes`/`parse_traits` (via `relevance.trait_gene_index`).
 
 ---
 
