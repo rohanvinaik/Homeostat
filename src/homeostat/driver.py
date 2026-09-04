@@ -21,6 +21,7 @@ from collections.abc import Collection, Iterable, Mapping
 from dataclasses import dataclass
 
 from homeostat.clinic import clinical_verdict, observed_symptoms
+from homeostat.completeness import SpecCompleteness, read_completeness
 from homeostat.event import Event, active_censors, events_to_censors, events_to_web
 from homeostat.jeeves import Probe, select_probe
 from homeostat.narrative import StoryRead, read_story
@@ -95,13 +96,16 @@ class DriverRead:
     plural, no single subject (the answer is a story, not a ranked gene); `ranked` is the
     resolve-narrow closure -- the candidate MECHANISMS (connected story-clusters) scored by coverage
     × internal-coherence × the calibrated predictive meter, descending (a near-tie at the top is the
-    Jeeves cue); `probe` is the DO-THIS on ASK; `trajectory` is the σ-trajectory; `censored` is what
-    each censor ruled out; `dropped` are observed deviations with no directed context.
+    Jeeves cue); `completeness` is the σ_sem read (how much of the mechanism-uncertainty structure
+    resolved, and the I_solve still owed); `probe` is the DO-THIS on ASK; `trajectory` is the
+    σ-trajectory; `censored` is what each censor ruled out; `dropped` are observed deviations with
+    no directed context.
     """
 
     verdict: str
     story: StoryRead
     ranked: list[tuple[Cluster, float]]
+    completeness: SpecCompleteness
     probe: Probe | None
     trajectory: Trajectory
     censored: dict[str, list[str]]
@@ -159,4 +163,7 @@ def drive(
     ranked = rank_clusters(
         story_clusters(story.genres), obs_signs, ternary_adjacency(events), signed
     )
-    return DriverRead(verdict, story, ranked, probe, traj, censors, dropped)
+    # COMPLETENESS: the σ_sem read -- how much of the mechanism-uncertainty structure resolved
+    # (H_0 → H_residual), and the I_solve still owed (the Jeeves DO-THIS when a plurality survives).
+    completeness = read_completeness(ranked, probe)
+    return DriverRead(verdict, story, ranked, completeness, probe, traj, censors, dropped)

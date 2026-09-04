@@ -126,6 +126,9 @@ def test_drive_closes_the_story_narrow_into_ranked_mechanisms():
     assert read.ranked  # the resolve-narrow engine produced ranked mechanisms
     assert read.ranked[0][1] > 0.0  # the leading mechanism scores positive
     assert any({"A", "B"} <= cl.entities for cl, _ in read.ranked)  # a mechanism spans the shadow
+    # the σ_sem completeness read: a valid resolved fraction, residual never exceeds initial.
+    assert 0.0 <= read.completeness.resolved <= 1.0
+    assert read.completeness.h_residual <= read.completeness.h0
 
 
 def test_drive_polarity_censor_certifies_bottom_on_a_contradictory_pattern():
