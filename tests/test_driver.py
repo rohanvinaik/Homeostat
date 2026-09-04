@@ -1,7 +1,7 @@
 """Intent tests for the driver — the generate-wide/resolve-narrow read as a ranked recommendation.
 Authored from the design; the pure ranker is Detective-pinned, drive() is validated end-to-end."""
 
-from homeostat.driver import drive, rank_candidates
+from homeostat.driver import drive, proximity_coherence, rank_candidates
 from homeostat.event import Event
 from homeostat.position import position
 
@@ -62,6 +62,34 @@ def test_rank_candidates_convergence_normalizes_even_when_max_is_at_or_below_one
 def test_rank_candidates_zero_coverage_with_a_soft_signal_stays_zero():
     # align 0 (killed by its one constraint) -> 0 * (1 + soft) = 0.0, never None.
     assert rank_candidates(["x"], [["x"]], 1, convergence={"x": 1.0}) == [("x", 0.0)]
+
+
+def test_rank_candidates_coherence_is_a_second_alignment_factor():
+    # A and B tie on coverage (both cover the one observed); A has higher coherence -> A first.
+    # A: align [1.0, 0.8] -> 0.8 ; B: align [1.0, 0.2] -> 0.2 (coherence multiplies coverage).
+    ranked = rank_candidates(["B", "A"], [[]], 1, coherence={"A": 0.8, "B": 0.2})
+    assert ranked == [("A", 0.8), ("B", 0.2)]
+
+
+def test_rank_candidates_survivor_absent_from_coherence_does_not_crash():
+    # a survivor with no coherence datum -> the coherence factor is skipped (no KeyError).
+    assert rank_candidates(["Z"], [[]], 1, coherence={"A": 0.5}) == [("Z", 1.0)]
+
+
+def test_proximity_coherence_favours_the_direct_regulator():
+    # observed {C}; A->C direct (dist 1), D->E->C distant (dist 2). A=0.5 coheres more than D=1/3.
+    radj = {"C": ["A", "E"], "E": ["D"], "A": [], "D": []}
+    coh = proximity_coherence(["C"], radj)
+    assert coh["C"] == 1.0  # C reaches itself (dist 0)
+    assert coh["A"] == 0.5 and coh["E"] == 0.5  # direct regulators (dist 1)
+    assert coh["D"] == 1 / 3 and coh["A"] > coh["D"]  # distant coheres less than direct
+
+
+def test_proximity_coherence_is_the_mean_over_observed():
+    # A reaches C (dist 1) and F (dist 2): coherence is the MEAN (1/2 + 1/3)/2, not the sum.
+    radj = {"C": ["A"], "F": ["B"], "B": ["A"], "A": []}
+    coh = proximity_coherence(["C", "F"], radj)
+    assert coh["A"] == (1 / 2 + 1 / 3) / 2
 
 
 # ---- the composed read -----------------------------------------------------------

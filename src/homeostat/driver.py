@@ -30,10 +30,12 @@ from homeostat.search import Trajectory, coverage, eliminate_two_sign
 from homeostat.web import (
     RelationalWeb,
     ancestor_cone,
+    distances_to,
     induced_subweb,
     kill_matrix,
     node_convergence,
     nodes,
+    reverse_adjacency,
 )
 
 DIRECTED_NETWORKS = frozenset(
@@ -46,22 +48,43 @@ def rank_candidates(
     positive_kill_sets: list[list[str]],
     n_observed: int,
     convergence: Mapping[str, float] | None = None,
+    coherence: Mapping[str, float] | None = None,
 ) -> list[tuple[str, float]]:
     """Rank surviving candidates into the recommendation: each scored by its kappa-coverage
-    alignment (`coverage / n_observed`, in [0, 1]) TIMES the PREFER soft blend. CONVERGENCE
-    (normalized by the max) is the soft tie-breaker: among candidates that equally cover the shadow,
-    the one whose couplings are backed by more independent networks ranks higher. Descending; ties
-    keep input order (stable sort). `n_observed <= 0` -> alignment 0 -> every score 0.0. Pure.
+    alignment (`coverage / n_observed`, in [0, 1]), optionally TIMES a COHERENCE alignment factor (a
+    candidate that coheres as a mechanism for the shadow is boosted, one that does not is demoted),
+    TIMES the PREFER soft blend. CONVERGENCE (normalized by its max) is the soft tie-breaker.
+    Descending; ties keep input order. Absent coherence/convergence for a candidate -> that factor
+    is neutral. `n_observed <= 0` -> alignment 0 -> every score 0.0. Pure.
     """
     conv = convergence or {}
+    coh = coherence or {}
     max_conv = max(conv.values(), default=0.0)
 
     def _score(s: str) -> float:
-        align = coverage(s, positive_kill_sets) / n_observed if n_observed > 0 else 0.0
+        align = [coverage(s, positive_kill_sets) / n_observed if n_observed > 0 else 0.0]
+        if s in coh:
+            align.append(coh[s])
         soft = [conv[s] / max_conv] if s in conv and max_conv > 0 else []
-        return score_candidate([align], soft)
+        return score_candidate(align, soft)
 
     return sorted(((s, _score(s)) for s in survivors), key=lambda t: t[1], reverse=True)
+
+
+def proximity_coherence(observed: list[str], reverse_adj: dict[str, list[str]]) -> dict[str, float]:
+    """Local STRUCTURAL coherence -- the self-contained default (a Regenesis-native SEMANTIC
+    coherence can be supplied to `drive` to override it). A candidate regulating the shadow through
+    SHORT/direct paths tells a more parsimonious mechanism than a distant, entangled one:
+    coherence(C) = mean over the observed C reaches of `1 / (1 + dist(C, O))`, in (0, 1]. One
+    reverse-BFS per observed; a candidate reaching no observed is absent. Pure.
+    """
+    total: dict[str, float] = {}
+    count: dict[str, int] = {}
+    for o in observed:
+        for c, d in distances_to(reverse_adj, o).items():
+            total[c] = total.get(c, 0.0) + 1.0 / (1 + d)
+            count[c] = count.get(c, 0) + 1
+    return {c: total[c] / count[c] for c in total}
 
 
 @dataclass(frozen=True)
@@ -87,6 +110,7 @@ def drive(
     verb_sign: Mapping[str, int],
     active_roles: Collection[str] = (),
     probes: Iterable[Probe] = (),
+    coherence: Mapping[str, float] | None = None,
     min_weight: float = 0.0,
 ) -> DriverRead:
     """Read one person's positioned deviations end-to-end (generate-wide → resolve-narrow → rank).
@@ -119,7 +143,14 @@ def drive(
     verdict = clinical_verdict(traj.bottom, is_resolved, traj.falsifiable, probe is not None)
     # convergence over the FULL multi-network web (all its weights) -- the soft tie-breaker.
     conv = node_convergence(web)
+    # coherence alignment: the supplied (Regenesis-native) map if given, else the local structural
+    # default (proximity over the DIRECTED reachability -- the parsimonious/direct mechanism).
+    coh = (
+        coherence
+        if coherence is not None
+        else proximity_coherence(observed_scoped, reverse_adjacency(directed))
+    )
     ranked = rank_candidates(
-        traj.survivors_left, list(constraints.values()), len(observed_scoped), conv
+        traj.survivors_left, list(constraints.values()), len(observed_scoped), conv, coh
     )
     return DriverRead(verdict, ranked, probe, traj, censors, dropped)

@@ -6,6 +6,7 @@ from homeostat.web import (
     Coupling,
     RelationalWeb,
     ancestor_cone,
+    distances_to,
     induced_subweb,
     kill_matrix,
     node_convergence,
@@ -167,3 +168,15 @@ def test_node_convergence_is_mean_coupling_weight():
     )
     # A: (A,B)=3,(A,C)=1 -> 2.0 ; B: (A,B)=3,(B,C)=2 -> 2.5 ; C: (A,C)=1,(B,C)=2 -> 1.5  (mean)
     assert node_convergence(web) == {"A": 2.0, "B": 2.5, "C": 1.5}
+
+
+def test_distances_to_is_shortest_reverse_bfs():
+    # forward a->b->c and a->c : reverse from c -> a is 1 (direct a->c beats a->b->c), b is 1.
+    radj = {"c": ["b", "a"], "b": ["a"], "a": []}
+    assert distances_to(radj, "c") == {"c": 0, "b": 1, "a": 1}
+
+
+def test_distances_to_reaches_multi_hop_via_the_queue():
+    # a->b->c chain: a is TWO hops from c, so BFS must enqueue b to reach a. (Kills append->pass.)
+    radj = {"c": ["b"], "b": ["a"], "a": []}
+    assert distances_to(radj, "c") == {"c": 0, "b": 1, "a": 2}

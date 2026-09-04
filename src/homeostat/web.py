@@ -194,6 +194,23 @@ def induced_subweb(web: RelationalWeb, keep: Collection[str]) -> RelationalWeb:
     return RelationalWeb(tuple(c for c in web.couplings if c.a in ks and c.b in ks))
 
 
+def distances_to(reverse_adj: dict[str, list[str]], target: str) -> dict[str, int]:
+    """Shortest directed-path DISTANCE from every node to `target` (0 for `target` itself), by
+    breadth-first over the REVERSED adjacency. Unreachable nodes are absent. The dual of a forward
+    BFS: `distances_to(radj, t)[c]` is the hop count of the shortest c→t directed path. Pure over
+    `(dict[str, list[str]], str)`.
+    """
+    dist = {target: 0}
+    queue: deque[str] = deque([target])
+    while queue:
+        n = queue.popleft()
+        for m in reverse_adj.get(n, ()):
+            if m not in dist:
+                dist[m] = dist[n] + 1
+                queue.append(m)
+    return dist
+
+
 def node_convergence(web: RelationalWeb) -> dict[str, float]:
     """Per-node CONVERGENCE: the mean coupling weight (network-support count) over each node's edges
     in the full multi-network web. The PREFER tie-breaker — among candidates that equally cover the
