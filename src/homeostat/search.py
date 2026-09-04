@@ -141,6 +141,16 @@ def covers_shadow(candidate: str, positive_kill_sets: list[list[str]]) -> bool:
     return not any(candidate in ks for ks in positive_kill_sets)
 
 
+def coverage(candidate: str, positive_kill_sets: list[list[str]]) -> int:
+    """kappa-coverage of one candidate: how many positive constraints it SATISFIES (is not killed
+    by) — the count of observed deviations this source reaches. The ranking's primary alignment
+    signal (Law 4: significance IS coverage of the shadow). `covers_shadow` is the all-or-nothing
+    special case (`coverage == len(positive_kill_sets)`); this is the graded score PREFER ranks on.
+    Pure over `(str, list[list[str]])`.
+    """
+    return sum(1 for ks in positive_kill_sets if candidate not in ks)
+
+
 def max_coverage_survivors(candidates: list[str], positive_kill_sets: list[list[str]]) -> list[str]:
     """The candidates covering the MOST of the shadow — argmax over κ-coverage, a candidate's
     coverage being how many positive constraints it SATISFIES (is not killed by = how many observed

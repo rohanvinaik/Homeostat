@@ -2,6 +2,7 @@
 orchestrator `eliminate_two_sign` is tested in test_two_sign.py; this file pins the pure toolkit."""
 
 from homeostat.search import (
+    coverage,
     covers_shadow,
     entropy_bits,
     falsifiable,
@@ -77,3 +78,10 @@ def test_max_coverage_survivors_ties_preserve_order_and_dedup():
 
 def test_max_coverage_survivors_empty_candidates_is_empty():
     assert max_coverage_survivors([], [["a"]]) == []
+
+
+def test_coverage_counts_constraints_the_candidate_satisfies():
+    assert coverage("x", [["a"], ["b"]]) == 2  # x in neither kill-set -> reaches both observed
+    assert coverage("x", [["x"], ["b"]]) == 1  # killed by the first -> reaches one
+    assert coverage("x", [["x"], ["x", "b"]]) == 0  # killed by both -> reaches none
+    assert coverage("x", []) == 0  # no constraints -> covers nothing
