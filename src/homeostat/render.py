@@ -157,9 +157,15 @@ def render(read: DriverRead) -> str:
         lines.append("  The dynamics are quiet — no genre fired an opinionated verdict here.")
 
     # --- WHAT REMAINS (verdict + how-solved + the ranked mechanisms) ---
-    pct = round(read.completeness.resolved * 100)
+    # the % is the MECHANISM-space resolution — meaningful only when there was ambiguity to
+    # resolve (h0 > 0). A single candidate mechanism is not a "100%" triumph, and pairing 100%
+    # with an ABSTAIN/DEGENERATE gene-level verdict misreads; so h0 == 0 says so plainly instead.
     lines.append("")
-    lines.append(f"WHAT REMAINS  —  how solved: {pct}%")
+    if read.completeness.h0 > 0:
+        pct = round(read.completeness.resolved * 100)
+        lines.append(f"WHAT REMAINS  —  mechanism-space {pct}% resolved")
+    else:
+        lines.append("WHAT REMAINS  —  a single candidate mechanism (nothing to disambiguate)")
     lines.append(f"  {verdict_clause(read.verdict, len(read.ranked))}")
     for cluster, score in read.ranked:
         lines.append(f"    · {_entities(cluster.entities)}   {score:.2f}")

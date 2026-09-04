@@ -93,7 +93,8 @@ def test_render_reads_a_vicious_comedy_as_a_story():
     out = render(read)
     assert out.startswith("THE STORY")
     assert "comedy" in out.lower()
-    assert "WHAT REMAINS" in out and "how solved:" in out
+    # one cluster {A, B} -> h0 == 0 -> no misleading "100%"; the honest single-candidate line
+    assert "single candidate mechanism" in out and "%" not in out
 
 
 def test_render_surfaces_the_operator_ledger():
