@@ -148,22 +148,31 @@ Homeostat is not a heuristic; it is a working instance of a body of formal theor
 
 ## Where it actually is (the honest status)
 
-Plainly, because it matters: **every layer is built and proven on real data. What is missing is not a
-capability — it is the orchestration that runs the layers together on one person, and the single
-end-to-end test that proves the whole.**
+Plainly, because it matters: **every layer is built and proven on real data, and the orchestrator that
+threads them into a single read of one person now exists and runs.** What is missing is the input pipeline
+that feeds a real person in, a rendering that surfaces the read, and the single blind end-to-end test that
+proves the whole on a mechanism it was not told.
 
 - **Built and pinned** — the two-sign elimination engine with certified-⊥; the per-person
   deviation/positioning layer with its typed, information-weighted departures; all **six coupling banks,
   each fired on its real open-biology dump** (SIGNOR, STRING, Ensembl/Compara, Reactome, GTEx, GWAS); the
   marker input path, run on the real HMDB serum reference; the structural (protein-biophysics) eliminator;
-  and the interpretive geometry — regulatory genres, role-fungibility, and the story→role bridge. Every
-  *pure decision* is verified to a mutation-complete specification and covered by hand-written intent
-  tests: **278 pass.** The complete theory is written out in full.
-- **Not yet built** — the **driver**: the zero-judgment orchestrator that threads all of the above into a
-  single read of one person (the generate-wide story derivation feeding the resolve-narrow elimination).
-  Until it exists a human can stand in for it, threading the engine's output by hand — and the immediate
-  next step is exactly that: a **blind, end-to-end recovery of a *known* mechanism**, which is what turns
-  "each part proven" into "the whole does what each part does."
+  the interpretive geometry (regulatory genres, role-fungibility, the story→role bridge); **the driver —
+  the zero-judgment orchestrator that threads all of the above into one read (scope → two-sign elimination
+  → the genre story → the resolve-narrow ranking of candidate mechanisms → the completeness read), which
+  discriminates on real data (recovers the injected source; TP53 ranked #1)**; the **calibrated predictive
+  coherence meter** (a small-sample-honest confirmation calibrated by minimax regret); and the
+  **completeness read** that reports, as a number, how much of the mechanism-uncertainty structure
+  resolved and which single measurement would resolve the rest. Every *pure decision* is verified to a
+  mutation-complete specification and covered by hand-written intent tests: **429 pass.** The complete
+  theory is written out in full.
+- **Not yet built** — the **input pipeline** (a diagnosis + labs + notes resolving to the read, so a real
+  person goes in without hand-threading); a **rendering** (the read is computed but not yet surfaced to a
+  human); the **operator-injected hypothesis and the mechanism-level discriminating question** (the two
+  that let a person's own intuition enter as a *tested* input and let the read name the one measurement
+  that separates the survivors); and the **blind, end-to-end recovery of a *known* multi-gene mechanism** —
+  the acceptance test that turns "each part proven, and the whole runs" into "the whole recovers a
+  mechanism it was not told."
 
 The deeper limit is not code. The data that would *settle* these questions — each person's genes and
 symptoms together, watched over time as a mechanism moves — is gated behind institutions and money.
