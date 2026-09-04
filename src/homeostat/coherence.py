@@ -43,16 +43,19 @@ def coherence_from_patterns(
 
     Each pattern is ``{name, subject, significance}`` where `subject` is the opaque story token and
     `significance` (>= 0) is the summed chain-improbability of the derivations that fired the Form —
-    the role's DEPTH. Per gene (subject mapped back via the render_story `sidecar`), keep the MAX
-    role significance, then normalize by the max across all genes -> (0, 1] (the same max-normalized
-    shape `rank_candidates` uses for convergence). A subject not in the sidecar, or a gene whose
-    best significance is 0 (a shallow over-fire, no depth), is OMITTED — absence is neutral in the
-    ranker, never a 0 that zeroes the candidate. Empty / all-zero -> {} (no signal, not a crash).
+    the role's DEPTH. The subject is mapped back to its gene through the render_story `sidecar`
+    CASE-INSENSITIVELY: GSE emit lowercases the opaque token (`Gene2` -> `gene2`), so the join must
+    reconcile case or every gene silently drops. Per gene, keep the MAX role significance, then
+    normalize by the max across all genes -> (0, 1] (the same max-normalized shape `rank_candidates`
+    uses for convergence). A subject not in the sidecar, or a gene whose best significance is 0 (a
+    shallow over-fire, no depth), is OMITTED — absence is neutral in the ranker, never a 0 that
+    zeroes the candidate. Empty / all-zero -> {} (no signal, not a crash).
     """
+    by_lower = {k.lower(): v for k, v in sidecar.items()}  # GSE lowercases the emitted token
     best: dict[str, float] = {}
     for p in patterns:
         subject = p.get("subject")
-        gene = sidecar.get(subject) if isinstance(subject, str) else None
+        gene = by_lower.get(subject.lower()) if isinstance(subject, str) else None
         if gene is None:
             continue
         raw = p.get("significance", 0.0)

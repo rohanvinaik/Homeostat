@@ -24,6 +24,13 @@ def test_subject_maps_back_through_the_sidecar_to_the_gene():
     assert coherence_from_patterns([_pat("binder", "Gene3", 2.0)], SIDECAR) == {"BAX": 1.0}
 
 
+def test_gse_lowercased_subject_still_maps_to_the_gene():
+    # GSE emit LOWERCASES the opaque token, so `understand` returns subject='gene3' while sidecar
+    # keys are 'Gene3'. The join must reconcile case or every gene silently drops (the {} bug the
+    # empirical gate caught). Regression: a lowercased subject still maps.
+    assert coherence_from_patterns([_pat("binder", "gene3", 2.0)], SIDECAR) == {"BAX": 1.0}
+
+
 def test_subject_absent_from_the_sidecar_is_dropped():
     # a recognized subject with no sidecar entry (not a rendered gene) -> no KeyError, omit.
     pats = [_pat("amplifier", "Gene9", 3.0), _pat("inhibitor", "Gene1", 3.0)]
