@@ -29,6 +29,7 @@ The load-bearing design properties, realized here:
 from __future__ import annotations
 
 from collections import deque
+from collections.abc import Collection
 from dataclasses import dataclass
 
 
@@ -128,3 +129,66 @@ def kill_matrix(
     for s in observed:
         constraints[f"explains:{s}"] = [c for c in ns if not reaches(adj, c, s)]
     return ns, constraints
+
+
+def reverse_adjacency(web: RelationalWeb, min_weight: float = 0.0) -> dict[str, list[str]]:
+    """The web compiled into a REVERSED one-hop adjacency `{node: [upstream neighbours]}` — the dual
+    of `web_adjacency`, applying the same ternary direction and `min_weight` floor but flipping each
+    carrying edge (a directed a→b contributes a to b's upstream; an undirected coupling both ways).
+    `reachers`/`ancestor_cone` run over this to find, cheaply, every candidate SOURCE that could
+    reach an observed deviation. Neighbour lists sorted for determinism. Orchestration.
+    """
+    radj: dict[str, set[str]] = {}
+    for c in web.couplings:
+        radj.setdefault(c.a, set())
+        radj.setdefault(c.b, set())
+    for c in web.couplings:
+        if c.weight < min_weight:
+            continue
+        if c.direction >= 0:  # forward a→b : a is upstream of b
+            radj[c.b].add(c.a)
+        if c.direction <= 0:  # forward b→a : b is upstream of a
+            radj[c.a].add(c.b)
+    return {n: sorted(up) for n, up in radj.items()}
+
+
+def reachers(reverse_adj: dict[str, list[str]], target: str) -> set[str]:
+    """Every node that propagates TO `target` — its ancestor cone, INCLUDING `target` itself (a node
+    reaches itself). Breadth-first over the REVERSED adjacency; the dual of `reaches`
+    (`n in reachers(radj, t)` iff `reaches(adj, n, t)`). This computes the relevant candidate
+    universe without a forward BFS from every node. Pure over `(dict[str, list[str]], str)`.
+    """
+    seen: set[str] = {target}
+    queue: deque[str] = deque([target])
+    while queue:
+        n = queue.popleft()
+        for m in reverse_adj.get(n, ()):
+            if m not in seen:
+                seen.add(m)
+                queue.append(m)
+    return seen
+
+
+def ancestor_cone(web: RelationalWeb, observed: list[str], min_weight: float = 0.0) -> list[str]:
+    """The RELEVANT candidate universe: the union of the ancestor cones of the observed deviations —
+    exactly the nodes that could be a source for at least one symptom. Everything else is killed by
+    every constraint (it reaches no observed), so is provably never a survivor; dropping it is
+    lossless for the verdict and survivors. This is 'relevance' as the design defines it — never
+    declared, always the reverse-reachability closure of what was actually observed. Sorted, unique.
+    One reverse-BFS per observed. Pure over `RelationalWeb`.
+    """
+    radj = reverse_adjacency(web, min_weight)
+    cone: set[str] = set()
+    for o in observed:
+        cone |= reachers(radj, o)
+    return sorted(cone)
+
+
+def induced_subweb(web: RelationalWeb, keep: Collection[str]) -> RelationalWeb:
+    """The sub-web on `keep`: every coupling whose BOTH endpoints are in `keep`. Handed the ancestor
+    cone, this is the tractable, provably-lossless candidate universe for the read — no path to an
+    observed deviation leaves the cone, so the survivors are unchanged while the candidate set (and
+    the reachability cost) collapse from the whole web to what is relevant. Pure.
+    """
+    ks = set(keep)
+    return RelationalWeb(tuple(c for c in web.couplings if c.a in ks and c.b in ks))

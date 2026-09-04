@@ -5,9 +5,13 @@ from homeostat.search import eliminate_two_sign
 from homeostat.web import (
     Coupling,
     RelationalWeb,
+    ancestor_cone,
+    induced_subweb,
     kill_matrix,
     nodes,
+    reachers,
     reaches,
+    reverse_adjacency,
     web_adjacency,
 )
 
@@ -101,3 +105,56 @@ def test_single_symptom_is_degenerate():
     cands, cons = kill_matrix(web, ["A"])
     traj = eliminate_two_sign(cands, cons, {})
     assert traj.sigma is None  # a lone symptom does not pin a mechanism (stays plural)
+
+
+# ---- relevance = the computed ancestor cone (scoping) -----------------------------
+
+
+def test_reverse_adjacency_flips_each_carrying_edge():
+    web = RelationalWeb((Coupling("a", "b", 1.0, +1), Coupling("c", "d", 1.0, 0)))
+    radj = reverse_adjacency(web)
+    assert radj["b"] == ["a"] and radj["a"] == []  # b's upstream is a; a has none
+    assert radj["c"] == ["d"] and radj["d"] == ["c"]  # undirected -> both upstream
+
+
+def test_reachers_is_the_ancestor_cone_including_self():
+    radj = {"A": ["source", "decoy"], "source": [], "decoy": [], "B": ["source"]}
+    assert reachers(radj, "A") == {"A", "source", "decoy"}  # includes A itself
+    assert reachers(radj, "source") == {"source"}  # a root reaches only itself upstream
+
+
+def test_ancestor_cone_is_the_union_over_observed_excluding_the_irrelevant():
+    web = RelationalWeb(
+        (
+            Coupling("source", "A", 1.0, +1),
+            Coupling("source", "B", 1.0, +1),
+            Coupling("decoy", "A", 1.0, +1),
+            Coupling("unrelated", "X", 1.0, +1),  # reaches neither A nor B
+        )
+    )
+    # ancestors of A: {A, source, decoy}; of B: {B, source}; union sorted; X/unrelated excluded.
+    assert ancestor_cone(web, ["A", "B"]) == ["A", "B", "decoy", "source"]
+
+
+def test_induced_subweb_keeps_only_both_endpoint_couplings():
+    web = RelationalWeb((Coupling("source", "A", 1.0, +1), Coupling("unrelated", "X", 1.0, +1)))
+    sub = induced_subweb(web, {"source", "A"})
+    assert sub.couplings == (Coupling("source", "A", 1.0, +1),)  # unrelated->X dropped
+
+
+def test_scoping_to_the_cone_preserves_the_survivor():
+    # The load-bearing property: the read on the cone-subweb recovers the SAME source as the full
+    # web, over a smaller candidate universe -- provably lossless, and the irrelevant never enters.
+    web = RelationalWeb(
+        (
+            Coupling("source", "A", 1.0, +1),
+            Coupling("source", "B", 1.0, +1),
+            Coupling("decoy", "A", 1.0, +1),
+            Coupling("unrelated", "X", 1.0, +1),  # noise the cone must strip
+        )
+    )
+    sub = induced_subweb(web, ancestor_cone(web, ["A", "B"]))
+    cands, cons = kill_matrix(sub, ["A", "B"])
+    traj = eliminate_two_sign(cands, cons, {})
+    assert traj.survivors_left == ["source"]  # same survivor as the full-web read
+    assert "unrelated" not in cands and "X" not in cands  # the irrelevant never entered
