@@ -25,6 +25,7 @@ from homeostat.completeness import SpecCompleteness, read_completeness
 from homeostat.event import Event, active_censors, events_to_censors, events_to_web
 from homeostat.jeeves import Probe, select_probe
 from homeostat.narrative import StoryRead, read_story
+from homeostat.operator import HypothesisOutcome, operator_ledger
 from homeostat.polarity import polarity_censors, signed_adjacency
 from homeostat.position import Position
 from homeostat.recommend import score_candidate
@@ -99,7 +100,8 @@ class DriverRead:
     Jeeves cue); `completeness` is the σ_sem read (how much of the mechanism-uncertainty structure
     resolved, and the I_solve still owed); `probe` is the DO-THIS on ASK; `trajectory` is the
     σ-trajectory; `censored` is what each censor ruled out; `dropped` are observed deviations with
-    no directed context.
+    no directed context; `operator` is the hypothesis ledger — which of the operator's proposed
+    edges the shadow confirmed / stood / contradicted (a tested input, never ground truth).
     """
 
     verdict: str
@@ -110,6 +112,7 @@ class DriverRead:
     trajectory: Trajectory
     censored: dict[str, list[str]]
     dropped: list[str]
+    operator: list[HypothesisOutcome]
 
 
 def drive(
@@ -119,6 +122,7 @@ def drive(
     active_roles: Collection[str] = (),
     probes: Iterable[Probe] = (),
     proteins: Mapping[str, str] | None = None,
+    hypotheses: Iterable[Event] = (),
     min_weight: float = 0.0,
 ) -> DriverRead:
     """Read one person's positioned deviations end-to-end (generate-wide → resolve-narrow → STORY).
@@ -127,9 +131,11 @@ def drive(
     two-sign elimination with the polarity-opposition + role censors, reads the surviving structure
     as a STORY (`narrative.read_story` -- the genre account, not a ranked gene), then closes that
     wide story NARROW into ranked candidate MECHANISMS (`resolve.rank_clusters` over the
-    story-clusters -- disambiguating the subtypes the label flattens). Observed deviations with no
-    directed context are dropped and reported. I/O-free orchestration over the pinned pieces;
-    intent-tested + validated end-to-end.
+    story-clusters -- disambiguating what the label flattens). Operator `hypotheses`
+    (proposed edges) enter the PREFER read ONLY (story + resolve), never the
+    elimination -- tested by the meter, reported in the ledger, never ground truth.
+    Observed deviations with no directed context are dropped. I/O-free orchestration
+    over the pinned pieces; intent-tested + validated.
     """
     events = list(events)
     web = events_to_web(events, DIRECTED_NETWORKS)
@@ -152,18 +158,26 @@ def drive(
     stuck = not is_resolved and not traj.bottom
     probe = select_probe(traj.survivors_left, list(probes)) if stuck else None
     verdict = clinical_verdict(traj.bottom, is_resolved, traj.falsifiable, probe is not None)
-    # PREFER: read the surviving structure as a STORY -- the genre account over the scoped events
-    # (the events whose coupling lives inside the observed cone), not a ranked gene. The story is
-    # read over the WHOLE scoped structure (the plurality is what it is read over, never collapsed).
+    # PREFER: read the surviving structure as a STORY -- the genre account, not a
+    # ranked gene. Operator `hypotheses` join HERE (PREFER-only), never the REQUIRE
+    # elimination -- they can help the read but never fabricate a certified mechanism.
+    # `signed` (the censor's) stays real-only; the resolve adjacencies below add the hyps.
+    hyp = list(hypotheses)
     scoped_events = [e for e in events if e.subject in in_web and e.target in in_web]
-    story = read_story(scoped_events, observed_scoped, proteins)
+    story = read_story(scoped_events + hyp, observed_scoped, proteins)
     # RESOLVE-NARROW: close the wide story to ranked candidate MECHANISMS -- the connected
     # story-clusters scored by coverage × internal-coherence (OTP-ternary sub-web) × the calibrated
-    # predictive meter (polarity sub-web). Reuses `signed` + `obs_signs`; H = log₂(clusters) → 0.
+    # predictive meter (polarity sub-web), over real + hypothesis edges. H = log₂(clusters) → 0.
+    prefer_events = events + hyp
     ranked = rank_clusters(
-        story_clusters(story.genres), obs_signs, ternary_adjacency(events), signed
+        story_clusters(story.genres),
+        obs_signs,
+        ternary_adjacency(prefer_events),
+        signed_adjacency(prefer_events, verb_sign),
     )
     # COMPLETENESS: the σ_sem read -- how much of the mechanism-uncertainty structure resolved
     # (H_0 → H_residual), and the I_solve still owed (the Jeeves DO-THIS when a plurality survives).
     completeness = read_completeness(ranked, probe)
-    return DriverRead(verdict, story, ranked, completeness, probe, traj, censors, dropped)
+    # OPERATOR LEDGER: each hypothesis judged against the FULL observed shadow, then reported.
+    ledger = operator_ledger(hyp, {o: positions[o].sign for o in observed}, verb_sign)
+    return DriverRead(verdict, story, ranked, completeness, probe, traj, censors, dropped, ledger)

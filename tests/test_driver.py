@@ -4,6 +4,7 @@ for the deferred recommendation ranker that will sort STORY-reads (not genes).""
 
 from homeostat.driver import drive, proximity_coherence, rank_candidates
 from homeostat.event import Event
+from homeostat.operator import HypothesisOutcome
 from homeostat.position import position
 
 VS = {"amplifies": 1, "inhibits": -1}
@@ -129,6 +130,26 @@ def test_drive_closes_the_story_narrow_into_ranked_mechanisms():
     # the σ_sem completeness read: a valid resolved fraction, residual never exceeds initial.
     assert 0.0 <= read.completeness.resolved <= 1.0
     assert read.completeness.h_residual <= read.completeness.h0
+
+
+def test_drive_operator_hypothesis_is_tested_never_ground_truth():
+    # the operator proposes A amplifies B; A and B both observed up -> the shadow CONFIRMS it. It
+    # enters the PREFER read and the ledger reports the confirmation -- but it NEVER enters the
+    # elimination (REQUIRE still recovers the real source, untouched by the operator's edge).
+    ev = [_reg("amplifies", "source", "A"), _reg("amplifies", "source", "B")]
+    pos = {"A": position("A", 1.0, 0.0, 0.0), "B": position("B", 1.0, 0.0, 0.0)}
+    read = drive(ev, pos, VS, hypotheses=[_reg("amplifies", "A", "B")])
+    assert read.operator == [HypothesisOutcome("A", "amplifies", "B", "confirmed")]
+    assert read.trajectory.survivors_left == ["source"]  # elimination untouched by the hypothesis
+
+
+def test_drive_operator_contradicted_hypothesis_falls_out():
+    # A up but B down; the operator proposes A amplifies B -> the shadow CONTRADICTS it (it predicts
+    # B up). The ledger records the contradiction; correctness stays in the code, not the operator.
+    ev = [_reg("amplifies", "source", "A")]
+    pos = {"A": position("A", 1.0, 0.0, 0.0), "B": position("B", -1.0, 0.0, 0.0)}
+    read = drive(ev, pos, VS, hypotheses=[_reg("amplifies", "A", "B")])
+    assert read.operator == [HypothesisOutcome("A", "amplifies", "B", "contradicted")]
 
 
 def test_drive_polarity_censor_certifies_bottom_on_a_contradictory_pattern():
