@@ -1,7 +1,8 @@
 """Intent tests for the relevance filter (the input layer's first turn-component — diagnosis → the
 possibly-relevant subspace). Authored from the design; the pure decisions are Detective-pinned."""
 
-from homeostat.relevance import relevant_subspace, trait_gene_index
+from homeostat.fungibility import Fungible
+from homeostat.relevance import fungible_map, relevant_subspace, trait_gene_index
 
 
 def _row(gene, trait):
@@ -52,3 +53,15 @@ def test_relevant_subspace_unknown_diagnosis_is_empty():
 
 def test_relevant_subspace_no_fungible_is_just_the_canonical_genes():
     assert relevant_subspace("adhd", {"adhd": {"A", "B"}}, {}) == {"A", "B"}
+
+
+# ---- fungible_map: only EARNED role-equivalence widens --------------------------------
+
+
+def test_fungible_map_only_earned_pairs_widen_symmetrically():
+    fungibles = [
+        Fungible("A", "B", "fungible", 2),  # earned (>=2 banks) -> widens both ways
+        Fungible("C", "D", "coincidental", 1),  # one bank -> does not widen
+        Fungible("E", "F", "seed-only", 0),  # resemblance only -> does not widen
+    ]
+    assert fungible_map(fungibles) == {"A": {"B"}, "B": {"A"}}

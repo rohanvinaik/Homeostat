@@ -152,6 +152,33 @@ def test_drive_operator_contradicted_hypothesis_falls_out():
     assert read.operator == [HypothesisOutcome("A", "amplifies", "B", "contradicted")]
 
 
+def test_drive_relevant_including_the_source_still_resolves():
+    # the diagnosis subspace includes the true source -> the read resolves to it as before.
+    ev = [
+        _reg("amplifies", "source", "A"),
+        _reg("amplifies", "source", "B"),
+        _reg("amplifies", "decoy", "A"),
+    ]
+    pos = {"A": position("A", 1.0, 0.0, 0.0), "B": position("B", 1.0, 0.0, 0.0)}
+    read = drive(ev, pos, VS, relevant={"source", "A", "B"})
+    assert read.verdict == "resolved" and read.trajectory.survivors_left == ["source"]
+
+
+def test_drive_relevant_excluding_the_source_lets_the_label_fall_out():
+    # the diagnosis subspace EXCLUDES the true source (option B): the shadow stays observed truth,
+    # but no RELEVANT source explains it -> the read does NOT resolve, and the excluded source is
+    # never surfaced. The label falls out, exactly like a wrong hypothesis.
+    ev = [
+        _reg("amplifies", "source", "A"),
+        _reg("amplifies", "source", "B"),
+        _reg("amplifies", "decoy", "A"),
+    ]
+    pos = {"A": position("A", 1.0, 0.0, 0.0), "B": position("B", 1.0, 0.0, 0.0)}
+    read = drive(ev, pos, VS, relevant={"decoy", "A", "B"})  # source excluded
+    assert read.verdict != "resolved"
+    assert "source" not in read.trajectory.survivors_left
+
+
 def test_drive_polarity_censor_certifies_bottom_on_a_contradictory_pattern():
     # source amplifies A and B; A observed UP but B observed DOWN. No single perturbation of source
     # explains both -> the polarity censor rules it out -> certified ⊥ (no lawful mechanism).

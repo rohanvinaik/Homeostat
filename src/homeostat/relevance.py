@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Mapping
 
+from homeostat.fungibility import Fungible
 from homeostat.trait_wiring import (
     MAPPED_GENE_COL,
     MAPPED_TRAIT_COL,
@@ -60,3 +61,17 @@ def relevant_subspace(
     for gene in canonical:
         subspace |= fungible.get(gene, set())
     return subspace
+
+
+def fungible_map(fungibles: Iterable[Fungible]) -> dict[str, set[str]]:
+    """The earned-fungible adjacency ``{gene: {role-equivalent partners}}`` from `read_fungibility`
+    verdicts — ONLY the EARNED ``"fungible"`` pairs (≥2 banks converged), symmetric. This is what
+    `relevant_subspace` widens by: a paralog doing the same job is in-scope. The unearned verdicts
+    (``"coincidental"`` / ``"seed-only"``) do NOT widen. Orchestration over the Fungible list.
+    """
+    adj: dict[str, set[str]] = {}
+    for f in fungibles:
+        if f.verdict == "fungible":
+            adj.setdefault(f.a, set()).add(f.b)
+            adj.setdefault(f.b, set()).add(f.a)
+    return adj

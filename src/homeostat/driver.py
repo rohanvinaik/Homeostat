@@ -125,6 +125,7 @@ def drive(
     hypotheses: Iterable[Event] = (),
     min_weight: float = 0.0,
     band: float = 0.0,
+    relevant: Collection[str] | None = None,
 ) -> DriverRead:
     """Read one person's positioned deviations end-to-end (generate-wide → resolve-narrow → STORY).
 
@@ -135,8 +136,10 @@ def drive(
     story-clusters -- disambiguating what the label flattens). Operator `hypotheses`
     (proposed edges) enter the PREFER read ONLY (story + resolve), never the
     elimination -- tested by the meter, reported in the ledger, never ground truth.
-    Observed deviations with no directed context are dropped. I/O-free orchestration
-    over the pinned pieces; intent-tested + validated.
+    `relevant` (the diagnosis subspace) restricts the eligible mechanism SOURCES; the
+    observed shadow stays sacrosanct, and a certified-⊥ results if no relevant source
+    explains it (option B). Observed deviations with no directed context are dropped.
+    I/O-free orchestration over the pinned pieces; intent-tested + validated.
     """
     events = list(events)
     web = events_to_web(events, DIRECTED_NETWORKS)
@@ -149,6 +152,13 @@ def drive(
     dropped = [o for o in observed if o not in in_web]
 
     candidates, constraints = kill_matrix(scoped, observed_scoped, min_weight)
+    # RELEVANCE (the diagnosis subspace, option B): restrict the eligible mechanism SOURCES to the
+    # relevant set -- the observed SHADOW stays sacrosanct (a label never censors an observation).
+    # If no relevant source explains the shadow, the read does not resolve (certified-⊥ or abstain):
+    # the label falls out, like a wrong hypothesis. `relevant is None` -> unrestricted (compatible).
+    rel = set(relevant) if relevant is not None else None
+    if rel is not None:
+        candidates = [c for c in candidates if c in rel]
     signed = signed_adjacency(events, verb_sign)
     obs_signs = {o: positions[o].sign for o in observed_scoped}
     censors: dict[str, list[str]] = {"polarity": polarity_censors(signed, candidates, obs_signs)}
@@ -176,6 +186,8 @@ def drive(
         ternary_adjacency(prefer_events),
         signed_adjacency(prefer_events, verb_sign),
     )
+    if rel is not None:  # keep the surfaced mechanisms coherent with the restricted verdict
+        ranked = [(cl, s) for cl, s in ranked if cl.entities & rel]
     # COMPLETENESS: the σ_sem read -- H_0 = all mechanisms; the surviving PLURALITY is the near-tie
     # the ranking could not order (`top_band`); `cluster_discriminant` names the NODE whose
     # measurement separates it (the mechanism-level Jeeves DO-THIS). H_residual = log₂(plurality).
