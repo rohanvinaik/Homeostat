@@ -315,11 +315,17 @@ pinned.
 Where `read_story` generates the story WIDE, the resolve engine closes it NARROW: it ranks candidate
 MECHANISMS (connected story-clusters — NOT genes) by how well each coheres with THIS person, driving
 H = log₂(candidates) → 0. **Reachable only from `test_resolve` — zero live consumers.**
-- **incr.1-2 built + pinned:** `connected_components` (merge genre instances sharing entities into
-  candidate mechanisms), `story_clusters`/`Cluster`/`_tagged` (enumerate), `cluster_coverage` (fraction of
-  the observed shadow spanned), `cluster_coherence` (Kuramoto order parameter over the cluster's sub-web
-  edge-signs — reinforcing cascade phase-locks → high r; balancing structure destructively interferes → low
-  r; orchestrates the pinned `quest.part_vector`/`order_parameter`), `rank_clusters` (the ModelAtlas blend).
+- **incr.1 — Detective-pinned:** `connected_components` (merge genre instances sharing entities into
+  candidate mechanisms; 5/6 killed, 1 proven-equivalent flagged), `cluster_coverage` (fraction of the
+  observed shadow spanned; 9/9). `story_clusters`/`Cluster`/`_tagged` (enumerate) are orchestration over
+  `connected_components`, intent-tested.
+- **incr.2 — intent-tested (orchestration; NOT yet `detective converge`d):** `cluster_coherence` (Kuramoto
+  order parameter over the cluster's sub-web edge-signs — reinforcing cascade phase-locks → high r;
+  balancing structure destructively interferes → low r; orchestrates the pinned `quest.part_vector`/
+  `order_parameter`) and `rank_clusters` (the ModelAtlas blend). They rest on pinned primitives, but
+  **`cluster_coherence` is `--input`-expressible (pure over frozenset + nested dict) and SHOULD be converged**
+  — a small tracked debt, folds into the resolve-wiring step. `rank_clusters` takes `Cluster` dataclasses
+  (`--input`-inexpressible), so intent-tested is the right level there.
 - **`recommend.py`** — the ported blend: `submodular_combine` (diminishing-returns soft aggregation, decay
   `SUBMODULAR_DECAY`) + `score_candidate(alignment, soft) = ∏(alignment) × submodular_combine(soft)`.
   Consumed by `resolve.rank_clusters` and by the parked `driver.rank_candidates` — **no live consumer.**
@@ -397,7 +403,8 @@ H = log₂(candidates) → 0. **Reachable only from `test_resolve` — zero live
 | tier-3 lament (treatment POC) | ✅ | `lament_verdict` pinned; `test_lament` |
 | **`clinic.read_from_events`** (elimination-only read) | ✅ | live via `test_clinic`/`test_certification`/`test_producer` |
 | **`driver.drive`** (composed read + story) | ✅ | discriminates (TP53 #1); `test_driver`; reachable from tests only |
-| resolve-narrow engine (incr.1-2) | 🅿️ | `resolve.py`/`recommend.py` pinned; **not wired**; `test_resolve` |
+| resolve-narrow engine (incr.1) | 🅿️ | `connected_components`/`cluster_coverage` Detective-pinned; **not wired**; `test_resolve` |
+| resolve-narrow engine (incr.2) | 🅿️ | `cluster_coherence`/`rank_clusters` intent-tested (orchestration); `cluster_coherence` converge = tracked debt |
 | resolve incr.3 / input layer / greenfield baseline / CLI-render | ⬜ | designed, not built |
 | Blind LRRK2 control | ⬜ | the acceptance test |
 
@@ -408,7 +415,9 @@ H = log₂(candidates) → 0. **Reachable only from `test_resolve` — zero live
 Traced with the language server: `get_symbols_overview` for the inventory, `find_referencing_symbols` for
 the call graph, from the two apex reads (`clinic.read_from_events`, `driver.drive`) + `prior_web._main`
 (assemble the web) + `ground.ground` (front door). 40 `tests/test_*.py` (394 tests) cover every live module;
-every pure decision is Detective-pinned under `tests/detective/` (43 synth files, 74 tests).
+every pure decision on the live elimination + story path is Detective-pinned under `tests/detective/`
+(43 synth files, 74 tests). **One tracked exception:** the parked resolve engine's `cluster_coherence`
+(incr.2) is intent-tested and convergeable but not yet `detective converge`d — see §5.
 
 **PARKED (🅿️ — built + pinned, but reachable ONLY from tests; no live consumer):** these are apex leaves
 awaiting the wiring in §7.4–§7.6, NOT dead code:
