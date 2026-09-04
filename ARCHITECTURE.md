@@ -25,11 +25,12 @@ significance is κ (coverage of the shadow), never any statistic (Law 1).
    L5  READ      ✅ genres (tragedy/comedy) · ✅ fungibility (+ structural eliminator)
                  ✅ story→Regenesis roles · ⬜ Regenesis generate-wide IN-LOOP · ⬜ the DRIVER
    L4  ENGINE    ✅ eliminate_two_sign → clinical_verdict (BOTTOM/RESOLVED/DEGENERATE/ASK/ABSTAIN)
+                 ✅ full-C: tier gates cert (certified iff observed all-VERIFIED; else TAG, code kept)
    L3  POSITION  ✅ per-person signed-ternary off the mined zero + discrimination guarantee
-                 ⬜ the positions PRODUCER (genotype/state → Position; signal-tier feed)
+                 ✅ marker PRODUCER + structured Differential · ⬜ genotype/state producer (driver)
    L2  BANKS     ✅ 4 global edge (signor/string/homology/metabolic) · ✅ 2 scoped (coexpr/trait) ⬜wire
    L1  EVENT     ✅ the one typed contract: Event → events_to_web + events_to_censors/active_censors
-   L0  SUBSTRATE ✅ otp (ternary) · web (RelationalWeb/kill_matrix) · kappa · signal 🔧unwired · paths/util
+   L0  SUBSTRATE ✅ otp (ternary) · web (RelationalWeb/kill_matrix) · kappa · signal ✅ tier→cert · paths/util
    ──────────────────────────────────────────────────────────────────────────────────────
    ⬜ THE DRIVER: generate-wide (Regenesis over the multi-network story) → resolve-narrow
       (eliminate_two_sign). Zero judgment in the glue; the Reading is the only judge (Law 11).
@@ -43,7 +44,7 @@ typed `Event`/`ClinicalResult` contracts (§3).
 
 ## 2. Layer contracts
 
-### L0 SUBSTRATE — ✅ (`otp.py`, `web.py`, `kappa.py`, `paths.py`, `util.py`) · `signal.py` 🔧
+### L0 SUBSTRATE — ✅ (`otp.py`, `web.py`, `kappa.py`, `paths.py`, `util.py`, `signal.py`)
 - **OWNS:** the signed-ternary algebra, the positive graph type, the reachability/κ machinery, IO paths.
 - **`otp.py`** — `ternary` (value → {−1,0,+1} off a zero), `interference`/`tally` (the elimination
   primitive: a single opposing sign vetoes a pile of weak supports; "the Monty-Hall move").
@@ -52,9 +53,11 @@ typed `Event`/`ClinicalResult` contracts (§3).
   source that CANNOT reach `S` — the survivor is the mechanism), `reaches`/`web_adjacency`.
 - **`kappa.py`** — `reachable`/`coverage`/`marginal_coverage`/`is_bridge`/`chain_significance` (κ =
   marginal coverage; the significance object, Law 4).
-- **`signal.py`** 🔧 — `Signal(ident, state, tier)` + `Tier` (VERIFIED/REPORTED/…), the genotype-
-  provenance tier. **Built + tested but wired to nothing** (§9): the intended person-genotype input the
-  read presumes, awaiting its producer.
+- **`signal.py`** ✅ — `Signal(ident, state, tier)` + `Tier` (VERIFIED/REPORTED/ABSENT), the
+  verification-provenance tier. **Now WIRED (full-C):** `Tier` gates certification in `clinic`
+  (`_TIER_RANK`/`weakest_tier`/`is_certified`, `ClinicalResult.certification_tier`) and rides on every
+  `Position` (`position.place`). A VERIFIED value-kill can certify; a REPORTED run-kill constrains but
+  banks nothing toward a certified verdict (NEGATIVE_SPECIFICATION Def 1.4).
 - **DOES NOT:** interpret. `paths`/`util` are IO-only.
 
 ### L1 EVENT — ✅ `event.py` (the one typed contract)
@@ -86,16 +89,27 @@ Each bank = a pure renderer (`X.py`) + an IO shell (`X_fetch.py`, data gitignore
   (correlation drawn as an arrow, frequency AS significance). Significance is κ.
 - **Gate PASSED:** every renderer's pure decision pinned; each fired on its real dump.
 
-### L3 POSITION — ✅ `position.py` · the producer ⬜
+### L3 POSITION — ✅ `position.py`, `differential.py`, `producer.py` (+ `reference_fetch.py`) · genotype producer ⬜
 - **OWNS:** the per-person placement — each measured property → signed-ternary off a **mined** zero
-  (a norm computed from the data, never a fixed threshold), + the discrimination guarantee.
-- **`Position`**, `mine_zero`, `deviation`, `signature`, `discriminates` (two operationally-different
-  states MUST have different signatures; the fix for a collapse is a NEW orthogonal dimension, never a
-  tuned threshold — Law 6).
-- **⬜ The producer:** the person's genotype/state → `dict[node, Position]`. The read *takes* positions
-  (object-led); nothing yet *produces* them from a real person (`signal.py` is the tier abstraction that
-  feed will carry).
-- **Gate PASSED:** `discriminates`/`position`/`mine_zero` pinned; `test_position.py`.
+  (a norm computed from the data, never a fixed threshold), the discrimination guarantee, and the typed
+  information-weighted departure that rides alongside the sign.
+- **`Position`** (now carries `tier` + `differential`), `mine_zero`, `deviation`, `signature`,
+  `discriminates` (two operationally-different states MUST have different signatures; the fix for a
+  collapse is a NEW orthogonal dimension, never a tuned threshold — Law 6). **`place`** composes the
+  sign (`ternary`) and the differential (`make_differential`) from one reference band, consistently.
+- **`differential.py`** ✅ — `Differential(kind, surprise, spread)`, `surprise = |value−center|/spread`
+  (monotone in −log P); the SICP coordinate-vs-provenance split — elimination reads only the `sign`, the
+  interpretive layer gets the differential. Wired into `Position` via `place`.
+- **✅ The MARKER producer** (`producer.signals_to_positions`): `signal → ground → parse → reference
+  lookup → place`; ungroundable / non-numeric / unreferenced signals honestly dropped. Its reference is
+  a GIVEN published demographic interval — the one sanctioned population read (the shadow, never the
+  mechanism; `docs/decisions/marker_reference.md`), served by **`reference_fetch.py`** (HMDB serum,
+  PARSE-LOCAL; fired on the real 1.3 GB dump → 5,341 entries). **Built & pinned but NOT yet wired into
+  the live read** (zero production consumers — `clinic` still takes positions object-led); enters at the driver.
+- **⬜ The genotype/state producer:** genotype → `dict[node, Position]` via the consequence-vector prior
+  (the genotype pole, §2 L4b) — awaits the driver.
+- **Gate PASSED:** `discriminates`/`position`/`mine_zero`/`place`/`make_differential`/`signals_to_positions`
+  pinned; `test_position.py`, `test_differential.py`, `test_producer.py`, `test_reference_fetch.py`.
 
 ### L4 ENGINE (resolve-narrow) — ✅ `search.py`, `clinic.py`, `jeeves.py`
 - **OWNS:** the two-sign σ-elimination and the clinical verdict.
@@ -109,6 +123,10 @@ Each bank = a pure renderer (`X.py`) + an IO shell (`X_fetch.py`, data gitignore
   `clinical_verdict(bottom, resolved, falsifiable, has_probe)`: **BOTTOM** (certified ⊥) / **RESOLVED**
   (unique survivor, σ_sem>0) / **DEGENERATE** (self-confirming, σ_sem=0, Law 7) / **ASK** (Jeeves has a
   discriminating probe) / **ABSTAIN** (no dimension separates the survivors, Law 10). → `ClinicalResult`.
+- **Full-C certification** (`clinic.weakest_tier`/`is_certified`) — a verdict is `certified` only when it
+  is a value-kill (BOTTOM/RESOLVED) AND every observed position is `Tier.VERIFIED`; a REPORTED-grade input
+  keeps the verdict CODE (TAG, never collapse) with `certified=False` and `certification_tier` naming the
+  weakest link. The read names its own trust boundary — the oracle judges validity, never the system.
 - **`jeeves.py`** — `Probe`, `expected_information_gain`, `select_probe` (the STUCK-branch: which new
   dimension best discriminates the surviving plurality).
 - **Gate PASSED:** `eliminate_two_sign`, `clinical_verdict`, `select_probe`, `kill_matrix` pinned;
@@ -148,6 +166,20 @@ Each bank = a pure renderer (`X.py`) + an IO shell (`X_fetch.py`, data gitignore
   fold-class blocker* (elimination-only). Wired to nothing.
 - **Gate PASSED:** every pure decision pinned; fired on the real LRRK2 axis (0 promotions, 0 regressions).
 
+### GENOTYPE POLE (the prior) — ✅ `consequence.py`, `biophysics.py` · producer/projection ⬜
+- **OWNS:** a variant's deterministic CONSEQUENCE as a dense vector — the genotype as a PRIOR on the
+  mechanism (a source-prior/node-weight, the person-structural twin of `trait_wiring`), NEVER an
+  observation; it never resolves alone (`docs/GENOTYPE_POLE.md`).
+- **`consequence.consequence_vector`** (design A, dense): the structural-consequence deltas (reusing
+  `structural.py`: class-flip + composition/gravy/charge/aromaticity) ⊕ the DNA structural mechanics
+  (`biophysics.py`: bendability [Bolshoy] + YR/RY phase [Drew-Travers/Trifonov], ported from
+  GenomeVault) ⊕ rarity. **`consequence_similarity`** = fungibility-by-cosine, at the interpretive
+  layer only — never in the elimination gate.
+- **Built & pinned but NOT yet wired** (zero consumers): the genotype PRODUCER (variant→sequence seam),
+  the PROJECTION to a source-prior, and the Law-7-safe ENTRY (shared with `trait_wiring`) land at the driver.
+- **Gate PASSED:** `consequence_vector`/`consequence_similarity`/`bendability`/`yr_ry_balance` pinned;
+  `test_consequence.py`, `test_biophysics.py`.
+
 ---
 
 ## 3. The two typed contracts — everything flows through these
@@ -167,6 +199,8 @@ ClinicalResult {                          # L4 — what the read returns; the on
   mechanism: the surviving source (only when RESOLVED)
   probe:     the next discriminating dimension (only when ASK; from Jeeves)
   trajectory: the σ-elimination Trajectory (steps, survivors, bottom, falsifiable)
+  certified: bool  # full-C: a value-kill AND every observed position VERIFIED
+  certification_tier: the weakest observed tier — names the trust boundary (TAG, not collapse)
 }
 ```
 Every read is `events + positions + active_roles → ClinicalResult`. No consumer reaches around the
@@ -178,7 +212,7 @@ Every read is `events + positions + active_roles → ClinicalResult`. No consume
 
 ```
 symptom text ──ground.ground──▶ concept + active_roles       # front door; abstains, never guesses
-person state ──────────────────▶ positions {node: Position}  # ⬜ producer; signed-ternary off mined zero
+person state ──────────────────▶ positions {node: Position}  # ✅ marker producer built (⬜ live-wired at driver)
 
 banks ──▶ [Event]  ──events_to_web──────────────────────────▶ web        # convergent, uncontradicted
                    ──active_censors(events_to_censors, active_roles)──▶ censors   # role-scoped negative
@@ -226,8 +260,10 @@ elimination + (⬜) the Regenesis read; the loop only routes.
 
 1. ✅ **The engine + the event contract + the 6 banks + the genre/interpretive/structural layers** —
    done. Gate: every pure decision Detective-complete; each bank fired on its real dump; 207 tests green.
-2. ⬜ **The positions producer** — a real person's genotype/state → `dict[node, Position]` (the
-   `signal`-tier feed). Gate: `read_from_events` runs on a real n=1 with provenance, not synthetic
+2. 🔧 **The positions producer** — ✅ the MARKER producer (`producer.signals_to_positions`, the structured
+   `Differential`, the HMDB-serum reference) + the genotype consequence-vector prior are BUILT & pinned;
+   ⬜ still to wire: the genotype/state producer and projecting both into the live `read_from_events`
+   (they enter at the driver). Gate: `read_from_events` runs on a real n=1 with provenance, not synthetic
    positions.
 3. ⬜ **The driver** (generate-wide → resolve-narrow) — the scoped banks + fungibility + genres +
    Regenesis roles enter; Harmonizer wires symbols. Gate: a scoped read on a real gene set traces every
@@ -244,12 +280,14 @@ elimination + (⬜) the Regenesis read; the loop only routes.
 | Component | State | Evidence |
 |---|---|---|
 | L0 substrate (otp/web/kappa/paths/util) | ✅ | pinned; `test_otp/web/kappa` |
-| `signal.py` (genotype tier) | 🔧 | built + tested, wired to nothing — pending producer or archive |
+| `signal.py` (verification tier) | ✅ | Tier GATES certification (full-C): `clinic.is_certified`/`weakest_tier`; `test_certification` |
 | L1 event contract | ✅ | `couple_verdict`/`events_to_web`/`events_to_censors`/`active_censors` pinned |
 | L2 banks — 4 global edge | ✅ | pinned; each fired on its real dump (SIGNOR/STRING/Compara/Reactome) |
 | L2 banks — 2 scoped (coexpr/trait) | ✅ built ⬜ wired | fired scoped; enter at the driver |
-| L3 position | ✅ | `discriminates`/`mine_zero` pinned · producer ⬜ |
-| L4 engine (eliminate/clinic/jeeves) | ✅ | certified-⊥, DEGENERATE/ASK/ABSTAIN pinned; `test_two_sign` |
+| L3 position + `differential` | ✅ | `discriminates`/`mine_zero`/`place` pinned · `Position` carries tier + differential |
+| marker producer + HMDB reference | ✅ built ⬜ wired | `producer.signals_to_positions` + `reference_fetch` (real 1.3 GB serum, 5,341 entries); enters at driver |
+| genotype consequence vector | ✅ built ⬜ wired | `consequence.py` + `biophysics.py` (design A; fungibility-by-cosine); producer/projection at driver |
+| L4 engine (eliminate/clinic/jeeves) | ✅ | certified-⊥, DEGENERATE/ASK/ABSTAIN + full-C tier-certification pinned; `test_two_sign`/`test_certification` |
 | L5 genres (tragedy/comedy/topology) | ✅ | pinned; fired on the real regulatory web (372 cycles) |
 | L5 fungibility + structural eliminator | ✅ | pinned; LRRK2 axis 0-promotions/0-regressions |
 | L4b structural pole | ✅ | eliminator wired; Ensembl CDS fetch (per-gene + bulk) |
@@ -266,8 +304,8 @@ elimination + (⬜) the Regenesis read; the loop only routes.
 The live set above was traced deterministically: `scratchpad/trace_wiring.py` (AST import graph — module
 → internal deps, reverse importers, `__main__` entry points) + the language server (`find_symbol` /
 `find_referencing_symbols` for the call graph). Entry points: `prior_web.__main__` (assemble the web),
-`clinic.read_from_events` (the apex read), `ground.ground` (the front door). 28 `tests/test_*.py` cover
-every live module; every pure decision is Detective-pinned under `tests/detective/`.
+`clinic.read_from_events` (the apex read), `ground.ground` (the front door). 34 `tests/test_*.py`
+(278 tests) cover every live module; every pure decision is Detective-pinned under `tests/detective/` (28 files).
 
 ## 9. Archived residue (`docs/archive/`, 2026-09-04)
 
@@ -282,6 +320,6 @@ residue, `git mv`-archived (reversible, history kept):
 KEPT as canon / current / records (NOT residue): `THESIS`, `SYSTEM_DESIGN`, `ETIOLOGY_ENGINE`,
 `STORY_LAYER`, `THEORY_OF_THE_CASE`, `PROTEIN_ROLE_GEOMETRY`, `REGULATORY_DEFICIT_PROGRAM` (the program),
 `DENSITY_PROTOCOL` (the lens-addition recipe), `PROBE_STATE` / `PROOF_POINTS` / `DATA_ACCESS_LANDSCAPE`
-(records), `decisions/*`, this file; `signal.py` (the pending genotype-tier feed); the unused multi-feature
+(records), `decisions/*`, this file; the unused multi-feature
 signature (future extreme blocker).
 ```
