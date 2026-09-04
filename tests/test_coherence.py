@@ -2,9 +2,17 @@
 generated. The pure scoring (`coherence_from_patterns`) is also Detective-pinned; the impure
 `coherence_from_regenesis` shell is validated end-to-end through the real `drive`."""
 
-from homeostat.coherence import coherence_from_patterns
+import json
 
-# render_story sidecar is opaque-token -> real gene.
+from homeostat.coherence import (
+    VERB_LEMMA,
+    coherence_from_patterns,
+    event_contract,
+    events_to_contracts,
+)
+from homeostat.event import Event
+
+# subject->gene map (identity on the contracts path: subjects come back as the real gene names).
 SIDECAR = {"Gene1": "TP53", "Gene2": "MDM2", "Gene3": "BAX"}
 
 
@@ -104,3 +112,59 @@ def test_all_zero_significance_is_no_signal():
     # every role a shallow over-fire -> max is 0 -> {} (guard is `> 0`, no ZeroDivision).
     pats = [_pat("amplifier", "Gene1", 0.0), _pat("inhibitor", "Gene2", 0.0)]
     assert coherence_from_patterns(pats, SIDECAR) == {}
+
+
+# ---- the pure contract emitter (the subprocess-free path) ------------------------
+
+
+def test_event_contract_is_the_understand_event_envelope():
+    # real gene names as entity lemmas, type_thread [] (opaque, no world lookup), verb_classes=
+    # [verb] (what the Form fires on), verb_thread [] (unneeded). Coreference via entity_id.
+    node = event_contract("TP53", "amplify", "BAX", "e0", "e1")
+    assert node == {
+        "contract_version": "2.0",
+        "predicate": {
+            "op": "EVENT",
+            "args": [
+                {"entity_id": "e0", "lemma": "TP53", "type_thread": []},
+                {"entity_id": "e1", "lemma": "BAX", "type_thread": []},
+            ],
+            "features": {"verb": "amplify", "verb_thread": [], "verb_classes": ["amplify"]},
+        },
+    }
+
+
+def test_verb_lemma_maps_every_l2_verb_to_a_centroid():
+    # the 5 distinct L2 role-verbs each map to their mechanism-universe class-centroid lemma.
+    assert VERB_LEMMA == {
+        "amplifies": "amplify",
+        "inhibits": "inhibit",
+        "binds": "bind",
+        "channels": "channel",
+        "resembles": "resemble",
+    }
+
+
+def test_events_to_contracts_lemmatizes_and_corefers_genes():
+    # a gene appearing in two events gets ONE stable entity id (coreference -> multi-hop depth); the
+    # surface verb is lemmatized; one JSONL line per event.
+    evs = [
+        Event("regulatory", "amplifies", "TP53", "BAX", 1),
+        Event("regulatory", "amplifies", "TP53", "BBC3", 1),
+    ]
+    lines = events_to_contracts(evs).splitlines()
+    assert len(lines) == 2
+    nodes = [json.loads(line) for line in lines]
+    # TP53 is the subject of both -> the SAME entity_id in both (coreference).
+    tp53_ids = {n["predicate"]["args"][0]["entity_id"] for n in nodes}
+    assert len(tp53_ids) == 1
+    assert all(n["predicate"]["features"]["verb"] == "amplify" for n in nodes)  # lemmatized
+
+
+def test_events_to_contracts_drops_an_unmapped_verb():
+    # a verb with no VERB_LEMMA entry carries no role -> its event is skipped, never faked
+    evs = [
+        Event("regulatory", "amplifies", "TP53", "BAX", 1),
+        Event("mystery", "frobnicates", "X", "Y", 1),  # unmapped -> dropped
+    ]
+    assert len(events_to_contracts(evs).splitlines()) == 1

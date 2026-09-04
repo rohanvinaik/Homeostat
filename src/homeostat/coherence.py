@@ -2,37 +2,52 @@
 
 The self-contained default coherence is STRUCTURAL (`driver.proximity_coherence`: a candidate on a
 short/direct path to the shadow tells a more parsimonious mechanism). This is the SEMANTIC override
-the `drive(coherence=)` seam was built for: fire the SCOPED story through Regenesis's mechanism
+the `drive(coherence=)` seam was built for: fire the SCOPED events through Regenesis's mechanism
 universe ONCE and read which candidates take a mechanistic ROLE (amplifier / inhibitor / binder /
 metabolizer / …), scored by the DEPTH of that role — the summed chain-improbability of the
 derivations that fired it. A deep, multi-hop role coheres; a shallow one-hop over-fire scores ~0; a
 gene that takes NO role is OMITTED (absence is neutral in `rank_candidates`, never a 0 that would
 zero the candidate out — the seam's contract).
 
-The read is grounded in the ROLE VERB, never the gene token: `story.render_story` hands Regenesis
-opaque-SVO prose (`Gene1 amplifies Gene2.`) plus a sidecar, so a Form fires from STRUCTURE — the
-active universe's registered class centroids (`universes/mechanism/archetypes.index` trigger column)
-— and the recognized subject (opaque token) is mapped BACK to its gene here. The universe fires
-`universe_only` (its own role Forms, no narrative genre ground).
+We feed Regenesis CONTRACTS, not prose — the pure in-process path (`understand(kind='contracts')`),
+NOT `kind='text'` (which shells out to the GSE emit SUBPROCESS: ~157s vs ~ms, and the whole point of
+Regenesis is to make that Java/Genesis round-trip obsolete). Our L2 `Event`s are already structured
+SVO facts, so we emit each straight to an EVENT contract: real gene names as entity lemmas (with
+`type_thread: []` -> opaque BY CONSTRUCTION, nothing imports world-knowledge of a name), the verb
+lemmatized to its mechanism-universe class centroid. A Form fires from STRUCTURE — the verb's class
+against the universe's registered `.index` centroids (`universes/mechanism/archetypes.index`). The
+universe fires `universe_only` (its own role Forms, no narrative genre ground).
 
-CARDINAL (docs/DOMAIN_INSTRUMENT_METHOD.md): if the read ABSTAINS on real prose, that is a
-centroid-REGISTRATION gap in the universe `.index` trigger column — calibrate the centroids, NEVER
-author the input to make roles fire. "0 patterns" is honest abstention ONLY once the emitted role
-verbs are proven reachable to the registered class centroids.
+CARDINAL (docs/DOMAIN_INSTRUMENT_METHOD.md): if the read ABSTAINS on real events, that is a
+centroid-REGISTRATION gap in the universe `.index` (or a verb missing from VERB_LEMMA) — calibrate
+the centroids/map, NEVER fabricate a verb to make roles fire. "0 patterns" is honest abstention ONLY
+once the emitted role verbs are proven reachable to the registered class centroids.
 """
 
 from __future__ import annotations
 
+import json
 import os
 from collections.abc import Iterable, Mapping
 from pathlib import Path
 
 from homeostat.event import Event
-from homeostat.story import render_story
 
 # The self-contained mechanism universe (authored role Forms + class-centroid .index), at the repo
 # root: src/homeostat/coherence.py -> parents[2] == repo root.
 MECHANISM_UNIVERSE = Path(__file__).resolve().parents[2] / "universes" / "mechanism"
+
+# The L2 role-verbs -> their mechanism-universe class-centroid LEMMA (data-driven: the 5 distinct
+# verbs across every network's events). `understand`'s DSL matches the lemma, not the surface verb
+# ('amplifies' abstains, 'amplify' fires), so this is the whole canonicalization the GSE emit did.
+# A verb absent here fires no Form -> its events are skipped (they carry no mechanistic role).
+VERB_LEMMA = {
+    "amplifies": "amplify",  # regulatory (SIGNOR up)   -> amplifier
+    "inhibits": "inhibit",  # regulatory (SIGNOR down)  -> inhibitor
+    "binds": "bind",  # physical                  -> binder
+    "channels": "channel",  # metabolic                 -> metabolizer
+    "resembles": "resemble",  # evolutionary              -> homolog
+}
 
 
 def coherence_from_patterns(
@@ -68,29 +83,76 @@ def coherence_from_patterns(
     return {gene: sig / top for gene, sig in best.items() if sig > 0.0}
 
 
+def event_contract(subject: str, verb: str, target: str, subject_id: str, target_id: str) -> dict:
+    """One L2 Event's fields -> its Regenesis EVENT contract node.
+
+    Real gene names are the entity lemmas; `type_thread: []` keeps them opaque (no
+    world-knowledge import). `verb` is the class-centroid lemma (VERB_LEMMA);
+    `verb_classes=[lemma]` is what the Form fires on (`verb_thread` unneeded -- proven).
+    Coreference rides `entity_id`, so the SAME gene must get the SAME id across events for
+    multi-hop chains (role DEPTH) to form. The caller resolves subject/target to a stable
+    per-gene id and a mapped verb. Pure.
+    """
+    return {
+        "contract_version": "2.0",
+        "predicate": {
+            "op": "EVENT",
+            "args": [
+                {"entity_id": subject_id, "lemma": subject, "type_thread": []},
+                {"entity_id": target_id, "lemma": target, "type_thread": []},
+            ],
+            "features": {"verb": verb, "verb_thread": [], "verb_classes": [verb]},
+        },
+    }
+
+
+def events_to_contracts(events: Iterable[Event]) -> str:
+    """Events -> contract-JSONL for the PURE understand-contracts path (no GSE subprocess). Assigns
+    each distinct gene a stable entity id (coreference -> multi-hop role depth), maps each
+    verb to its class-centroid lemma, and drops events whose verb has no mapping (they carry no
+    mechanistic role). One JSONL line per kept event. Impure over the Event objects (the pure
+    per-event decision is `event_contract` + the VERB_LEMMA lookup).
+    """
+    evs = list(events)
+    genes = sorted({g for e in evs for g in (e.subject, e.target)})
+    ids = {g: f"e{k}" for k, g in enumerate(genes)}
+    lines = []
+    for e in evs:
+        lemma = VERB_LEMMA.get(e.verb)
+        if lemma is None:
+            continue
+        node = event_contract(e.subject, lemma, e.target, ids[e.subject], ids[e.target])
+        lines.append(json.dumps(node, sort_keys=True))
+    return "\n".join(lines)
+
+
 def coherence_from_regenesis(
     events: Iterable[Event], universe_root: str | os.PathLike[str] = MECHANISM_UNIVERSE
 ) -> dict[str, float]:
-    """Fire the SCOPED story through Regenesis ONCE -> per-candidate SEMANTIC coherence for
+    """Fire the SCOPED events through Regenesis ONCE -> per-candidate SEMANTIC coherence for
     `drive(coherence=)`. The IMPURE shell over the pinned `coherence_from_patterns`; the caller
-    SCOPES which events to hand in (story.render_story renders what it is given).
+    SCOPES which events to hand in (`events_to_contracts` emits what it is given).
 
-    Renders the events to opaque-SVO prose + sidecar, constructs the mechanism Universe
-    (`universe_only`: the domain's role Forms, no narrative ground — replicating Regenesis's own
-    `_universe` construction: a missing genres.index is a path that is never read under
-    universe_only), fires `understand(kind='text')` (universe-aware GSE emit -> the role Forms), and
-    reads the recognized patterns. The Regenesis engine is imported LAZILY so this self-contained
-    package degrades to the structural default when the engine is absent (ImportError propagates to
-    the caller, which falls back to `drive`'s proximity coherence).
+    Emits the events to contract-JSONL (pure Python, no GSE subprocess), builds the mechanism
+    Universe (`universe_only`: the domain's role Forms, no narrative ground -- replicating
+    Regenesis's own `_universe`: a missing genres.index is a path never read under universe_only),
+    fires the pure in-process `understand(kind='contracts')`, and reads the patterns. Subjects come
+    back as the real gene names (case-preserved here), so the `{gene: gene}` map is an identity
+    through the pinned `coherence_from_patterns`. The Regenesis engine is imported LAZILY so this
+    self-contained package degrades to the structural default when it is absent (the ImportError
+    propagates to the caller, which falls back to proximity).
 
-    CARDINAL: an ABSTAINED read (`out["abstained"]`, i.e. no patterns) on real prose is a
-    centroid-registration gap — calibrate the universe `.index`, NEVER author the input. Returns {}
-    on abstention (no semantic signal), which the ranker treats as neutral.
+    CARDINAL: an ABSTAINED read (no patterns) on real events is a centroid-registration gap (or a
+    verb missing from VERB_LEMMA) -- calibrate, NEVER fabricate a verb. Returns {} on abstention.
     """
     from regenesis.instrument import understand
     from regenesis.library import Universe
 
-    text, sidecar = render_story(events)
+    evs = list(events)
+    contracts = events_to_contracts(evs)
+    genes = {g for e in evs for g in (e.subject, e.target)}
+    if not contracts:
+        return {}
     root = os.fspath(universe_root)
     universe = Universe(
         root,
@@ -99,5 +161,5 @@ def coherence_from_regenesis(
         "NARRATIVE",
         True,  # universe_only: fire ONLY the domain's role Forms
     )
-    out = understand(text, universe=universe, kind="text")
-    return coherence_from_patterns(out.get("patterns", []), sidecar)
+    out = understand(contracts, universe=universe, kind="contracts")
+    return coherence_from_patterns(out.get("patterns", []), {g: g for g in genes})
