@@ -7,13 +7,15 @@ how well each coheres with THIS person's signals, driving H = log₂(candidate m
 A candidate mechanism is NOT a gene (ranking genes was the subject-fallacy we cut) — it is a
 CONNECTED STORY-CLUSTER: the genre instances that share entities (a tragedy whose sink feeds a
 vicious comedy, addressed by a quest = one coherent sub-etiology). The two autisms surface as two
-clusters; the engine resolves which is THIS person's by coverage of their shadow × the cluster's own
-internal phase-coherence, through the ModelAtlas blend (`recommend.score_candidate`). A surviving
+clusters; the engine resolves which is THIS person's by THREE distinct signals — coverage of their
+shadow × the cluster's internal phase-coherence × the calibrated predictive meter (SSL §9.3) — kept
+orthogonal and combined through the ModelAtlas blend (`recommend.score_candidate`). A surviving
 plurality is not collapsed — it yields the Jeeves DO-THIS (the discriminating measurement).
 
-Increments 1-2 (here): candidate enumeration, coverage, internal-coherence, and the ranked blend.
-Still to come: the operator-injected hypothesis (fluid-intelligence as a tested input, never
-ground truth), the Jeeves DO-THIS on a surviving plurality, and the GWAS relevance-seeding.
+Built (here): candidate enumeration, coverage, internal-coherence, the calibrated predictive meter
+(`cluster_meter` over `meter.coherence_meter`), and the ranked three-factor blend. Still to come:
+the operator-injected hypothesis (fluid-intelligence as a tested input, never ground truth), the
+Jeeves DO-THIS on a surviving plurality, and the GWAS relevance-seeding.
 """
 
 from __future__ import annotations
@@ -21,6 +23,8 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import dataclass
 
+from homeostat.meter import coherence_meter, source_outcomes
+from homeostat.polarity import SignedAdj
 from homeostat.quest import order_parameter, part_vector
 from homeostat.recommend import score_candidate
 
@@ -82,24 +86,52 @@ def cluster_coherence(
     return order_parameter(vectors)
 
 
+def cluster_meter(
+    entities: frozenset[str], signed_polar: SignedAdj, observed: Mapping[str, int]
+) -> float:
+    """The cluster's calibrated PREDICTIVE coherence: the best member-source's `coherence_meter`
+    over the cluster's own observed shadow — the mechanism's load-bearing driver, the single
+    perturbation that best explains the observed cone (`meter.source_outcomes`, the polarity-censor
+    machinery read soft). Because each source is scored on its BEST perturbation direction
+    (persuasion before execution: ``confirmed = max(n₊, n₋) ≥ contradicted``), the source-driven
+    meter is already ≥ 0 — the negative pole is structurally the polarity CENSOR's domain (a hard
+    veto upstream), not the ranker's, so `rank_clusters`'s ``max(0, ·)`` is a guard, never a
+    truncation of live signal. `coherence_meter` keeps the full ternary (-1, 1) for any
+    non-best-direction use. No entities → 0.0 (informational zero). Orchestration over the pinned
+    `source_outcomes` / `coherence_meter`.
+    """
+    obs_in = {o: observed[o] for o in observed if o in entities}
+    meters = [
+        coherence_meter(*source_outcomes(signed_polar, src, obs_in)) for src in sorted(entities)
+    ]
+    return max(meters) if meters else 0.0
+
+
 def rank_clusters(
     clusters: list[Cluster],
-    observed: frozenset[str],
-    signed_adj: Mapping[str, Mapping[str, int]],
+    observed: Mapping[str, int],
+    signed_ternary: Mapping[str, Mapping[str, int]],
+    signed_polar: SignedAdj,
 ) -> list[tuple[Cluster, float]]:
     """Rank the candidate mechanisms (resolve-narrow): each cluster scored by the ModelAtlas blend
-    (`recommend.score_candidate`) over its alignment factors -- COVERAGE of the observed shadow x
-    internal COHERENCE (the soft info-theoretic signals + operator prefer fold in at increment 3).
-    Descending; ties keep order. A near-tie at the top is a surviving plurality -- the Jeeves cue.
-    Orchestration over the pinned `cluster_coverage` / `cluster_coherence` / `score_candidate`.
+    (`recommend.score_candidate`) over THREE alignment factors, each a distinct signal (orthogonal
+    information is kept, never collapsed): COVERAGE of the observed shadow × internal COHERENCE
+    (`cluster_coherence`, phase-lock over the OTP-ternary sub-web `signed_ternary`) × the calibrated
+    predictive METER (`cluster_meter`, the SSL §9.3 track record over the polarity sub-web
+    `signed_polar`, DIRECTIONALLY GATED by `max(0, ·)` — a rectifier at the ranking boundary, not an
+    abandonment of the ternary; the negative pole stays live for the censor). `observed` is the sign
+    map (its keys are the shadow). Descending; ties keep order. A near-tie at the top is a surviving
+    plurality — the Jeeves cue. Orchestration over the pinned factors + `score_candidate`.
     """
+    shadow = frozenset(observed)
     scored = [
         (
             cl,
             score_candidate(
                 [
-                    cluster_coverage(cl.entities, observed),
-                    cluster_coherence(cl.entities, signed_adj),
+                    cluster_coverage(cl.entities, shadow),
+                    cluster_coherence(cl.entities, signed_ternary),
+                    max(0.0, cluster_meter(cl.entities, signed_polar, observed)),
                 ],
                 [],
             ),

@@ -2,14 +2,18 @@
 Authored from the design; `connected_components` / `cluster_coverage` are Detective-pinned."""
 
 from homeostat.comedy import Comedy
+from homeostat.event import Event
+from homeostat.polarity import signed_adjacency as polar_adjacency
 from homeostat.quest import Quest
 from homeostat.resolve import (
     cluster_coherence,
     cluster_coverage,
+    cluster_meter,
     connected_components,
     rank_clusters,
     story_clusters,
 )
+from homeostat.topology import signed_adjacency as ternary_adjacency
 from homeostat.tragedy import Tragedy
 
 # ---- connected_components: the candidate-clustering primitive ---------------------
@@ -98,15 +102,61 @@ def test_cluster_coherence_no_in_cluster_edges_is_zero():
     assert cluster_coherence(frozenset({"A"}), {"A": {"B": 1}}) == 0.0  # B outside the cluster
 
 
-def test_rank_clusters_orders_by_coverage_times_coherence():
-    # cluster {A,B}: covers B (1/1) x coherence 1.0 = 1.0 ; cluster {X,Y}: covers nothing -> 0.
+# ---- cluster_meter: the calibrated predictive coherence (SSL §9.3, the meter) --------
+
+
+def test_cluster_meter_best_source_confirms_the_shadow():
+    # {A,B}, A amplifies B, B observed up -> perturbing A +1 explains B: (1,0,0) -> 1/(1+1.5) = 0.4.
+    assert cluster_meter(frozenset({"A", "B"}), {"A": [("B", 1)]}, {"B": 1}) == 0.4
+
+
+def test_cluster_meter_no_entities_is_zero():
+    assert cluster_meter(frozenset(), {"A": [("B", 1)]}, {"B": 1}) == 0.0
+
+
+def test_cluster_meter_scores_only_the_clusters_own_shadow():
+    # an observed node OUTSIDE the cluster's entities is not the cluster's to explain -> excluded
+    # from obs_in, so it never dilutes the meter (each cluster scored on its own sub-etiology).
+    inside = cluster_meter(frozenset({"A", "B"}), {"A": [("B", 1)]}, {"B": 1})
+    outside = cluster_meter(frozenset({"A", "B"}), {"A": [("B", 1)]}, {"B": 1, "Z": 1})
+    assert inside == outside == 0.4  # Z (outside {A,B}) is filtered, no dilution
+
+
+def test_cluster_meter_is_non_negative_persuasion_before_execution():
+    # a conflicting source is scored on its BEST perturbation direction, so the meter never drops
+    # below 0 -- the negative pole is the censor's domain, not the ranker's.
+    m = cluster_meter(frozenset({"A", "B", "C"}), {"A": [("B", 1), ("C", 1)]}, {"B": 1, "C": -1})
+    assert m >= 0.0
+
+
+# ---- rank_clusters: the three-factor blend (coverage x coherence x meter) -------------
+
+
+def test_rank_clusters_orders_by_the_three_factor_blend():
+    # {A,B}: covers B, internally coherent, source A confirms B -> positive, ranked first.
+    # {X,Y}: covers none of the shadow -> coverage 0 -> score 0, ranked last.
     genres = {
         "tragedy": [Tragedy("A", "B", "doomed")],
         "comedy": [Comedy("X", "Y", "vicious")],
     }
     clusters = story_clusters(genres)
     ranked = rank_clusters(
-        clusters, frozenset({"B"}), {"A": {"B": 1}, "X": {"Y": 1}, "Y": {"X": 1}}
+        clusters,
+        {"B": 1},
+        {"A": {"B": 1}, "X": {"Y": 1}, "Y": {"X": 1}},  # ternary — internal coherence
+        {"A": [("B", 1)], "X": [("Y", 1)], "Y": [("X", 1)]},  # polar — predictive meter
     )
-    assert ranked[0][0].entities == frozenset({"A", "B"}) and ranked[0][1] == 1.0
+    assert ranked[0][0].entities == frozenset({"A", "B"}) and ranked[0][1] > 0.0
     assert ranked[-1][1] == 0.0  # the uncovered cluster ranks last
+
+
+def test_rank_clusters_from_the_real_producers_end_to_end():
+    # drive BOTH adjacencies from the REAL producers over actual Events (not hand-literals), so the
+    # pin is against the signal rank_clusters consumes in drive -- closing the producer-seam gap.
+    events = [Event("regulatory", "amplifies", "A", "B", 1)]
+    verb_sign = {"amplifies": 1, "inhibits": -1}
+    clusters = story_clusters({"tragedy": [Tragedy("A", "B", "doomed")]})
+    ranked = rank_clusters(
+        clusters, {"B": 1}, ternary_adjacency(events), polar_adjacency(events, verb_sign)
+    )
+    assert ranked[0][0].entities == frozenset({"A", "B"}) and ranked[0][1] > 0.0
