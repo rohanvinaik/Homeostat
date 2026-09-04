@@ -15,6 +15,13 @@ markers. The literature table itself (`(marker, demographic) -> [low, high]`) is
 
 from __future__ import annotations
 
+from collections.abc import Callable, Iterable, Mapping
+from math import isfinite
+
+from homeostat.ground import ground
+from homeostat.position import Position, place
+from homeostat.signal import Signal
+
 
 def reference_center_spread(low: float, high: float) -> tuple[float, float]:
     """Convert a published reference interval [low, high] to the (center, spread) a Position reads
@@ -26,3 +33,47 @@ def reference_center_spread(low: float, high: float) -> tuple[float, float]:
     center = (low + high) / 2.0
     spread = (high - low) / 2.0
     return center, spread
+
+
+def parse_marker(state: str) -> float | None:
+    """Parse a marker's raw state string to a FINITE float, or None when it is not a numeric marker
+    -- a genotype ("A;G"), a unit-laden or empty string. A None is an honest skip: the reading is
+    not a numeric marker this producer places (a genotype defers to the genotype pole). Pure over
+    `str`.
+    """
+    try:
+        value = float(state)
+    except (TypeError, ValueError):
+        return None
+    return value if isfinite(value) else None
+
+
+def signals_to_positions(
+    signals: Iterable[Signal],
+    demographics: Mapping[str, str],
+    reference: Callable[[str, Mapping[str, str]], tuple[float, float] | None],
+    vocab: dict[str, str],
+    k: float = 1.0,
+) -> dict[str, Position]:
+    """Produce the read's input from a person's marker readings: each Signal grounded to a node,
+    looked up against its demographic reference interval, and PLACED as a structured Position (the
+    signed coordinate + differential + tier). A reading is honestly DROPPED -- never faked -- when
+    it is ungroundable, non-numeric (a genotype, deferred), or has no demographic reference. The
+    covariate correction lives entirely in `reference`'s key: age 8 and age 80 resolve to different
+    intervals, so a normal-for-age value never reads as a deviation. Orchestration over the pinned
+    `ground` / `parse_marker` / `reference_center_spread` / `place`; integration-tested end to end.
+    """
+    out: dict[str, Position] = {}
+    for sig in signals:
+        node = ground(sig.ident, vocab).node
+        if node is None:
+            continue
+        value = parse_marker(sig.state)
+        if value is None:
+            continue
+        interval = reference(node, demographics)
+        if interval is None:
+            continue
+        center, spread = reference_center_spread(*interval)
+        out[node] = place(node, value, center, spread, k, sig.tier)
+    return out
