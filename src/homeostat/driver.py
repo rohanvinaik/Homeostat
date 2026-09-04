@@ -6,13 +6,20 @@ answer. The composition, all judgment-free glue over pinned pieces:
 
   REQUIRE (hard) -- relevance = the DIRECTED-reachability ancestor cone of the observed shadow
      (`ancestor_cone`/`induced_subweb` over the directed sub-web); `kill_matrix` is positive
-     elimination; the polarity censor (`polarity_censors`) + role censors are the negative
-     sign. `eliminate_two_sign` runs both signs to a survivor / certified ⊥ / plurality.
-  PREFER (soft) -- `rank_candidates` orders the survivors by kappa-coverage through the ModelAtlas
-     blend (`score_candidate`); convergence / rarity / absence / coherence fold in as wired.
+     elimination; the polarity censor (`polarity_censors`) + role censors are the negative sign.
+     `eliminate_two_sign` runs both signs to a survivor / certified ⊥ / plurality. The diagnosis
+     subspace (`relevant=`) gates the eligible SOURCES (option B); the observed shadow is untouched.
+  PREFER (soft) -- the surviving structure is read as a STORY (`narrative.read_story`: the dynamics
+     genres + the Regenesis account), then closed NARROW into ranked candidate MECHANISMS
+     (`resolve.rank_clusters`: connected story-clusters scored coverage × internal-coherence × the
+     calibrated predictive meter). This REPLACED the old gene ranking (the subject-fallacy, cut
+     `5c30e65`). Operator `hypotheses` join PREFER only -- tested by the meter, reported in the
+     ledger, never ground truth.
 
-The verdict names its own trust boundary; a plural residual yields the Jeeves DO-THIS probe. This is
-the ONE place all the layers meet; it holds no biology of its own.
+It then reports its own σ_sem completeness (`completeness.read_completeness`) and the mechanism-
+level Jeeves node that separates any surviving plurality. The verdict names its own trust boundary;
+a plural residual yields the Jeeves DO-THIS probe. This is the ONE place all the layers meet; it
+holds no biology of its own.
 """
 
 from __future__ import annotations
