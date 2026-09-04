@@ -27,6 +27,7 @@ from homeostat.event import Event, active_censors, events_to_censors, events_to_
 from homeostat.jeeves import Probe, select_probe
 from homeostat.position import Position
 from homeostat.search import Trajectory, eliminate_two_sign
+from homeostat.signal import Tier
 from homeostat.web import RelationalWeb, kill_matrix
 
 RESOLVED = "resolved"  # a unique, falsifiable survivor — the mechanism to interrogate
@@ -40,13 +41,18 @@ ABSTAIN = "abstain"  # a plural residual no available dimension separates — th
 class ClinicalResult:
     """The outcome of a clinical read. `verdict` is one of the codes above. `mechanism` is the
     survivor on RESOLVED, else None; `probe` is the next question on ASK, else None; `trajectory`
-    is the two-sign trajectory (its `survivors_left` is the residual, empty on BOTTOM).
+    is the two-sign trajectory (its `survivors_left` is the residual, empty on BOTTOM). `certified`
+    is True only when the verdict is a certificate (BOTTOM/RESOLVED) resting on VERIFIED evidence;
+    `certification_tier` is the weakest-link tier of the observations the read consumed — the read
+    naming its own trust boundary (TAG: the verdict code is never collapsed to a weaker one).
     """
 
     verdict: str
     mechanism: str | None
     probe: Probe | None
     trajectory: Trajectory
+    certified: bool = False
+    certification_tier: Tier = Tier.VERIFIED
 
 
 def observed_symptoms(positions: dict[str, Position]) -> list[str]:
@@ -70,6 +76,29 @@ def clinical_verdict(bottom: bool, is_resolved: bool, is_falsifiable: bool, has_
     return ASK if has_probe else ABSTAIN
 
 
+_TIER_RANK = {Tier.VERIFIED.value: 2, Tier.REPORTED.value: 1, Tier.ABSENT.value: 0}
+
+
+def weakest_tier(tiers: list[str]) -> str:
+    """The weakest (least-certifying) tier among the observations — VERIFIED > REPORTED > ABSENT.
+    An empty set has no weakening evidence, so it is vacuously VERIFIED. Pure over the Tier values;
+    the weakest-link envelope warrant (Regenesis SSL: a chain is as warranted as its weakest datum).
+    """
+    weakest = Tier.VERIFIED.value
+    for t in tiers:
+        if _TIER_RANK.get(t, 0) < _TIER_RANK.get(weakest, 0):
+            weakest = t
+    return weakest
+
+
+def is_certified(verdict: str, weakest: str) -> bool:
+    """CERTIFIED only if the verdict is a certificate (BOTTOM or RESOLVED) AND its weakest
+    load-bearing observation is VERIFIED. A REPORTED datum is a run-kill — it constrains the read
+    but banks nothing toward certification (NEGATIVE_SPECIFICATION Def. 1.4). Pure `(str, str)`.
+    """
+    return verdict in (BOTTOM, RESOLVED) and weakest == Tier.VERIFIED.value
+
+
 def read_presentation(
     web: RelationalWeb,
     positions: dict[str, Position],
@@ -78,9 +107,11 @@ def read_presentation(
     min_weight: float = 0.0,
 ) -> ClinicalResult:
     """Read one person's positioned presentation over the prior web, two-sign, returning the
-    verdict (the mechanism, a certified ⊥, the next Jeeves question, or an honest abstention).
-    I/O-free orchestration over the pinned `kill_matrix` / `eliminate_two_sign` /
-    `clinical_verdict` / `select_probe`; validated by hand-authored intent tests.
+    verdict (the mechanism, a certified ⊥, the next Jeeves question, or an honest abstention),
+    TAGGED with whether it is certified — a certificate resting on any REPORTED observation is
+    reported UNCERTIFIED, never silently collapsed. I/O-free orchestration over the pinned
+    `kill_matrix` / `eliminate_two_sign` / `clinical_verdict` / `select_probe` / `is_certified`;
+    validated by hand-authored intent tests.
     """
     observed = observed_symptoms(positions)
     candidates, constraints = kill_matrix(web, observed, min_weight)
@@ -90,7 +121,9 @@ def read_presentation(
     probe = select_probe(traj.survivors_left, list(probes)) if stuck else None
     verdict = clinical_verdict(traj.bottom, is_resolved, traj.falsifiable, probe is not None)
     mechanism = traj.survivors_left[0] if verdict == RESOLVED else None
-    return ClinicalResult(verdict, mechanism, probe, traj)
+    weakest = weakest_tier([positions[n].tier.value for n in observed])
+    certified = is_certified(verdict, weakest)
+    return ClinicalResult(verdict, mechanism, probe, traj, certified, Tier(weakest))
 
 
 def read_from_events(
