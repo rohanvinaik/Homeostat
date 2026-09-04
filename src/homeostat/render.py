@@ -1,30 +1,33 @@
-"""homeostat.render — the read as a human-readable STORY (the machine's CALL in the interface).
+"""homeostat.render — the read as a human-readable hypothesis set (the machine's CALL).
 
-`driver.drive` / `person.read_person` compute a `DriverRead`, but nothing surfaces it; this is the
-other half of the operator/computer interface — the precise CALL the operator answers next turn.
-Story-led (the answer IS a story, not a ranked gene): the narrative account FIRST — a Dr. House read
-in the same language that reads Shakespeare (Winston's thesis made tangible) — then WHAT REMAINS and
-how-solved (the σ_sem completeness), then MY QUESTION (the mechanism-level Jeeves counter-ask), the
-treatment, and WHAT the operator's own hypotheses got right.
+`driver.drive` / `person.read_person` compute a `DriverRead`; this surfaces it as the operator's
+half of the call-and-response, in the shape of Detective's minimal CLI: a legible, ranked, BOUNDED
+set of candidate MECHANISMS (not a wall of every genre instance), each a short story over the genes
+it spans, then the one measurement that would separate the leaders. Mechanistic reads and hypotheses
+-- generative, reasoned-over, falsifiable -- never a claim of idempotent proof.
 
-Pure: `render(read) -> str`, judgment-free orchestration over pinned phrase-decisions. The decidable
-sub-decisions (verb → Polti situation, genre verdict → clause, verdict → headline, outcome →
-phrase) are total string functions, Detective-pinned; the assembly is intent-tested (a
-`DriverRead` is a domain object with no `--input` form). Reuses `narrative.genre_triples`
-so the dramatic account is READ, never re-derived.
+Story-led: each candidate is told through its genre reads (a Dr. House read in the language that
+reads Shakespeare). Pure `render(read) -> str`, judgment-free orchestration; a candidate is shown
+only if it EXPLAINS part of the shadow (score > 0, the reachability gate), top-K -- so the signal
+the engine computed is not drowned in a wall of genre instances.
 """
 
 from __future__ import annotations
 
+from homeostat.clinic import ASK, BOTTOM, DEGENERATE, RESOLVED
 from homeostat.driver import DriverRead
 from homeostat.narrative import genre_triples
 
 _DRAMATIC = {"harm": "pursuit", "betray": "revenge", "seize": "obtaining", "pursue": "pursuit"}
+_TOP_K = 6  # candidates shown in full; the rest are counted, not dumped
+_BEATS = 2  # story beats shown per candidate
 
 
 def _entities(entities: frozenset[str]) -> str:
-    """A cluster's entity set → a stable ``{A, B, C}`` string (sorted for determinism). Pure."""
-    return "{" + ", ".join(sorted(entities)) + "}"
+    """A cluster's entity set → a stable ``{A, B, C}`` string (sorted; elided past 8). Pure."""
+    genes = sorted(entities)
+    shown = ", ".join(genes[:8]) + (", …" if len(genes) > 8 else "")
+    return "{" + shown + "}"
 
 
 def dramatic_situation(verb: str) -> str:
@@ -101,97 +104,83 @@ def outcome_clause(subject: str, verb: str, target: str, outcome: str) -> str:
     return f"Your hypothesis that {edge} — untestable on this shadow (it stands, unjudged)."
 
 
-def verdict_clause(verdict: str, survivors: int) -> str:
-    """The WHAT-REMAINS headline for a clinical verdict. Named codes: RESOLVED (one mechanism),
-    BOTTOM (certified ⊥, a proof of non-membership), DEGENERATE (self-confirming, σ_sem=0), ASK (a
-    plurality remains — a measurement is owed), ABSTAIN (no dimension separates). Pure over str/int.
+def verdict_clause(verdict: str, candidates: int) -> str:
+    """The one-line read headline for a clinical verdict (the clinic CODE values, LOWERCASE).
+    RESOLVED (one mechanism), BOTTOM (certified ⊥, a proof of non-membership), DEGENERATE (self-
+    confirming, σ_sem=0), ASK (a plurality a measurement separates), else ABSTAIN (a plurality, none
+    yet separable). `candidates` = the count of shadow-explaining mechanisms. Pure over str/int.
     """
-    if verdict == "RESOLVED":
-        return "Resolved to a single mechanism — the structure explains this shadow."
-    if verdict == "BOTTOM":
-        return (
-            "Certified ⊥: no lawful mechanism in the relevant sources explains this shadow "
-            "(a proof, not a failed search)."
-        )
-    if verdict == "DEGENERATE":
-        return "Degenerate: the read is self-confirming — nothing was falsified (σ_sem = 0)."
-    if verdict == "ASK":
-        return f"{survivors} mechanisms fit this story equally; I cannot yet separate them."
-    return "Abstained: no available dimension separates the mechanisms that remain."
+    plural = "s" if candidates != 1 else ""
+    if verdict == RESOLVED:
+        return "resolved to a single mechanism."
+    if verdict == BOTTOM:
+        return "certified ⊥ — nothing in scope explains the presentation (a proof)."
+    if verdict == DEGENERATE:
+        return "degenerate — self-confirming; nothing was falsified."
+    if verdict == ASK:
+        return f"{candidates} candidate mechanism{plural} fit; a measurement separates them."
+    return f"{candidates} candidate mechanism{plural} fit; none yet separable."
+
+
+def _cluster_beats(members: tuple) -> list[str]:
+    """A candidate cluster's own story: its member ``(genre, instance)`` reads rendered to clauses,
+    opinionated verdicts only (the rest abstain from the story). Pure over the members tuple.
+    """
+    beats: list[str] = []
+    for genre, inst in members:
+        if genre == "tragedy" and inst.verdict in ("doomed", "suppressed"):
+            beats.append(tragedy_clause(inst.origin, inst.sink, inst.verdict))
+        elif genre == "comedy" and inst.verdict in ("vicious", "homeostatic"):
+            beats.append(comedy_clause(inst.a, inst.b, inst.verdict))
+        elif genre == "quest" and inst.verdict in ("resolving", "entangling"):
+            beats.append(quest_clause(inst.hero, list(inst.joined), inst.verdict))
+        elif genre == "allegory" and inst.verdict == "fungible":
+            beats.append(allegory_clause(inst.a, inst.b, inst.verdict, inst.banks))
+    return beats
 
 
 def render(read: DriverRead) -> str:
-    """A `DriverRead` → a story-led, human-readable report (the machine's CALL). Judgment-free
-    orchestration over the pinned phrase-decisions above + the read's own computed structure — it
-    adds no biology and makes no ranking of its own. Five sections, each omitted when it has nothing
-    to say: THE STORY (the genres + the Regenesis dramatic account), WHAT REMAINS (verdict +
-    how-solved + the ranked mechanisms), MY QUESTION (the counter-ask, when a measurement is owed),
-    TREATMENT (laments), WHAT YOU GOT RIGHT (the ledger). Intent-tested (domain-object input).
+    """A `DriverRead` → a story-led, BOUNDED hypothesis set (the machine's CALL). Judgment-free
+    orchestration over the pinned phrase-decisions + the read's own structure. Sections, omitted
+    when empty: THE READ (verdict headline), CANDIDATE MECHANISMS (shadow-explaining clusters,
+    score > 0, top-K, each with genes + story), WHAT I CAN'T YET TELL (the counter-ask), TREATMENT
+    (laments), WHAT YOU GOT RIGHT (the ledger). Intent-tested (domain-object input).
     """
     lines: list[str] = []
+    candidates = [(cl, sc) for cl, sc in read.ranked if sc > 0.0]
+    lines.append(f"THE READ  —  {verdict_clause(read.verdict, len(candidates))}")
 
-    # --- THE STORY (tier-1 genres + tier-2 dramatic account) ---
-    story = read.story
-    beats: list[str] = []
-    for t in story.genres.get("tragedy", []):
-        if t.verdict in ("doomed", "suppressed"):
-            beats.append(tragedy_clause(t.origin, t.sink, t.verdict))
-    for c in story.genres.get("comedy", []):
-        if c.verdict in ("vicious", "homeostatic"):
-            beats.append(comedy_clause(c.a, c.b, c.verdict))
-    for q in story.genres.get("quest", []):
-        if q.verdict in ("resolving", "entangling"):
-            beats.append(quest_clause(q.hero, list(q.joined), q.verdict))
-    for f in story.genres.get("allegory", []):
-        if f.verdict == "fungible":
-            beats.append(allegory_clause(f.a, f.b, f.verdict, f.banks))
+    if candidates:
+        lines.append("")
+        lines.append("CANDIDATE MECHANISMS  (ranked by how much of the presentation each explains)")
+        for i, (cl, _sc) in enumerate(candidates[:_TOP_K], 1):
+            lines.append(f"  {i}. {_entities(cl.entities)}")
+            for beat in _cluster_beats(cl.members)[:_BEATS]:
+                lines.append(f"       {beat}")
+        extra = len(candidates) - _TOP_K
+        if extra > 0:
+            lines.append(f"  … and {extra} more that partially explain the presentation.")
+        triples = genre_triples(read.story.genres)
+        if triples and read.story.account is not None:
+            sits = " + ".join(dict.fromkeys(dramatic_situation(v) for _, v, _ in triples))
+            lines.append(f"  (read through the same engine that reads Macbeth: {sits})")
 
-    lines.append("THE STORY")
-    if beats:
-        lines.extend(f"  {b}" for b in beats)
-        triples = genre_triples(story.genres)
-        if triples and story.account is not None:
-            situations = " + ".join(dict.fromkeys(dramatic_situation(v) for _, v, _ in triples))
-            lines.append(f"  (read through the same engine that reads Macbeth: {situations})")
-    else:
-        lines.append("  The dynamics are quiet — no genre fired an opinionated verdict here.")
-
-    # --- WHAT REMAINS (verdict + how-solved + the ranked mechanisms) ---
-    # the % is the MECHANISM-space resolution — meaningful only when there was ambiguity to
-    # resolve (h0 > 0). A single candidate mechanism is not a "100%" triumph, and pairing 100%
-    # with an ABSTAIN/DEGENERATE gene-level verdict misreads; so h0 == 0 says so plainly instead.
-    lines.append("")
-    if read.completeness.h0 > 0:
-        pct = round(read.completeness.resolved * 100)
-        lines.append(f"WHAT REMAINS  —  mechanism-space {pct}% resolved")
-    else:
-        lines.append("WHAT REMAINS  —  a single candidate mechanism (nothing to disambiguate)")
-    lines.append(f"  {verdict_clause(read.verdict, len(read.ranked))}")
-    for cluster, score in read.ranked:
-        lines.append(f"    · {_entities(cluster.entities)}   {score:.2f}")
-
-    # --- MY QUESTION (the counter-ask, when a measurement is owed) ---
     if read.completeness.i_solve is not None:
         lines.append("")
-        lines.append("MY QUESTION TO YOU  (the counter-ask)")
-        lines.append(
-            f"  Measure {read.completeness.i_solve} — its value distinguishes the mechanisms that"
-        )
-        lines.append("  remain. Tell me, and the story resolves.")
+        lines.append("WHAT I CAN'T YET TELL  —  and the measurement that would")
+        lines.append(f"  Measure {read.completeness.i_solve}; it separates the leading candidates.")
     elif read.probe is not None:
         lines.append("")
-        lines.append("MY QUESTION TO YOU  (the counter-ask)")
+        lines.append("WHAT I CAN'T YET TELL  —  and the measurement that would")
         verb = "confirm" if read.probe.kind == "confirm" else "rule out"
         lines.append(f"  Measure {read.probe.dimension} — to {verb} the surviving candidates.")
 
-    # --- TREATMENT (the laments) ---
-    if story.treatment:
+    if read.story.treatment:
         lines.append("")
         lines.append("TREATMENT")
-        for lam in story.treatment:
+        for lam in read.story.treatment:
             lines.append(f"  {lament_clause(lam.mourned, lam.substitute, lam.verdict)}")
 
-    # --- WHAT YOU GOT RIGHT (the operator ledger) ---
     if read.operator:
         lines.append("")
         lines.append("WHAT YOU GOT RIGHT")

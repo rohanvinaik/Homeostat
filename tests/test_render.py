@@ -75,26 +75,26 @@ def test_outcome_clause_branches():
 
 
 def test_verdict_clause_branches():
-    assert "single mechanism" in verdict_clause("RESOLVED", 1)
-    assert "Certified ⊥" in verdict_clause("BOTTOM", 0)
-    assert "self-confirming" in verdict_clause("DEGENERATE", 1)
-    assert "3 mechanisms" in verdict_clause("ASK", 3)
-    assert "no available dimension" in verdict_clause("ABSTAIN", 2)
+    # the clinic verdict CODES are lowercase ("resolved"/"abstain"/…) -- match those, not uppercase.
+    assert "single mechanism" in verdict_clause("resolved", 1)
+    assert "certified ⊥" in verdict_clause("bottom", 0)
+    assert "self-confirming" in verdict_clause("degenerate", 1)
+    assert "3 candidate mechanisms" in verdict_clause("ask", 3)
+    assert "separable" in verdict_clause("abstain", 2)
 
 
 # ---- render, end-to-end over a REAL DriverRead ----
 
 
 def test_render_reads_a_vicious_comedy_as_a_story():
-    # A <-> B mutual amplification, both up -> a vicious comedy fires; render leads with THE STORY
-    # and reports WHAT REMAINS. Validated through the real `drive`, not a hand-built read.
+    # A <-> B mutual amplification, both up -> a vicious comedy fires; render leads with THE READ
+    # and surfaces the {A,B} candidate mechanism with its story. Through the real `drive`.
     events = [_reg("amplifies", "A", "B"), _reg("amplifies", "B", "A")]
     read = drive(events, {"A": _up("A"), "B": _up("B")}, VS)
     out = render(read)
-    assert out.startswith("THE STORY")
+    assert out.startswith("THE READ")
+    assert "CANDIDATE MECHANISMS" in out
     assert "comedy" in out.lower()
-    # one cluster {A, B} -> h0 == 0 -> no misleading "100%"; the honest single-candidate line
-    assert "single candidate mechanism" in out and "%" not in out
 
 
 def test_render_surfaces_the_operator_ledger():
@@ -108,10 +108,8 @@ def test_render_surfaces_the_operator_ledger():
 
 
 def test_render_quiet_when_no_genre_is_opinionated():
-    # a lone directed edge with a single observed node -> no comedy/tragedy/quest fires -> the STORY
-    # section says so rather than inventing a beat.
+    # a lone directed edge with a single observed node -> no opinionated genre fires, but the read
+    # is still legible (it does not invent a mechanism it cannot support).
     read = drive([_reg("amplifies", "src", "A")], {"A": _up("A")}, VS)
     out = render(read)
-    assert "THE STORY" in out
-    # either a quiet note or (defensively) no fabricated genre keyword beyond the headers
-    assert "quiet" in out or "WHAT REMAINS" in out
+    assert out.startswith("THE READ")

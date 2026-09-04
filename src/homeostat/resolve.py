@@ -147,12 +147,15 @@ def rank_clusters(
         (
             cl,
             score_candidate(
+                # COVERAGE is the HARD factor: a candidate must EXPLAIN (reach) the shadow to rank.
+                [cluster_coverage(cl.entities, shadow, reach)],
+                # coherence + meter are SOFT refinements (rewards, diminishing returns) -- they
+                # order the candidates, they never GATE one out (a hypothesis engine ranks, it does
+                # not prove; a shadow-reaching mechanism is never zeroed by a flat meter).
                 [
-                    cluster_coverage(cl.entities, shadow, reach),
                     cluster_coherence(cl.entities, signed_ternary),
                     max(0.0, cluster_meter(cl.entities, signed_polar, observed, reach)),
                 ],
-                [],
             ),
         )
         for cl in clusters
