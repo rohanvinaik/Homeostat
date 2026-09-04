@@ -1,7 +1,8 @@
 """Intent tests for the coherence meter (SSL §9.3 — the NML/KT-calibrated coherence scalar).
 Authored from the design; the pure decisions are Detective-pinned."""
 
-from homeostat.meter import coherence_meter, nml_regret
+from homeostat.meter import coherence_meter, nml_regret, source_outcomes
+from homeostat.polarity import polarity_censors
 
 # ---- coherence_meter: the calibrated net confirmation --------------------------------
 
@@ -52,3 +53,42 @@ def test_nml_regret_is_log2_n_for_the_three_outcome_meter():
     # (m-1)/2 * log2(n) with m=3 -> log2(n): n=2 -> 1 bit, n=4 -> 2 bits.
     assert nml_regret(2) == 1.0
     assert nml_regret(4) == 2.0
+
+
+# ---- source_outcomes: the elimination track record (the meter's input) ---------------
+
+
+def test_source_outcomes_consistent_source_confirms_all():
+    # A amplifies B (+1); B observed up -> perturbing A +1 explains B. One confirmation.
+    assert source_outcomes({"A": [("B", 1)]}, "A", {"B": 1}) == (1, 0, 0)
+
+
+def test_source_outcomes_self_observed_source_is_confirmed_too():
+    # A inhibits B; A up, B down -> perturb A +1: A up (self), B down. Both confirmed.
+    assert source_outcomes({"A": [("B", -1)]}, "A", {"A": 1, "B": -1}) == (2, 0, 0)
+
+
+def test_source_outcomes_conflicting_requirements_are_contradiction():
+    # A amplifies both B and C, but B is up and C is down -> no single perturbation explains both.
+    assert source_outcomes({"A": [("B", 1), ("C", 1)]}, "A", {"B": 1, "C": -1}) == (1, 1, 0)
+
+
+def test_source_outcomes_picks_the_majority_direction():
+    # 2 requirements demand -1, 1 demands +1 -> best perturbation is -1: confirms 2, contradicts 1.
+    # (the majority direction can be OPPOSE, so confirmed is max(n₊, n₋), never just n₊.)
+    adj = {"A": [("B", 1), ("C", 1), ("D", 1)]}
+    assert source_outcomes(adj, "A", {"B": -1, "C": -1, "D": 1}) == (2, 1, 0)
+
+
+def test_source_outcomes_unreached_observed_is_standing():
+    # A reaches B but not Z -> Z is the informational zero (standing), not a contradiction.
+    assert source_outcomes({"A": [("B", 1)]}, "A", {"B": 1, "Z": 1}) == (1, 0, 1)
+
+
+def test_source_outcomes_contradicted_iff_polarity_censored():
+    # the load-bearing consistency claim: contradicted>=1 is EXACTLY the polarity censor firing.
+    adj = {"A": [("B", 1), ("C", 1)]}
+    censored = source_outcomes(adj, "A", {"B": 1, "C": -1})  # conflicting -> (1, 1, 0)
+    clean = source_outcomes(adj, "A", {"B": 1, "C": 1})  # agreeing -> (2, 0, 0)
+    assert censored[1] >= 1 and "A" in polarity_censors(adj, ["A"], {"B": 1, "C": -1})
+    assert clean[1] == 0 and "A" not in polarity_censors(adj, ["A"], {"B": 1, "C": 1})
