@@ -21,7 +21,7 @@ from collections.abc import Collection, Iterable, Mapping
 from dataclasses import dataclass
 
 from homeostat.clinic import clinical_verdict, observed_symptoms
-from homeostat.completeness import SpecCompleteness, read_completeness
+from homeostat.completeness import SpecCompleteness, read_completeness, top_band
 from homeostat.event import Event, active_censors, events_to_censors, events_to_web
 from homeostat.jeeves import Probe, select_probe
 from homeostat.narrative import StoryRead, read_story
@@ -29,7 +29,7 @@ from homeostat.operator import HypothesisOutcome, operator_ledger
 from homeostat.polarity import polarity_censors, signed_adjacency
 from homeostat.position import Position
 from homeostat.recommend import score_candidate
-from homeostat.resolve import Cluster, rank_clusters, story_clusters
+from homeostat.resolve import Cluster, cluster_discriminant, rank_clusters, story_clusters
 from homeostat.search import Trajectory, coverage, eliminate_two_sign
 from homeostat.topology import signed_adjacency as ternary_adjacency
 from homeostat.web import (
@@ -124,6 +124,7 @@ def drive(
     proteins: Mapping[str, str] | None = None,
     hypotheses: Iterable[Event] = (),
     min_weight: float = 0.0,
+    band: float = 0.0,
 ) -> DriverRead:
     """Read one person's positioned deviations end-to-end (generate-wide → resolve-narrow → STORY).
 
@@ -175,9 +176,12 @@ def drive(
         ternary_adjacency(prefer_events),
         signed_adjacency(prefer_events, verb_sign),
     )
-    # COMPLETENESS: the σ_sem read -- how much of the mechanism-uncertainty structure resolved
-    # (H_0 → H_residual), and the I_solve still owed (the Jeeves DO-THIS when a plurality survives).
-    completeness = read_completeness(ranked, probe)
+    # COMPLETENESS: the σ_sem read -- H_0 = all mechanisms; the surviving PLURALITY is the near-tie
+    # the ranking could not order (`top_band`); `cluster_discriminant` names the NODE whose
+    # measurement separates it (the mechanism-level Jeeves DO-THIS). H_residual = log₂(plurality).
+    plurality = top_band([s for _, s in ranked], band)
+    discriminant = cluster_discriminant([sorted(ranked[i][0].entities) for i in plurality])
+    completeness = read_completeness(len(ranked), len(plurality), discriminant)
     # OPERATOR LEDGER: each hypothesis judged against the FULL observed shadow, then reported.
     ledger = operator_ledger(hyp, {o: positions[o].sign for o in observed}, verb_sign)
     return DriverRead(verdict, story, ranked, completeness, probe, traj, censors, dropped, ledger)

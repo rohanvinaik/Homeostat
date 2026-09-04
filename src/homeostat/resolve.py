@@ -23,6 +23,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import dataclass
 
+from homeostat.jeeves import expected_information_gain
 from homeostat.meter import coherence_meter, source_outcomes
 from homeostat.polarity import SignedAdj
 from homeostat.quest import order_parameter, part_vector
@@ -168,3 +169,27 @@ def story_clusters(genres: Mapping[str, list]) -> list[Cluster]:
         for comp in comps
     ]
     return sorted(clusters, key=lambda cl: tuple(sorted(cl.entities)))
+
+
+def cluster_discriminant(entity_sets: list[list[str]]) -> str | None:
+    """The mechanism-level Jeeves measurement: given the TIED candidate mechanisms' entity sets (the
+    surviving plurality the ranking could not separate), the node whose membership best SPLITS them
+    — a node in some but not all clusters, chosen by max `jeeves.expected_information_gain` over the
+    ``[contains, does-not]`` partition (an even split carries the most information — the same
+    Lindley/Howard EIG the elimination Jeeves uses, lifted from genes to mechanisms). Measuring
+    whether that node is deviated tells you which mechanism is THIS person's. None when < 2 sets or
+    no node discriminates (the tied mechanisms share the same span). Pure over ``list[list[str]]``.
+    """
+    sets = [set(s) for s in entity_sets]
+    if len(sets) < 2:
+        return None
+    everywhere = set.intersection(*sets)
+    best_node: str | None = None
+    best_gain = 0.0
+    for node in sorted(set().union(*sets) - everywhere):
+        contain = sum(1 for s in sets if node in s)
+        gain = expected_information_gain([contain, len(sets) - contain])
+        if gain > best_gain:
+            best_gain = gain
+            best_node = node
+    return best_node

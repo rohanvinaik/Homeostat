@@ -1,14 +1,12 @@
 """Intent tests for the σ_sem completeness read (SSL §2.5 — "how solved is this mechanism?").
-Authored from the design; `resolution_entropy` / `spec_completeness` are Detective-pinned."""
+Authored from the design; the pure decisions are Detective-pinned."""
 
 from homeostat.completeness import (
     read_completeness,
     resolution_entropy,
     spec_completeness,
+    top_band,
 )
-from homeostat.jeeves import Probe
-
-_PROBE = Probe("tachycardia", "confirm", {"m1": 1, "m2": -1})
 
 # ---- resolution_entropy: the Hartley conceptual entropy -------------------------------
 
@@ -27,12 +25,10 @@ def test_resolution_entropy_one_or_zero_candidates_is_no_uncertainty():
 
 
 def test_spec_completeness_structure_resolved_to_one_is_complete():
-    # 4 candidates -> 1 survivor: H_0=2 bits, H_residual=0, structure resolved everything.
     assert spec_completeness(4, 1) == (2.0, 0.0, 1.0)
 
 
 def test_spec_completeness_a_surviving_plurality_is_partial():
-    # 4 -> 2: 1 bit resolved of 2 -> half resolved, 1 bit of I_solve remains.
     assert spec_completeness(4, 2) == (2.0, 1.0, 0.5)
 
 
@@ -44,24 +40,43 @@ def test_spec_completeness_no_initial_uncertainty_is_vacuously_complete():
     assert spec_completeness(1, 1) == (0.0, 0.0, 1.0)
 
 
-# ---- read_completeness: over the ranked mechanisms -----------------------------------
+# ---- top_band: the surviving plurality (near-tie the ranking could not separate) -----
 
 
-def test_read_completeness_single_survivor_is_resolved_no_measurement_owed():
-    # one mechanism covers the shadow (score > 0), the rest are ruled out -> resolved, no Jeeves.
-    sc = read_completeness([("m1", 0.9), ("m2", 0.0), ("m3", 0.0)], _PROBE)
-    assert sc.resolved == 1.0 and sc.h_residual == 0.0
-    assert sc.i_solve is None  # nothing to discriminate
+def test_top_band_unique_top_is_a_single_survivor():
+    assert top_band([1.0, 0.4, 0.0], 0.0) == [0]  # exact: only the top score
 
 
-def test_read_completeness_plurality_owes_the_jeeves_measurement():
-    # two mechanisms survive (both score > 0) -> a plurality -> the measurement is owed (I_solve).
-    sc = read_completeness([("m1", 0.9), ("m2", 0.5), ("m3", 0.0)], _PROBE)
-    assert sc.h_residual == 1.0 and sc.resolved < 1.0
-    assert sc.i_solve is _PROBE  # the Jeeves DO-THIS is carried
+def test_top_band_exact_ties_are_the_plurality():
+    assert top_band([1.0, 1.0, 0.3], 0.0) == [0, 1]  # two exact ties (the symmetric-subtype case)
 
 
-def test_read_completeness_no_measurement_owed_when_structure_resolves():
-    # even with a probe available, a single survivor owes no measurement.
-    sc = read_completeness([("m1", 0.9), ("m2", 0.0)], _PROBE)
-    assert sc.i_solve is None
+def test_top_band_relative_band_includes_near_ties():
+    # band 0.2: within 20% of the top (1.0) -> score >= 0.8; 0.9 qualifies, 0.5 does not.
+    assert top_band([1.0, 0.9, 0.5], 0.2) == [0, 1]
+
+
+def test_top_band_no_positive_score_is_empty():
+    assert top_band([0.0, 0.0], 0.0) == []
+    assert top_band([], 0.0) == []
+
+
+def test_top_band_only_strictly_positive_scores_survive_even_at_a_full_band():
+    # band 1.0 -> threshold 0, but a 0-score is still NOT a covering mechanism: only score > 0
+    # survives (the "positive score = covers something" requirement, independent of the band).
+    assert top_band([1.0, 0.0], 1.0) == [0]
+
+
+# ---- read_completeness: bundle the counts + the Jeeves node ---------------------------
+
+
+def test_read_completeness_single_survivor_is_resolved_no_measurement():
+    # 4 candidates, ranking resolved to 1 -> complete, nothing to measure.
+    sc = read_completeness(4, 1, None)
+    assert sc.resolved == 1.0 and sc.h_residual == 0.0 and sc.i_solve is None
+
+
+def test_read_completeness_plurality_carries_the_jeeves_node():
+    # 2 of 4 survive as a near-tie -> half resolved, and the node to measure is carried.
+    sc = read_completeness(4, 2, "TP53")
+    assert sc.h_residual == 1.0 and sc.resolved == 0.5 and sc.i_solve == "TP53"

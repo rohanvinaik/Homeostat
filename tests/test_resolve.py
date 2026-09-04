@@ -8,6 +8,7 @@ from homeostat.quest import Quest
 from homeostat.resolve import (
     cluster_coherence,
     cluster_coverage,
+    cluster_discriminant,
     cluster_meter,
     connected_components,
     rank_clusters,
@@ -160,3 +161,39 @@ def test_rank_clusters_from_the_real_producers_end_to_end():
         clusters, {"B": 1}, ternary_adjacency(events), polar_adjacency(events, verb_sign)
     )
     assert ranked[0][0].entities == frozenset({"A", "B"}) and ranked[0][1] > 0.0
+
+
+# ---- cluster_discriminant: the mechanism-level Jeeves (incr.3b) -----------------------
+
+
+def test_cluster_discriminant_disjoint_pair_picks_a_splitter():
+    # {A,B} vs {C,D}: any node splits them 1/1 -> the first (sorted) is the measurement.
+    assert cluster_discriminant([["A", "B"], ["C", "D"]]) == "A"
+
+
+def test_cluster_discriminant_shared_root_picks_the_differentiator():
+    # {A,B} and {A,C} share A (measuring A discriminates nothing) -> B is the differentiator.
+    assert cluster_discriminant([["A", "B"], ["A", "C"]]) == "B"
+
+
+def test_cluster_discriminant_prefers_the_even_split():
+    # A is in 2 of 4 clusters (an even 2/2 split, max EIG); B/C/D/E/F each in only 1 (uneven).
+    sets = [["A", "B"], ["A", "C"], ["D", "E"], ["D", "F"]]
+    assert cluster_discriminant(sets) == "A"
+
+
+def test_cluster_discriminant_none_when_identical_or_single():
+    assert cluster_discriminant([["A", "B"], ["A", "B"]]) is None  # identical span
+    assert cluster_discriminant([["A", "B"]]) is None  # < 2 clusters
+
+
+def test_cluster_discriminant_uses_the_correct_eig_partition():
+    # 3 clusters; A (in 1) and M (in 2) TIE on the true EIG [contain, n-contain] (symmetric), so the
+    # sort picks A. A malformed [contain, n+contain] breaks the tie toward M -- pins the partition.
+    assert cluster_discriminant([["A", "M"], ["M"], ["Z"]]) == "A"
+
+
+def test_cluster_discriminant_has_no_positive_gain_floor():
+    # 100 disjoint singletons: the best split's EIG ~0.08. A discriminant MUST still be returned
+    # (best_gain starts at 0.0, not a positive floor that would suppress thin splits at scale).
+    assert cluster_discriminant([[f"a{i}"] for i in range(100)]) == "a0"
