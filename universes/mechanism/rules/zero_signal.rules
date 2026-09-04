@@ -1,4 +1,0 @@
-# The informational zero: a lens ABSTAINING on a gene is an ACTIVE signal, not a null (abstain != no).
-# Transitive (the copula 'is absent' emits no fact) — a gene a lens LACKS data on becomes diagnostic,
-# never dropped. 'diagnostic' is the token a later layer consumes.
-if x lacks data then x becomes diagnostic
