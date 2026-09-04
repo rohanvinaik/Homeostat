@@ -47,6 +47,7 @@ from homeostat.web import (
     kill_matrix,
     nodes,
     reachers,
+    reverse_adjacency,
     web_adjacency,
 )
 
@@ -192,11 +193,16 @@ def drive(
     # story-clusters scored by coverage × internal-coherence (OTP-ternary sub-web) × the calibrated
     # predictive meter (polarity sub-web), over the SAME resolved subgraph + hyps. H = log₂ → 0.
     prefer_events = scoped_events + hyp
+    # COVERAGE credits REACHING the shadow, not containing it: each observed node -> its ancestor
+    # cone (who reaches it) over the scoped web, so a source-cluster that drives a symptom scores.
+    rev = reverse_adjacency(scoped, min_weight)
+    reach_map = {o: reachers(rev, o) for o in observed_scoped}
     ranked = rank_clusters(
         story_clusters(story.genres),
         obs_signs,
         ternary_adjacency(prefer_events),
         signed_adjacency(prefer_events, verb_sign),
+        reach_map,
     )
     if rel is not None:  # keep the surfaced mechanisms coherent with the restricted verdict
         ranked = [(cl, s) for cl, s in ranked if cl.entities & rel]

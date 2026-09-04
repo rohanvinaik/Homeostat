@@ -55,6 +55,24 @@ def test_cluster_coverage_full_and_none():
     assert cluster_coverage(frozenset({"A"}), frozenset()) == 0.0  # no shadow -> 0
 
 
+def test_cluster_coverage_reach_credits_reaching_not_containing():
+    # source S reaches symptom O (O's ancestor cone includes S) but the cluster does NOT contain O.
+    # With `reach` the cluster covers O -> 1.0; without it (membership) S not in shadow -> 0.0.
+    reach = {"O": {"S", "O"}}
+    assert cluster_coverage(frozenset({"S"}), frozenset({"O"}), reach) == 1.0
+    assert cluster_coverage(frozenset({"S"}), frozenset({"O"})) == 0.0
+
+
+def test_cluster_coverage_reach_unreached_symptom_is_zero():
+    # a cluster that neither is nor reaches the symptom scores 0 even with a reach map.
+    assert cluster_coverage(frozenset({"Z"}), frozenset({"O"}), {"O": {"S", "O"}}) == 0.0
+
+
+def test_cluster_coverage_reach_self_reach_is_covered():
+    # the observed node as its own reacher, in the cluster -> covered (pins the reach residual).
+    assert cluster_coverage(frozenset({"x"}), frozenset({"x"}), {"x": {"x"}}) == 1.0
+
+
 # ---- story_clusters: the candidate enumeration -----------------------------------
 
 
@@ -113,6 +131,14 @@ def test_cluster_meter_best_source_confirms_the_shadow():
 
 def test_cluster_meter_no_entities_is_zero():
     assert cluster_meter(frozenset(), {"A": [("B", 1)]}, {"B": 1}) == 0.0
+
+
+def test_cluster_meter_reach_credits_reaching_the_shadow():
+    # A reaches symptom B (amplifies), B observed up, cluster {A} does NOT contain B.
+    # With `reach`, A's record is scored against B -> meter > 0 (membership gave 0).
+    reach = {"B": {"A", "B"}}
+    assert cluster_meter(frozenset({"A"}), {"A": [("B", 1)]}, {"B": 1}, reach) == 0.4
+    assert cluster_meter(frozenset({"A"}), {"A": [("B", 1)]}, {"B": 1}) == 0.0
 
 
 def test_cluster_meter_scores_only_the_clusters_own_shadow():

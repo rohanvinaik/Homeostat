@@ -55,14 +55,24 @@ def connected_components(sets: list[frozenset[str]]) -> list[frozenset[str]]:
     return [frozenset(c) for c in comps]
 
 
-def cluster_coverage(entities: frozenset[str], observed: frozenset[str]) -> float:
-    """The COVERAGE alignment factor: the fraction of the observed shadow this candidate spans,
-    ``|entities ∩ observed| / |observed|`` in [0, 1] — does the sub-story explain what we SEE? No
-    observed -> 0.0 (nothing to cover). Pure over two sets.
+def cluster_coverage(
+    entities: frozenset[str],
+    observed: frozenset[str],
+    reach: Mapping[str, set[str]] | None = None,
+) -> float:
+    """The COVERAGE alignment factor: the fraction of the observed shadow this candidate EXPLAINS.
+    A mechanism is relevant to the degree it REACHES the shadow, not contains it: with `reach` (each
+    observed node -> its ancestor set, who reaches it), a cluster covers `o` iff one of its entities
+    reaches `o` (``entities & reach[o]``). Without `reach` (None) it degenerates to membership
+    ``|entities & observed|`` -- the self-only reach. In [0, 1]; no observed -> 0.0. Pure.
     """
     if not observed:
         return 0.0
-    return len(entities & observed) / len(observed)
+    if reach is None:
+        covered = len(entities & observed)
+    else:
+        covered = sum(1 for o in observed if entities & reach.get(o, frozenset({o})))
+    return covered / len(observed)
 
 
 def cluster_coherence(
@@ -88,7 +98,10 @@ def cluster_coherence(
 
 
 def cluster_meter(
-    entities: frozenset[str], signed_polar: SignedAdj, observed: Mapping[str, int]
+    entities: frozenset[str],
+    signed_polar: SignedAdj,
+    observed: Mapping[str, int],
+    reach: Mapping[str, set[str]] | None = None,
 ) -> float:
     """The cluster's calibrated PREDICTIVE coherence: the best member-source's `coherence_meter`
     over the cluster's own observed shadow — the mechanism's load-bearing driver, the single
@@ -99,9 +112,13 @@ def cluster_meter(
     veto upstream), not the ranker's, so `rank_clusters`'s ``max(0, ·)`` is a guard, never a
     truncation of live signal. `coherence_meter` keeps the full ternary (-1, 1) for any
     non-best-direction use. No entities → 0.0 (informational zero). Orchestration over the pinned
-    `source_outcomes` / `coherence_meter`.
+    `source_outcomes` / `coherence_meter`. The cluster's shadow is what it REACHES (`reach`, the
+    sibling of `cluster_coverage`), not what it contains; None -> membership (the self-only reach).
     """
-    obs_in = {o: observed[o] for o in observed if o in entities}
+    if reach is None:
+        obs_in = {o: observed[o] for o in observed if o in entities}
+    else:
+        obs_in = {o: observed[o] for o in observed if entities & reach.get(o, frozenset({o}))}
     meters = [
         coherence_meter(*source_outcomes(signed_polar, src, obs_in)) for src in sorted(entities)
     ]
@@ -113,6 +130,7 @@ def rank_clusters(
     observed: Mapping[str, int],
     signed_ternary: Mapping[str, Mapping[str, int]],
     signed_polar: SignedAdj,
+    reach: Mapping[str, set[str]] | None = None,
 ) -> list[tuple[Cluster, float]]:
     """Rank the candidate mechanisms (resolve-narrow): each cluster scored by the ModelAtlas blend
     (`recommend.score_candidate`) over THREE alignment factors, each a distinct signal (orthogonal
@@ -130,9 +148,9 @@ def rank_clusters(
             cl,
             score_candidate(
                 [
-                    cluster_coverage(cl.entities, shadow),
+                    cluster_coverage(cl.entities, shadow, reach),
                     cluster_coherence(cl.entities, signed_ternary),
-                    max(0.0, cluster_meter(cl.entities, signed_polar, observed)),
+                    max(0.0, cluster_meter(cl.entities, signed_polar, observed, reach)),
                 ],
                 [],
             ),
