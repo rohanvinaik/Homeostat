@@ -15,6 +15,9 @@ interpretive layer -- never in the elimination gate). Pure over strings/tuples; 
 
 from __future__ import annotations
 
+from math import sqrt
+
+from homeostat.biophysics import bendability, yr_ry_balance
 from homeostat.structural import (
     aromaticity,
     composition,
@@ -51,3 +54,51 @@ def structural_consequence(ref_aa: str, var_aa: str) -> tuple[float, float, floa
         abs(net_charge(ref_aa) - net_charge(var_aa)),
         abs(aromaticity(ref_aa) - aromaticity(var_aa)),
     )
+
+
+def _delta(ref_val: float | None, var_val: float | None) -> float:
+    """``|ref - var|`` when both present, else 0.0 -- a missing measure carries no delta
+    (the informational zero). Pure over `(float | None, float | None)`.
+    """
+    if ref_val is None or var_val is None:
+        return 0.0
+    return abs(ref_val - var_val)
+
+
+def biophysics_consequence(ref_dna: str, var_dna: str) -> tuple[float, float]:
+    """The variant's effect on the local DNA structural mechanics, as two non-negative deltas:
+    ``|d bendability|`` and ``|d (YR/RY balance)|``. A missing measure (no-dinucleotide
+    sequence) contributes 0.0. Orchestration over pinned `biophysics.py`; intent-tested.
+    """
+    return (
+        _delta(bendability(ref_dna), bendability(var_dna)),
+        _delta(yr_ry_balance(ref_dna), yr_ry_balance(var_dna)),
+    )
+
+
+def consequence_vector(
+    ref_aa: str, var_aa: str, ref_dna: str, var_dna: str, rarity: float
+) -> tuple[float, ...]:
+    """The full consequence vector (design A, dense): the five structural-consequence deltas,
+    then the two biophysics deltas, then the presence/rarity gate. Non-negative throughout; the zero
+    vector is a variant of no measured consequence. Orchestration; intent-tested.
+    """
+    return (
+        *structural_consequence(ref_aa, var_aa),
+        *biophysics_consequence(ref_dna, var_dna),
+        rarity,
+    )
+
+
+def consequence_similarity(a: tuple[float, ...], b: tuple[float, ...]) -> float:
+    """Cosine similarity of two consequence vectors -- the genotype-level FUNGIBILITY read: two
+    variants whose consequences point the same way are fungible for the mechanism. In [0, 1] (the
+    vectors are non-negative). A zero vector has no direction, so similarity is 0.0 -- never a
+    spurious 1.0. Pure over equal-length tuples.
+    """
+    dot = sum(x * y for x, y in zip(a, b, strict=True))
+    na = sqrt(sum(x * x for x in a))
+    nb = sqrt(sum(y * y for y in b))
+    if na == 0.0 or nb == 0.0:
+        return 0.0
+    return dot / (na * nb)
