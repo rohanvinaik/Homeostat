@@ -112,6 +112,22 @@ def test_drive_recovers_the_unique_source_and_reads_it_as_a_story():
     assert any(q.hero == "source" and q.verdict == "resolving" for q in read.story.genres["quest"])
 
 
+def test_drive_closes_the_story_narrow_into_ranked_mechanisms():
+    # the composed read now also CLOSES the wide story narrow: resolve.rank_clusters over the story-
+    # clusters yields ranked candidate MECHANISMS. A cluster spanning the observed shadow leads with
+    # a positive score (coverage × internal-coherence × the calibrated predictive meter).
+    ev = [
+        _reg("amplifies", "source", "A"),
+        _reg("amplifies", "source", "B"),
+        _reg("amplifies", "decoy", "A"),
+    ]
+    pos = {"A": position("A", 1.0, 0.0, 0.0), "B": position("B", 1.0, 0.0, 0.0)}
+    read = drive(ev, pos, VS)
+    assert read.ranked  # the resolve-narrow engine produced ranked mechanisms
+    assert read.ranked[0][1] > 0.0  # the leading mechanism scores positive
+    assert any({"A", "B"} <= cl.entities for cl, _ in read.ranked)  # a mechanism spans the shadow
+
+
 def test_drive_polarity_censor_certifies_bottom_on_a_contradictory_pattern():
     # source amplifies A and B; A observed UP but B observed DOWN. No single perturbation of source
     # explains both -> the polarity censor rules it out -> certified ⊥ (no lawful mechanism).

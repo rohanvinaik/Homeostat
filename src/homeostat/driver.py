@@ -27,7 +27,9 @@ from homeostat.narrative import StoryRead, read_story
 from homeostat.polarity import polarity_censors, signed_adjacency
 from homeostat.position import Position
 from homeostat.recommend import score_candidate
+from homeostat.resolve import Cluster, rank_clusters, story_clusters
 from homeostat.search import Trajectory, coverage, eliminate_two_sign
+from homeostat.topology import signed_adjacency as ternary_adjacency
 from homeostat.web import (
     RelationalWeb,
     ancestor_cone,
@@ -90,14 +92,16 @@ def proximity_coherence(observed: list[str], reverse_adj: dict[str, list[str]]) 
 class DriverRead:
     """The driver's output. `verdict` is the clinic code (RESOLVED/BOTTOM/DEGENERATE/ASK/ABSTAIN);
     `story` is the presentation-level STORY-READ over the surviving structure -- the genre account,
-    plural, no single subject (the answer is a story, not a ranked gene); `probe` is the DO-THIS on
-    ASK; `trajectory` is the two-sign σ-trajectory; `censored` is what each censor ruled out;
-    `dropped` are observed deviations with no directed context (not explainable by a directed
-    mechanism).
+    plural, no single subject (the answer is a story, not a ranked gene); `ranked` is the
+    resolve-narrow closure -- the candidate MECHANISMS (connected story-clusters) scored by coverage
+    × internal-coherence × the calibrated predictive meter, descending (a near-tie at the top is the
+    Jeeves cue); `probe` is the DO-THIS on ASK; `trajectory` is the σ-trajectory; `censored` is what
+    each censor ruled out; `dropped` are observed deviations with no directed context.
     """
 
     verdict: str
     story: StoryRead
+    ranked: list[tuple[Cluster, float]]
     probe: Probe | None
     trajectory: Trajectory
     censored: dict[str, list[str]]
@@ -116,10 +120,12 @@ def drive(
     """Read one person's positioned deviations end-to-end (generate-wide → resolve-narrow → STORY).
 
     Scopes to the DIRECTED-reachability cone of the observed (relevance, never declared), runs
-    two-sign elimination with the polarity-opposition + role censors, then reads the surviving
-    structure as a STORY (`narrative.read_story` over the scoped events) -- the presentation-level
-    genre account, not a ranked gene. Observed deviations with no directed context are dropped and
-    reported. I/O-free orchestration over the pinned pieces; intent-tested + validated end-to-end.
+    two-sign elimination with the polarity-opposition + role censors, reads the surviving structure
+    as a STORY (`narrative.read_story` -- the genre account, not a ranked gene), then closes that
+    wide story NARROW into ranked candidate MECHANISMS (`resolve.rank_clusters` over the
+    story-clusters -- disambiguating the subtypes the label flattens). Observed deviations with no
+    directed context are dropped and reported. I/O-free orchestration over the pinned pieces;
+    intent-tested + validated end-to-end.
     """
     events = list(events)
     web = events_to_web(events, DIRECTED_NETWORKS)
@@ -147,4 +153,10 @@ def drive(
     # read over the WHOLE scoped structure (the plurality is what it is read over, never collapsed).
     scoped_events = [e for e in events if e.subject in in_web and e.target in in_web]
     story = read_story(scoped_events, observed_scoped, proteins)
-    return DriverRead(verdict, story, probe, traj, censors, dropped)
+    # RESOLVE-NARROW: close the wide story to ranked candidate MECHANISMS -- the connected
+    # story-clusters scored by coverage × internal-coherence (OTP-ternary sub-web) × the calibrated
+    # predictive meter (polarity sub-web). Reuses `signed` + `obs_signs`; H = log₂(clusters) → 0.
+    ranked = rank_clusters(
+        story_clusters(story.genres), obs_signs, ternary_adjacency(events), signed
+    )
+    return DriverRead(verdict, story, ranked, probe, traj, censors, dropped)
