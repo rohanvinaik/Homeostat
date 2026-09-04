@@ -22,6 +22,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from statistics import median
 
+from homeostat.differential import Differential
 from homeostat.otp import ternary
 from homeostat.signal import Tier
 
@@ -35,6 +36,9 @@ class Position:
     is the mined baseline this position is read against (None when no baseline was available).
     `tier` is the observation's verification grade (VERIFIED can certify; REPORTED banks nothing
     toward a certified verdict), riding to `clinical_verdict` so the read names its trust boundary.
+    `differential` is the OPTIONAL structured differential (differential.py) -- the typed,
+    information-weighted read against the reference DISTRIBUTION -- riding alongside the signed
+    coordinate for the interpretive layer; None when only the scalar coordinate was carried.
     """
 
     dimension: str
@@ -42,6 +46,7 @@ class Position:
     depth: float
     zero: float | None
     tier: Tier = Tier.VERIFIED
+    differential: Differential | None = None
 
 
 def deviation(value: float | None, zero: float | None) -> float | None:
