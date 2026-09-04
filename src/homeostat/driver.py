@@ -23,6 +23,7 @@ from dataclasses import dataclass
 from homeostat.clinic import clinical_verdict, observed_symptoms
 from homeostat.event import Event, active_censors, events_to_censors, events_to_web
 from homeostat.jeeves import Probe, select_probe
+from homeostat.narrative import StoryRead, read_story
 from homeostat.polarity import polarity_censors, signed_adjacency
 from homeostat.position import Position
 from homeostat.recommend import score_candidate
@@ -33,9 +34,7 @@ from homeostat.web import (
     distances_to,
     induced_subweb,
     kill_matrix,
-    node_convergence,
     nodes,
-    reverse_adjacency,
 )
 
 DIRECTED_NETWORKS = frozenset(
@@ -90,14 +89,15 @@ def proximity_coherence(observed: list[str], reverse_adj: dict[str, list[str]]) 
 @dataclass(frozen=True)
 class DriverRead:
     """The driver's output. `verdict` is the clinic code (RESOLVED/BOTTOM/DEGENERATE/ASK/ABSTAIN);
-    `ranked` is the recommendation (candidate, prefer-score) descending -- the mechanism on
-    RESOLVED, the plurality on ASK/ABSTAIN, empty on BOTTOM; `probe` is the DO-THIS on ASK;
-    `trajectory` is the two-sign σ-trajectory; `censored` is what each censor ruled out; `dropped`
-    are observed deviations with no directed context (not explainable by a directed mechanism).
+    `story` is the presentation-level STORY-READ over the surviving structure -- the genre account,
+    plural, no single subject (the answer is a story, not a ranked gene); `probe` is the DO-THIS on
+    ASK; `trajectory` is the two-sign σ-trajectory; `censored` is what each censor ruled out;
+    `dropped` are observed deviations with no directed context (not explainable by a directed
+    mechanism).
     """
 
     verdict: str
-    ranked: list[tuple[str, float]]
+    story: StoryRead
     probe: Probe | None
     trajectory: Trajectory
     censored: dict[str, list[str]]
@@ -110,15 +110,16 @@ def drive(
     verb_sign: Mapping[str, int],
     active_roles: Collection[str] = (),
     probes: Iterable[Probe] = (),
-    coherence: Mapping[str, float] | None = None,
+    proteins: Mapping[str, str] | None = None,
     min_weight: float = 0.0,
 ) -> DriverRead:
-    """Read one person's positioned deviations end-to-end (generate-wide → resolve-narrow → rank).
+    """Read one person's positioned deviations end-to-end (generate-wide → resolve-narrow → STORY).
 
     Scopes to the DIRECTED-reachability cone of the observed (relevance, never declared), runs
-    two-sign elimination with the polarity-opposition + role censors, and ranks the survivors by
-    kappa-coverage. Observed deviations with no directed context are dropped and reported. I/O-free
-    orchestration over the pinned pieces; intent-tested + validated end-to-end.
+    two-sign elimination with the polarity-opposition + role censors, then reads the surviving
+    structure as a STORY (`narrative.read_story` over the scoped events) -- the presentation-level
+    genre account, not a ranked gene. Observed deviations with no directed context are dropped and
+    reported. I/O-free orchestration over the pinned pieces; intent-tested + validated end-to-end.
     """
     events = list(events)
     web = events_to_web(events, DIRECTED_NETWORKS)
@@ -141,16 +142,9 @@ def drive(
     stuck = not is_resolved and not traj.bottom
     probe = select_probe(traj.survivors_left, list(probes)) if stuck else None
     verdict = clinical_verdict(traj.bottom, is_resolved, traj.falsifiable, probe is not None)
-    # convergence over the FULL multi-network web (all its weights) -- the soft tie-breaker.
-    conv = node_convergence(web)
-    # coherence alignment: the supplied (Regenesis-native) map if given, else the local structural
-    # default (proximity over the DIRECTED reachability -- the parsimonious/direct mechanism).
-    coh = (
-        coherence
-        if coherence is not None
-        else proximity_coherence(observed_scoped, reverse_adjacency(directed))
-    )
-    ranked = rank_candidates(
-        traj.survivors_left, list(constraints.values()), len(observed_scoped), conv, coh
-    )
-    return DriverRead(verdict, ranked, probe, traj, censors, dropped)
+    # PREFER: read the surviving structure as a STORY -- the genre account over the scoped events
+    # (the events whose coupling lives inside the observed cone), not a ranked gene. The story is
+    # read over the WHOLE scoped structure (the plurality is what it is read over, never collapsed).
+    scoped_events = [e for e in events if e.subject in in_web and e.target in in_web]
+    story = read_story(scoped_events, observed_scoped, proteins)
+    return DriverRead(verdict, story, probe, traj, censors, dropped)

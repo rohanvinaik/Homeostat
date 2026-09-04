@@ -1,5 +1,6 @@
-"""Intent tests for the driver — the generate-wide/resolve-narrow read as a ranked recommendation.
-Authored from the design; the pure ranker is Detective-pinned, drive() is validated end-to-end."""
+"""Intent tests for the driver — generate-wide/resolve-narrow, read as a STORY. `drive` is validated
+end-to-end; the (now orphaned) `rank_candidates`/`proximity_coherence` stay Detective-pinned, kept
+for the deferred recommendation ranker that will sort STORY-reads (not genes)."""
 
 from homeostat.driver import drive, proximity_coherence, rank_candidates
 from homeostat.event import Event
@@ -95,9 +96,10 @@ def test_proximity_coherence_is_the_mean_over_observed():
 # ---- the composed read -----------------------------------------------------------
 
 
-def test_drive_recovers_the_unique_source_and_ranks_it():
+def test_drive_recovers_the_unique_source_and_reads_it_as_a_story():
     # source amplifies A and B; decoy only A. A and B both observed UP -> source is the unique
-    # directed cause reaching both, polarity-consistent -> RESOLVED, ranked first.
+    # directed cause reaching both, polarity-consistent -> RESOLVED. The PREFER STORY reads source
+    # as a resolving-quest hero joining the two symptoms (not a ranked gene).
     ev = [
         _reg("amplifies", "source", "A"),
         _reg("amplifies", "source", "B"),
@@ -106,8 +108,8 @@ def test_drive_recovers_the_unique_source_and_ranks_it():
     pos = {"A": position("A", 1.0, 0.0, 0.0), "B": position("B", 1.0, 0.0, 0.0)}
     read = drive(ev, pos, VS)
     assert read.verdict == "resolved"
-    assert read.ranked[0][0] == "source"
-    assert read.trajectory.survivors_left == ["source"]
+    assert read.trajectory.survivors_left == ["source"]  # REQUIRE recovers the source
+    assert any(q.hero == "source" and q.verdict == "resolving" for q in read.story.genres["quest"])
 
 
 def test_drive_polarity_censor_certifies_bottom_on_a_contradictory_pattern():
