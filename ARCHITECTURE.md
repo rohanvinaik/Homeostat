@@ -1,6 +1,6 @@
 # Homeostat — Architecture (as-built wiring map)
 
-**Status:** Canonical engineering map, traced from source at `2118c48` (2026-09-05). Companion to
+**Status:** Canonical engineering map, traced from source at `300aff5` (2026-09-05). Companion to
 `docs/THESIS.md` and `docs/SYSTEM_DESIGN.md` (the *why*; this is the *what and how*). Every claim below
 was traced with the language server — `get_symbols_overview` for the inventory, `find_referencing_symbols`
 for the call graph — not from memory. **It is the definition of the live system: anything not reachable
@@ -16,14 +16,16 @@ combination of deviations that no single criterion names. The engine reads *one 
 against a prior web of couplings and **eliminates** candidate mechanisms to a survivor, a certified ⊥ (a
 proof of "no such mechanism"), an honest abstention, or the next discriminating question — then reads the
 surviving structure through the four **dynamics genres** and Regenesis's narrative universe, closes that
-wide story NARROW into ranked candidate MECHANISMS, and reports its own **σ_sem completeness** ("how much
-of the mechanism-uncertainty did structure resolve?"). It reads a FROZEN world and adds nothing of its own
-(Law 11); its significance is κ (coverage of the shadow), never a statistic (Law 1). The answer is a
-**story resolved to ranked mechanisms, never a ranked gene** (the subject-fallacy, cut `5c30e65`).
+wide story NARROW into ranked candidate MECHANISMS, and reports its own **σ_sem completeness** — how much
+of the mechanism-uncertainty structure resolved, and the one **mechanism-level Jeeves measurement** that
+would separate any surviving plurality. The person may inject **hypotheses** (proposed edges), tested by
+the meter and reported, never ground truth. It reads a FROZEN world and adds nothing of its own (Law 11);
+its significance is κ (coverage of the shadow), never a statistic (Law 1). The answer is a **story
+resolved to ranked mechanisms, never a ranked gene** (the subject-fallacy, cut `5c30e65`).
 
-**Scale (counts primary-sourced, not remembered):** 45 modules · 42 `tests/test_*.py` · **429 tests**, of
-which **80 are Detective-generated** across 47 `tests/detective/*` synth files. Clean tree, `main`,
-unpushed.
+**Scale (counts primary-sourced, not remembered):** 46 modules · 43 `tests/test_*.py` · **448 tests**, of
+which **81 are Detective-generated** across 48 `tests/detective/*` synth files. Clean tree, `main`,
+2 unpushed.
 
 ---
 
@@ -35,9 +37,10 @@ unpushed.
    APEX         ✅ driver.drive — the COMPOSED read: scope → eliminate → STORY → resolve-narrow → σ_sem
                 ✅ clinic.read_from_events — the elimination-only read (pre-story core; still live)
    ──────────────────────────────────────────────────────────────────────────────────────
-   L6  COMPLETE ✅ completeness.read_completeness — σ_sem: H₀→H_residual, resolved fraction, I_solve
+   L6  COMPLETE ✅ completeness — σ_sem: H₀→H_residual (the top-band plurality), resolved fraction, I_solve
    L5  RESOLVE  ✅ resolve.rank_clusters — candidate MECHANISMS scored coverage × coherence × meter
-                ✅ meter — the NML/KT-calibrated predictive coherence (SSL §9.3) · ⬜ resolve incr.3
+                ✅ meter (NML/KT SSL §9.3) · ✅ operator hypothesis (tested input) · ✅ mechanism-Jeeves
+                ⬜ resolve incr.3c GWAS seeding (deferred to the input layer — its generate-wide home)
    L5  STORY    ✅ narrative.read_story: 4 dynamics genres → tier-2 Regenesis account → tier-3 lament
                 ✅ tragedy · comedy · allegory(fungibility+structural) · epic-quest(Kuramoto)
    L4  ENGINE   ✅ eliminate_two_sign → clinical_verdict (BOTTOM/RESOLVED/DEGENERATE/ASK/ABSTAIN)
@@ -225,17 +228,18 @@ DriverRead {                              # the composed-read output (driver.dri
   story:        StoryRead       # the genre account over the surviving structure (not a ranked gene)
   ranked:       list[(Cluster, float)]  # resolve-narrow: candidate MECHANISMS scored, descending
   completeness: SpecCompleteness  # σ_sem: h0, h_residual, resolved fraction, i_solve (§L6)
-  probe:        the Jeeves DO-THIS (on ASK)
+  probe:        the elimination-level Jeeves DO-THIS (on ASK; gene-survivor level)
   trajectory:   the two-sign σ-trajectory
   censored:     dict[str, list[str]]  # what each censor ruled out
   dropped:      list[str]       # observed deviations with no directed context
-}
+  operator:     list[HypothesisOutcome]  # the operator ledger — each proposed edge confirmed/
+}                                        #   contradicted/standing (a tested input, never ground truth)
 
 SpecCompleteness {                        # L6 — the σ_sem "how solved is this mechanism?" read
   h0:         float   # log₂(candidate mechanisms) — initial mechanism-uncertainty, bits
-  h_residual: float   # log₂(surviving mechanisms) — the plurality = I_solve, still to measure
+  h_residual: float   # log₂(surviving PLURALITY) — the near-tie the ranking could not order = I_solve
   resolved:   float   # (h0 - h_residual)/h0 — SSL's L, fraction structure resolved for free
-  i_solve:    Probe | None  # the Jeeves measurement owed when a plurality survives
+  i_solve:    str | None  # the NODE to measure (mechanism-level Jeeves) that separates the plurality
 }
 ```
 No consumer reaches around the `Event` stream. Abstention (ABSTAIN / sign-0 / ORTHOGONAL) is a real answer,
@@ -350,19 +354,28 @@ MECHANISMS (connected story-clusters — NOT genes) by THREE orthogonal signals,
   [])` (`recommend.py`'s ModelAtlas blend, `∏(alignment) × submodular_combine(soft)`). The `max(0,·)` is a
   directional-gate guard at the ranking boundary. `recommend.score_candidate` is now LIVE (via
   `rank_clusters`); the parked `driver.rank_candidates` also consumes it.
-- **⬜ incr.3 (designed, not built):** the operator-injected hypothesis (fluid intelligence as a tested
-  input, never ground truth), the mechanism-level Jeeves DO-THIS on a surviving plurality, GWAS
-  relevance-seeding.
+- **incr.3a — the operator-injected hypothesis (`operator.py`, ✅ LIVE `0f7473a`):** fluid intelligence
+  as a TESTED input. The person proposes hypothesis EDGES; `drive`'s `hypotheses` param threads them into
+  the PREFER read ONLY (story + resolve), NEVER the elimination — so they can help but never fabricate a
+  certified mechanism. `edge_outcome` (value-COMPLETE 20/20) judges each against the shadow —
+  confirmed/contradicted/standing (the OTP ternary); `operator_ledger` → `DriverRead.operator`, the read
+  telling the person what their intuition got right.
+- **incr.3b — the mechanism-level Jeeves (`resolve.cluster_discriminant`, ✅ LIVE `300aff5`):** when the
+  ranking leaves a plurality it could not order, the NODE (symmetric-difference of the tied clusters'
+  spans, max-EIG split — the same `jeeves` EIG, lifted from genes to mechanisms) whose measurement
+  separates them. COMPLETE (2 killables the search mis-filed caught by hand). It is `SpecCompleteness.i_solve`.
+- **⬜ incr.3c — GWAS relevance-seeding:** deferred to the input layer (its generate-wide home — the
+  catalog trait→gene as a SEARCH-ORDER PRIOR only, never significance); building it now would be an orphan.
 
 ### L6 COMPLETENESS — `completeness.py` — ✅ LIVE
 The σ_sem read (SSL §2.5): "how solved is this person's mechanism?" as a NUMBER, over the ranked mechanisms.
-`resolution_entropy(count) = log₂(count)` (the Hartley conceptual entropy; COMPLETE, 2 proven-equivalent);
-`spec_completeness(initial, survivors)` → `(h0, h_residual, resolved)` where survivors = the mechanisms
-structure did NOT rule out (score > 0), `h0 = log₂(initial)`, `h_residual = log₂(survivors)` = I_solve,
-`resolved = (h0−h_residual)/h0` = SSL's L (COMPLETE 16/16). `read_completeness(ranked, probe)` carries the
-Jeeves `probe` as `i_solve` only when a plurality survives. Wired into `drive` (`2118c48`);
-`DriverRead.completeness`. *(The `i_solve` probe is currently the elimination-level Jeeves; the
-mechanism-level one is resolve incr.3.)* A neural net structurally cannot emit this read.
+`resolution_entropy(count) = log₂(count)` (Hartley entropy; COMPLETE); `top_band(scores, band)` = the
+surviving PLURALITY (the near-tie the ranking could not order — score within a relative `band` of the top;
+COMPLETE); `spec_completeness(initial, survivors)` → `(h0, h_residual, resolved)` where survivors =
+`|top_band|`, `h_residual = log₂(survivors)` = I_solve, `resolved = (h0−h_residual)/h0` = SSL's L (COMPLETE
+16/16). `read_completeness` carries the mechanism-level Jeeves node (`cluster_discriminant`) as `i_solve`
+when a plurality survives. Wired into `drive` (`2118c48`/`300aff5`); `DriverRead.completeness`. A neural net
+structurally cannot emit this read.
 
 ---
 
@@ -404,11 +417,13 @@ mechanism-level one is resolve incr.3.)* A neural net structurally cannot emit t
    Reachable from tests only (no CLI yet).
 4. ✅ **The resolve-narrow engine + the predictive meter + the σ_sem completeness** — `resolve.rank_clusters`
    (coverage × internal-coherence × the SSL §9.3 calibrated `meter`), wired into `drive` (`8a17a21`); the
-   `completeness.read_completeness` σ_sem read wired in (`2118c48`). Every pure decision Detective-pinned.
-   ⬜ **incr.3 remains:** the operator-injected hypothesis, the mechanism-level Jeeves DO-THIS, GWAS seeding.
+   `completeness` σ_sem read wired in (`2118c48`). Every pure decision Detective-pinned.
+   ✅ **incr.3a/b DONE:** the operator-injected hypothesis (`operator.py`, `0f7473a`) and the mechanism-level
+   Jeeves (`resolve.cluster_discriminant`, `300aff5`). ⬜ **incr.3c GWAS seeding** deferred to step 5.
 5. ⬜ **The input layer** — clean-etiology diagnosis → form-cassette (degenerate) + multimodal diagnosis →
-   relevance filter feeding the resolve engine; the marker producer + genotype pole projected into the live
-   read; the scoped banks (coexpr/trait) entering per-gene-set.
+   relevance filter feeding the resolve engine (this is where **GWAS relevance-seeding** lives, ordering
+   generate-wide); the marker producer + genotype pole projected into the live read; the scoped banks
+   (coexpr/trait) entering per-gene-set.
 6. ⬜ **The greenfield-workflow baseline + a rendering of `DriverRead`** — a few realistic workflows → drive
    → story, the functional-validation oracle. No CLI/render exists yet.
 7. ⬜ **The blind LRRK2 control** — recover LRRK2–NOD2–RIPK2 as coherence, blind (≥2 networks + Regenesis).
@@ -439,8 +454,11 @@ mechanism-level one is resolve incr.3.)* A neural net structurally cannot emit t
 | **`driver.drive`** (composed read: story + resolve-narrow + σ_sem) | ✅ | discriminates (TP53 #1); `test_driver`; reachable from tests only |
 | **L5 resolve-narrow engine** (enumeration + coverage + coherence) | ✅ **LIVE** | `connected_components`/`cluster_coverage`/`cluster_coherence` Detective-COMPLETE; wired into `drive` |
 | **L5 predictive meter** (`meter.py`, SSL §9.3) | ✅ | `coherence_meter` 18/18, `source_outcomes` value-complete, `nml_regret` COMPLETE; `cluster_meter` in `rank_clusters` |
-| **L6 σ_sem completeness** (`completeness.py`) | ✅ **LIVE** | `resolution_entropy`/`spec_completeness` Detective-COMPLETE; `read_completeness` wired into `drive` |
-| resolve incr.3 / input layer / greenfield baseline / CLI-render | ⬜ | designed, not built |
+| **L6 σ_sem completeness** (`completeness.py`) | ✅ **LIVE** | `resolution_entropy`/`spec_completeness`/`top_band` Detective-COMPLETE; `read_completeness` wired into `drive` |
+| **incr.3a operator hypothesis** (`operator.py`) | ✅ **LIVE** | `edge_outcome` value-COMPLETE; `operator_ledger` → `DriverRead.operator`; PREFER-only, never elimination |
+| **incr.3b mechanism-level Jeeves** (`resolve.cluster_discriminant`) | ✅ **LIVE** | Detective-COMPLETE; the `SpecCompleteness.i_solve` node |
+| resolve incr.3c GWAS seeding | ⬜ | deferred to the input layer (generate-wide home) |
+| input layer / greenfield baseline / CLI-render | ⬜ | designed, not built |
 | Blind LRRK2 control | ⬜ | the acceptance test |
 
 ---
@@ -449,10 +467,11 @@ mechanism-level one is resolve incr.3.)* A neural net structurally cannot emit t
 
 Traced with the language server: `get_symbols_overview` for the inventory, `find_referencing_symbols` for
 the call graph, from the two apex reads (`clinic.read_from_events`, `driver.drive`) + `prior_web._main`
-(assemble the web) + `ground.ground` (front door). 42 `tests/test_*.py` (429 tests) cover every live module;
-every pure decision on the live elimination + story + resolve + completeness path is Detective-pinned under
-`tests/detective/` (47 synth files, 80 tests) — the incr.2 `cluster_coherence` debt is now closed
-(Detective-COMPLETE, `801448b`).
+(assemble the web) + `ground.ground` (front door). 43 `tests/test_*.py` (448 tests) cover every live module;
+every pure decision on the live elimination + story + resolve + completeness + operator path is
+Detective-pinned under `tests/detective/` (48 synth files, 81 tests) — the incr.2 `cluster_coherence` debt
+is closed (`801448b`), and each incr.3 pin caught real killables Detective's search had mis-filed as
+candidate-equivalent (the residual-reading discipline, `0f7473a`/`300aff5`).
 
 **PARKED (🅿️ — built + pinned, but reachable ONLY from tests; no live consumer):** these are apex leaves
 awaiting the wiring in §7.5–§7.6, NOT dead code:
