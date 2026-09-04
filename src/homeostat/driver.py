@@ -46,6 +46,8 @@ from homeostat.web import (
     induced_subweb,
     kill_matrix,
     nodes,
+    reachers,
+    web_adjacency,
 )
 
 DIRECTED_NETWORKS = frozenset(
@@ -176,17 +178,20 @@ def drive(
     stuck = not is_resolved and not traj.bottom
     probe = select_probe(traj.survivors_left, list(probes)) if stuck else None
     verdict = clinical_verdict(traj.bottom, is_resolved, traj.falsifiable, probe is not None)
-    # PREFER: read the surviving structure as a STORY -- the genre account, not a
-    # ranked gene. Operator `hypotheses` join HERE (PREFER-only), never the REQUIRE
-    # elimination -- they can help the read but never fabricate a certified mechanism.
-    # `signed` (the censor's) stays real-only; the resolve adjacencies below add the hyps.
+    # PREFER: read ONLY the RESOLVED-RELEVANT subgraph -- the surviving mechanism, never the whole
+    # cone. A story-understanding model reads the relevance the pipeline validated up to here;
+    # excess context DEGRADES it (a neural net is the opposite). The mechanism is the survivors'
+    # forward cascade to the shadow (the corridor), via the pinned `web_adjacency`/`reachers`.
+    # Operator `hypotheses` join HERE (PREFER-only), never the REQUIRE elimination.
     hyp = list(hypotheses)
-    scoped_events = [e for e in events if e.subject in in_web and e.target in in_web]
+    fwd = web_adjacency(scoped, min_weight)
+    mechanism = set(observed_scoped).union(*(reachers(fwd, s) for s in traj.survivors_left))
+    scoped_events = [e for e in events if e.subject in mechanism and e.target in mechanism]
     story = read_story(scoped_events + hyp, observed_scoped, proteins)
     # RESOLVE-NARROW: close the wide story to ranked candidate MECHANISMS -- the connected
     # story-clusters scored by coverage × internal-coherence (OTP-ternary sub-web) × the calibrated
-    # predictive meter (polarity sub-web), over real + hypothesis edges. H = log₂(clusters) → 0.
-    prefer_events = events + hyp
+    # predictive meter (polarity sub-web), over the SAME resolved subgraph + hyps. H = log₂ → 0.
+    prefer_events = scoped_events + hyp
     ranked = rank_clusters(
         story_clusters(story.genres),
         obs_signs,
