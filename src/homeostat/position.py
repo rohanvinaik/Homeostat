@@ -22,8 +22,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from statistics import median
 
-from homeostat.differential import Differential
-from homeostat.otp import ternary
+from homeostat.differential import Differential, make_differential
+from homeostat.otp import ORTHOGONAL, ternary
 from homeostat.signal import Tier
 
 
@@ -73,6 +73,30 @@ def position(
     dev = deviation(value, zero)
     depth = abs(dev) if dev is not None else 0.0
     return Position(dimension, ternary(dev, tol), depth, zero, tier)
+
+
+def place(
+    dimension: str,
+    value: float | None,
+    center: float | None,
+    spread: float | None,
+    k: float,
+    tier: Tier = Tier.VERIFIED,
+) -> Position:
+    """Place a reading as a FULL structured position: the signed coordinate AND its differential,
+    consistent by construction. `sign` and the differential's `kind` are both drawn from the same
+    k-spread band (tol = k * spread), so a coordinate is SUPPORT iff its kind is ELEVATED, OPPOSE
+    iff DEPLETED, ORTHOGONAL iff NONE. A degenerate reference (spread None or <= 0) is the
+    informational zero on both channels (sign 0, kind NONE) -- abstain, never a division blow-up.
+    Composition over the pinned `deviation` / `otp.ternary` / `make_differential`; the sign/kind
+    agreement is intent-tested.
+    """
+    diff = make_differential(value, center, spread, k)
+    if spread is None or spread <= 0.0:
+        return Position(dimension, ORTHOGONAL, 0.0, center, tier, diff)
+    dev = deviation(value, center)
+    depth = abs(dev) if dev is not None else 0.0
+    return Position(dimension, ternary(dev, k * spread), depth, center, tier, diff)
 
 
 def mine_zero(values: list[float | None]) -> float | None:
