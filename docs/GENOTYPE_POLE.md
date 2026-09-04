@@ -51,12 +51,15 @@ already done the hard design work; Homeostat builds a **tight local version**, r
    and features (`structural.py`: `structural_class`, `composition_distance`, `gravy`, `net_charge`,
    `aromaticity`), measure the DELTA vs the reference protein. Confidence-gated: clear change -> strong,
    ambiguous -> abstain.
-2. **biophysics-via-encoding-difficulty** — GenomeVault's novel kernel: the complementary-pair HDV's
-   *errors are biological feature detectors*. The encoding's DIFFICULTY (its confidence/error) at a site
-   is not noise — it concentrates ~44x in genic/regulatory/structurally-complex regions (p < 1e-90).
-   So the biophysics signal is **where the encoding struggles**, deterministic and annotation-free.
-   (The complementary-pair encoding is the Z2xZ2 ternary: AT{A=+1,T=-1}, GC{G=+1,C=-1}, position-bound,
-   sum-bundled, with an explicit Setun informational zero.)
+2. **biophysics — DNA structural mechanics from sequence** (verified from source; supersedes the
+   earlier "encoding-difficulty" framing). The variant's effect on the LOCAL DNA's mechanical
+   structure, read via literature dinucleotide scales (GenomeVault `biophysical_properties.py`, ported
+   tight to `biophysics.py`): the rigid<->flexible phase signal -- YR/RY balance and bendability
+   (Bolshoy 1991). RY-biased = rigid, YR-biased = flexible. Deterministic, annotation-free -- "structure
+   without structure" in its tightest form. The axis is the property DELTA (variant vs reference local
+   sequence). (The complementary-pair *encoding-difficulty* signal -- errors-as-detectors, 44x genic
+   p<1e-90 -- is a related but HEAVIER signal, deferred; the structural-mechanics scales are the tight
+   reusable kernel, and v1 is a DENSE feature vector (design A), not a full HDV/VSA (design B, deferred).)
 3. **presence/rarity** — reference-departure (hom-ref = no prior; het/hom-alt = present) + the noise
    gate (private/novel = maybe error -> weaker prior / lower tier). This is the observation/tier gate,
    not the magnitude.
