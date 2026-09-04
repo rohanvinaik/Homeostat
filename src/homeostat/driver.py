@@ -27,7 +27,14 @@ from homeostat.polarity import polarity_censors, signed_adjacency
 from homeostat.position import Position
 from homeostat.recommend import score_candidate
 from homeostat.search import Trajectory, coverage, eliminate_two_sign
-from homeostat.web import RelationalWeb, ancestor_cone, induced_subweb, kill_matrix, nodes
+from homeostat.web import (
+    RelationalWeb,
+    ancestor_cone,
+    induced_subweb,
+    kill_matrix,
+    node_convergence,
+    nodes,
+)
 
 DIRECTED_NETWORKS = frozenset(
     {"regulatory"}
@@ -35,19 +42,26 @@ DIRECTED_NETWORKS = frozenset(
 
 
 def rank_candidates(
-    survivors: list[str], positive_kill_sets: list[list[str]], n_observed: int
+    survivors: list[str],
+    positive_kill_sets: list[list[str]],
+    n_observed: int,
+    convergence: Mapping[str, float] | None = None,
 ) -> list[tuple[str, float]]:
     """Rank surviving candidates into the recommendation: each scored by its kappa-coverage
-    alignment (`coverage / n_observed`, in [0, 1]) through the PREFER blend, descending. Soft
-    signals (convergence, rarity, absence, coherence) fold into `score_candidate` as they wire in.
-    Ties keep input order (stable sort). `n_observed <= 0` -> every score 0.0. Pure.
+    alignment (`coverage / n_observed`, in [0, 1]) TIMES the PREFER soft blend. CONVERGENCE
+    (normalized by the max) is the soft tie-breaker: among candidates that equally cover the shadow,
+    the one whose couplings are backed by more independent networks ranks higher. Descending; ties
+    keep input order (stable sort). `n_observed <= 0` -> alignment 0 -> every score 0.0. Pure.
     """
-    if n_observed <= 0:
-        return [(s, 0.0) for s in survivors]
-    scored = [
-        (s, score_candidate([coverage(s, positive_kill_sets) / n_observed], [])) for s in survivors
-    ]
-    return sorted(scored, key=lambda t: t[1], reverse=True)
+    conv = convergence or {}
+    max_conv = max(conv.values(), default=0.0)
+
+    def _score(s: str) -> float:
+        align = coverage(s, positive_kill_sets) / n_observed if n_observed > 0 else 0.0
+        soft = [conv[s] / max_conv] if s in conv and max_conv > 0 else []
+        return score_candidate([align], soft)
+
+    return sorted(((s, _score(s)) for s in survivors), key=lambda t: t[1], reverse=True)
 
 
 @dataclass(frozen=True)
@@ -103,5 +117,9 @@ def drive(
     stuck = not is_resolved and not traj.bottom
     probe = select_probe(traj.survivors_left, list(probes)) if stuck else None
     verdict = clinical_verdict(traj.bottom, is_resolved, traj.falsifiable, probe is not None)
-    ranked = rank_candidates(traj.survivors_left, list(constraints.values()), len(observed_scoped))
+    # convergence over the FULL multi-network web (all its weights) -- the soft tie-breaker.
+    conv = node_convergence(web)
+    ranked = rank_candidates(
+        traj.survivors_left, list(constraints.values()), len(observed_scoped), conv
+    )
     return DriverRead(verdict, ranked, probe, traj, censors, dropped)

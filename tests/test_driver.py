@@ -36,6 +36,34 @@ def test_rank_candidates_single_observed_still_ranks():
     assert rank_candidates(["A", "B"], [["B"]], n_observed=1) == [("A", 1.0), ("B", 0.0)]
 
 
+def test_rank_candidates_convergence_breaks_a_coverage_tie():
+    # A and B BOTH cover both observed (tied on coverage); convergence is the tie-breaker.
+    # align 1.0 each; A soft 4/4=1.0 -> 1*(1+1)=2.0 ; B soft 1/4=0.25 -> 1*(1+0.25)=1.25 -> A first.
+    ranked = rank_candidates(["B", "A"], [[], []], n_observed=2, convergence={"A": 4.0, "B": 1.0})
+    assert ranked == [("A", 2.0), ("B", 1.25)]
+
+
+def test_rank_candidates_survivor_absent_from_convergence_does_not_crash():
+    # a survivor with no convergence datum -> soft skipped (no KeyError), ranked by coverage alone.
+    assert rank_candidates(["Z"], [[]], 1, convergence={"A": 1.0}) == [("Z", 1.0)]
+
+
+def test_rank_candidates_all_zero_convergence_skips_the_soft_signal():
+    # max convergence 0 -> guard is `> 0`, so no soft signal (no ZeroDivision), rank by coverage.
+    assert rank_candidates(["A"], [[]], 1, convergence={"A": 0.0}) == [("A", 1.0)]
+
+
+def test_rank_candidates_convergence_normalizes_even_when_max_is_at_or_below_one():
+    # max_conv == 1.0 still normalizes and applies (the guard is `> 0`, not `> 1`).
+    ranked = rank_candidates(["A", "B"], [[], []], 2, convergence={"A": 1.0, "B": 0.5})
+    assert ranked == [("A", 2.0), ("B", 1.5)]
+
+
+def test_rank_candidates_zero_coverage_with_a_soft_signal_stays_zero():
+    # align 0 (killed by its one constraint) -> 0 * (1 + soft) = 0.0, never None.
+    assert rank_candidates(["x"], [["x"]], 1, convergence={"x": 1.0}) == [("x", 0.0)]
+
+
 # ---- the composed read -----------------------------------------------------------
 
 
