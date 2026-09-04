@@ -63,10 +63,29 @@ def test_pattern_missing_the_significance_key_defaults_to_zero_and_is_omitted():
     assert coherence_from_patterns(pats, SIDECAR) == {"MDM2": 1.0}
 
 
-def test_any_positive_significance_normalizes_and_never_abstains():
-    # a lone small-magnitude role (top in (0, 1]) still normalizes to 1.0 -- the top<=0.0 guard is a
-    # zero/empty floor ONLY, never an abstention on genuinely-positive coherence.
-    assert coherence_from_patterns([_pat("amplifier", "Gene1", 0.5)], SIDECAR) == {"TP53": 1.0}
+def test_any_positive_significance_however_small_normalizes_and_never_abstains():
+    # a lone TINY role (0.05) still normalizes to 1.0 -- the top<=0.0 guard is a zero/empty floor
+    # ONLY, never an abstention/filter on genuinely-positive coherence, however small. (Kills the
+    # top<=0.1 and filter>0.1 mutants -- a small-chain-improbability real role must survive.)
+    assert coherence_from_patterns([_pat("amplifier", "Gene1", 0.05)], SIDECAR) == {"TP53": 1.0}
+
+
+def test_non_str_subject_is_skipped_gracefully_not_crashed():
+    # patterns are typed Mapping[str, object] -- subject can be any object. A non-str subject cannot
+    # map to a gene, so the isinstance guard SKIPS it (never `.lower()`-crashes). Pins the guard's
+    # real intent -- the differential proved `if subject`/`if True` crash here; the original omits.
+    assert (
+        coherence_from_patterns(
+            [{"name": "amplifier", "subject": 123, "significance": 3.0}], SIDECAR
+        )
+        == {}
+    )
+    assert (
+        coherence_from_patterns(
+            [{"name": "amplifier", "subject": None, "significance": 3.0}], SIDECAR
+        )
+        == {}
+    )
 
 
 def test_zero_significance_is_omitted_not_zeroed():
