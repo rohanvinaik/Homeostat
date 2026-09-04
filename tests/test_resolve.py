@@ -3,7 +3,13 @@ Authored from the design; `connected_components` / `cluster_coverage` are Detect
 
 from homeostat.comedy import Comedy
 from homeostat.quest import Quest
-from homeostat.resolve import cluster_coverage, connected_components, story_clusters
+from homeostat.resolve import (
+    cluster_coherence,
+    cluster_coverage,
+    connected_components,
+    rank_clusters,
+    story_clusters,
+)
 from homeostat.tragedy import Tragedy
 
 # ---- connected_components: the candidate-clustering primitive ---------------------
@@ -72,3 +78,35 @@ def test_story_clusters_a_shared_entity_fuses_reads_into_one_candidate():
     assert len(clusters) == 1
     assert clusters[0].entities == frozenset({"FLAW", "SINK", "HERO", "OTHER"})
     assert len(clusters[0].members) == 2  # the tragedy + the quest, one candidate mechanism
+
+
+# ---- cluster_coherence + rank_clusters (increment 2) -----------------------------
+
+
+def test_cluster_coherence_reinforcing_cascade_phase_locks():
+    # A->B->C all +1 (a vicious reinforcing dysregulation) -> the phasors align -> r = 1.
+    assert cluster_coherence(frozenset({"A", "B", "C"}), {"A": {"B": 1}, "B": {"C": 1}}) == 1.0
+
+
+def test_cluster_coherence_self_correcting_loop_destructively_interferes():
+    # A->B (+1), B->A (-1): a homeostatic/balancing loop -> opposing phasors cancel -> r ~ 0 (NOT a
+    # pathological reinforcing mechanism).
+    assert cluster_coherence(frozenset({"A", "B"}), {"A": {"B": 1}, "B": {"A": -1}}) < 1e-9
+
+
+def test_cluster_coherence_no_in_cluster_edges_is_zero():
+    assert cluster_coherence(frozenset({"A"}), {"A": {"B": 1}}) == 0.0  # B outside the cluster
+
+
+def test_rank_clusters_orders_by_coverage_times_coherence():
+    # cluster {A,B}: covers B (1/1) x coherence 1.0 = 1.0 ; cluster {X,Y}: covers nothing -> 0.
+    genres = {
+        "tragedy": [Tragedy("A", "B", "doomed")],
+        "comedy": [Comedy("X", "Y", "vicious")],
+    }
+    clusters = story_clusters(genres)
+    ranked = rank_clusters(
+        clusters, frozenset({"B"}), {"A": {"B": 1}, "X": {"Y": 1}, "Y": {"X": 1}}
+    )
+    assert ranked[0][0].entities == frozenset({"A", "B"}) and ranked[0][1] == 1.0
+    assert ranked[-1][1] == 0.0  # the uncovered cluster ranks last

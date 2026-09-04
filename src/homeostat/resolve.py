@@ -11,14 +11,18 @@ clusters; the engine resolves which is THIS person's by coverage of their shadow
 internal phase-coherence, through the ModelAtlas blend (`recommend.score_candidate`). A surviving
 plurality is not collapsed — it yields the Jeeves DO-THIS (the discriminating measurement).
 
-Increment 1 (here): the candidate enumeration + coverage. The coherence-fit, the operator-injected
-hypothesis (fluid-intelligence as a tested input, never ground truth), and the resolve loop follow.
+Increments 1-2 (here): candidate enumeration, coverage, internal-coherence, and the ranked blend.
+Still to come: the operator-injected hypothesis (fluid-intelligence as a tested input, never
+ground truth), the Jeeves DO-THIS on a surviving plurality, and the GWAS relevance-seeding.
 """
 
 from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass
+
+from homeostat.quest import order_parameter, part_vector
+from homeostat.recommend import score_candidate
 
 
 @dataclass(frozen=True)
@@ -54,6 +58,55 @@ def cluster_coverage(entities: frozenset[str], observed: frozenset[str]) -> floa
     if not observed:
         return 0.0
     return len(entities & observed) / len(observed)
+
+
+def cluster_coherence(
+    entities: frozenset[str], signed_adj: Mapping[str, Mapping[str, int]]
+) -> float:
+    """The INTERNAL-COHERENCE alignment factor: does the cluster's sub-web form a phase-locked
+    (reinforcing) mechanism, or a conflicting / self-correcting structure? The Kuramoto order
+    parameter over the sub-web's SIGNED EDGES (each edge -> a phasor via `quest.part_vector`,
+    SUPPORT in-phase / OPPOSE antiphase / informational-zero a zero vector). A vicious reinforcing
+    cascade phase-locks (high r -> a real dysregulation); a balancing or contradictory structure
+    destructively interferes (low r -> not a pathological mechanism). Works for cycles and cascades
+    alike (no source/depth needed). No in-cluster edges -> 0.0. Orchestration over the pinned
+    `part_vector` / `order_parameter`.
+    """
+    vectors = [
+        part_vector(sign, 0, 0)
+        for u, nbrs in signed_adj.items()
+        if u in entities
+        for v, sign in nbrs.items()
+        if v in entities
+    ]
+    return order_parameter(vectors)
+
+
+def rank_clusters(
+    clusters: list[Cluster],
+    observed: frozenset[str],
+    signed_adj: Mapping[str, Mapping[str, int]],
+) -> list[tuple[Cluster, float]]:
+    """Rank the candidate mechanisms (resolve-narrow): each cluster scored by the ModelAtlas blend
+    (`recommend.score_candidate`) over its alignment factors -- COVERAGE of the observed shadow x
+    internal COHERENCE (the soft info-theoretic signals + operator prefer fold in at increment 3).
+    Descending; ties keep order. A near-tie at the top is a surviving plurality -- the Jeeves cue.
+    Orchestration over the pinned `cluster_coverage` / `cluster_coherence` / `score_candidate`.
+    """
+    scored = [
+        (
+            cl,
+            score_candidate(
+                [
+                    cluster_coverage(cl.entities, observed),
+                    cluster_coherence(cl.entities, signed_adj),
+                ],
+                [],
+            ),
+        )
+        for cl in clusters
+    ]
+    return sorted(scored, key=lambda t: t[1], reverse=True)
 
 
 def _tagged(genres: Mapping[str, list]) -> list[tuple[frozenset[str], str, object]]:
