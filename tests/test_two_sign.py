@@ -93,6 +93,7 @@ def test_censor_as_partial_eliminator_competes_in_the_greedy_step():
 def test_positive_bulk_then_tail_kappa_pattern():
     traj = eliminate_two_sign(["a", "b", "c", "d"], {"k1": ["b", "c"], "k2": ["d"]}, {})
     assert traj.sigma == 2
+    assert traj.survivors_left == ["a"] and traj.bottom is False  # 'a' covers both constraints
     assert [s.kappa for s in traj.steps] == [2, 1]  # bulk (kills a cluster) then tail
 
 
@@ -103,6 +104,20 @@ def test_positive_never_empties_the_set():
     assert traj.bottom is False  # only a censor can certify ⊥
 
 
+def test_no_common_cover_yields_candidates_not_a_spurious_resolution():
+    # Two positive constraints with NO common satisfier: explains:sA kills all but A, explains:sB
+    # kills all but B. The greedy could collapse to {A} via the no-empty rule -- but A violates
+    # explains:sB, so that singleton is spurious. The engine must instead PRODUCE the max-κ-coverage
+    # candidate plurality (Law 4), never predict one. (The regression the real-data run exposed.)
+    cands = ["A", "B", "C"]
+    cons = {"explains:sA": ["B", "C"], "explains:sB": ["A", "C"]}
+    traj = eliminate_two_sign(cands, cons, {})
+    assert traj.sigma is None  # NOT resolved -- no single source covers the whole shadow
+    assert traj.bottom is False  # positive unsatisfiability is not a censor ⊥
+    assert set(traj.survivors_left) == {"A", "B"}  # best partial covers (κ=1 each; C covers 0)
+    assert traj.falsifiable is False
+
+
 def test_kappa_zero_constraint_leaves_a_plural_residual():
     # A κ=0 constraint (kills no live survivor) resolves nothing -> STUCK plural (σ_sem>0).
     traj = eliminate_two_sign(["a", "b"], {"k1": ["x"]}, {})
@@ -111,5 +126,6 @@ def test_kappa_zero_constraint_leaves_a_plural_residual():
 
 def test_single_candidate_is_not_falsifiable():
     traj = eliminate_two_sign(["a"], {}, {})
-    assert traj.sigma == 0  # trivially resolved in zero steps
+    assert traj.sigma == 0 and traj.steps == []  # trivially resolved in zero steps
+    assert traj.survivors_left == ["a"] and traj.bottom is False  # the lone candidate survives
     assert traj.falsifiable is False  # no plurality to resolve -> not a real finding

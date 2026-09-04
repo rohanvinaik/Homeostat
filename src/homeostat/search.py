@@ -131,6 +131,34 @@ def knee_index(kappas: list[int]) -> int:
     return len(kappas)
 
 
+def covers_shadow(candidate: str, positive_kill_sets: list[list[str]]) -> bool:
+    """True iff the candidate is killed by NO positive constraint — it reaches EVERY observed
+    deviation, so it genuinely covers the shadow. A SOLE survivor that fails this is a spurious
+    singleton (the greedy's no-empty rule kept it alive past a contradicting constraint), NOT a
+    resolution — the read must produce candidates, never predict one. Pure over `(str,
+    list[list[str]])`.
+    """
+    return not any(candidate in ks for ks in positive_kill_sets)
+
+
+def max_coverage_survivors(candidates: list[str], positive_kill_sets: list[list[str]]) -> list[str]:
+    """The candidates covering the MOST of the shadow — argmax over κ-coverage, a candidate's
+    coverage being how many positive constraints it SATISFIES (is not killed by = how many observed
+    deviations it reaches). When NO candidate covers the whole shadow, THESE are the honest
+    partial-mechanism candidates the read produces (Law 4: significance is κ-coverage), never one
+    predicted survivor. Order-preserving over `candidates`, deduped. Pure over `(list[str],
+    list[list[str]])`.
+    """
+    uniq = list(dict.fromkeys(candidates))
+    if not uniq:
+        return []
+    kill = [set(ks) for ks in positive_kill_sets]
+    total = len(kill)
+    cov = {c: total - sum(1 for ks in kill if c in ks) for c in uniq}
+    best = max(cov.values())
+    return [c for c in uniq if cov[c] == best]
+
+
 # ---- the trajectory (orchestration over the pure decisions) --------------------------------
 
 
@@ -199,9 +227,16 @@ def eliminate_two_sign(
             if constraint_disposition(k, n, is_censor=True) == "bottom":
                 steps.append(Step(cid, k))
                 return Trajectory(steps, None, [], False, bottom=True)
-        # 2. a unique survivor is the resolved mechanism
+        # 2. a unique survivor is the resolved mechanism — but ONLY if it genuinely covers the
+        #    shadow (reaches every observed). A sole survivor the no-empty rule kept alive past a
+        #    contradicting positive constraint is spurious: produce the max-κ-coverage candidate
+        #    plurality (Law 4), never predict that one. (The ⊥/censor two-sign path is unaffected.)
         if resolved(n):
-            break
+            if covers_shadow(alive[0], list(constraints.values())):
+                break
+            return Trajectory(
+                steps, None, max_coverage_survivors(candidates, list(constraints.values())), False
+            )
         # 3. greedy max-κ admissible eliminator across BOTH signs (positive before negative on ties,
         #    then sorted id — deterministic).
         best_id: str | None = None

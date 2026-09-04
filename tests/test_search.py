@@ -2,9 +2,11 @@
 orchestrator `eliminate_two_sign` is tested in test_two_sign.py; this file pins the pure toolkit."""
 
 from homeostat.search import (
+    covers_shadow,
     entropy_bits,
     falsifiable,
     knee_index,
+    max_coverage_survivors,
     resolved,
     survivors,
     survivors_killed,
@@ -55,3 +57,23 @@ def test_survivors_killed_counts_current_survivors():
     assert survivors_killed(["b"], ["a", "b", "c"]) == 1
     assert survivors_killed(["x"], ["a", "b"]) == 0  # not among the living -> kills nothing
     assert survivors_killed(["a", "b"], ["a", "b"]) == 2  # would empty (caller's admissibility)
+
+
+def test_covers_shadow_true_only_when_no_positive_constraint_kills():
+    assert covers_shadow("x", [["a", "b"], ["c"]]) is True  # killed by none -> reaches all observed
+    assert covers_shadow("x", []) is True  # no constraints -> vacuously covers
+    assert covers_shadow("x", [["a"], ["x", "c"]]) is False  # killed by one -> misses an observed
+
+
+def test_max_coverage_survivors_returns_the_best_partial_covers():
+    # kill-sets {b}, {b,c}: coverage a=2, b=0, c=1 -> the argmax is [a]
+    assert max_coverage_survivors(["a", "b", "c"], [["b"], ["b", "c"]]) == ["a"]
+
+
+def test_max_coverage_survivors_ties_preserve_order_and_dedup():
+    # a and d each covered by both constraints (killed by neither) -> both returned, order kept
+    assert max_coverage_survivors(["a", "d", "a"], [["b"], ["c"]]) == ["a", "d"]
+
+
+def test_max_coverage_survivors_empty_candidates_is_empty():
+    assert max_coverage_survivors([], [["a"]]) == []
