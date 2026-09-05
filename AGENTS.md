@@ -1,4 +1,113 @@
-# For agents (and humans) arriving fresh — read before proposing anything
+# AGENTS.md
+
+Two kinds of agent read this file. **Most are here to RUN Homeostat** for someone who found it and
+wants a read — that is the first and larger part, immediately below. **If you were instead sent to
+CHANGE the code**, skip to *Changing Homeostat* further down; that part carries the one law the
+project will not survive you breaking.
+
+---
+
+## Operating Homeostat — for the agent a person hands this to
+
+You are the operator. Someone found Homeostat, had you clone it, and will hand you a person's
+situation — a diagnosis, some lab or genetic values, maybe a hunch — and ask you to run it and tell
+them what it found. Your job: translate their situation into the engine's inputs, run the read, and
+relay it **honestly — including when the honest result is "not enough to say."** That last-mile
+honesty is the whole product, and you are the last mile of it.
+
+Read the [README](README.md) first for what the tool *is* and why. This section is how you *operate* it.
+
+### What one read returns — so you know what you are relaying
+
+Exactly one of these, never a diagnosis and never a label:
+
+- **A ranked set of candidate mechanisms** — each a small group of genes read as a *story* (a
+  tragedy, a vicious comedy, an allegory, a quest), with how much of the presentation each explains.
+- **The next question** — when candidates tie, the single measurement that would separate them. This
+  is the engine's counter-ask: relay it, the person measures it, you feed it back and run again.
+- **A certified ⊥** — "nothing in the known biology explains this, *with a proof*" — but only when the
+  evidence is verified-tier. On reported-only evidence it says so: "uncertified ⊥ — cannot certify
+  absence."
+- **An honest abstention** — "I cannot separate these without a measurement you don't have."
+
+Every certificate carries the **verification tier of the weakest evidence it used**. Feed it
+self-reported data and a resolved/⊥ result comes back *provisional / uncertified* — relay that word,
+never upgrade it.
+
+### Confirm it runs (≈30 seconds, no network)
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+python -m pip install -e ".[dev]"
+make demo          # five self-contained reads — no downloads
+```
+
+`make help` lists every command. Anything touching real biology fetches a few hundred MB of public
+data on first run (SIGNOR, STRING, Ensembl/Compara, Reactome, GWAS, the Jensen-lab DISEASES
+glossary), SHA-256-receipted into the gitignored `data/`, then cached.
+
+### Running it on the person's OWN inputs — two real entry points
+
+**1. Diagnoses → wiring (turnkey, arbitrary input today).** If the person gives you *diagnosis names*,
+this computes which of them are mechanistically wired together over the real interactome — not
+asserted, computed:
+
+```bash
+python scripts/build_glossary.py                                   # once: builds the diagnosis→gene glossary
+make connect ARGS="\"Crohn's disease\" \"Ulcerative colitis\" \"Ankylosing spondylitis\""
+```
+
+Names must match the DISEASES glossary keys — it resolves them or returns nothing; it does not guess.
+Very large ("diffuse") gene sets are reported but flagged non-specific. Without molecular observations
+this answers only the adjacency question — it will not invent a single central mechanism, and that
+limit is deliberate.
+
+**2. Diagnosis + labs → the full mechanistic read (the composition).** This is the "give the agent
+your inputs and have *it* run it" path.
+
+```python
+from homeostat import read_person, drive, render
+```
+
+- **`read_person(diagnosis, labs, events, verb_sign, trait_index, *, demographics, reference, vocab, …)`**
+  — one turn of the interface. The **diagnosis** restricts the mechanism *search only* (the observed
+  shadow stays sacrosanct); the **labs** become the shadow; it returns a `DriverRead`. Each lab is a
+  `Signal(ident, state, tier)` — and you MUST carry the tier honestly: `Tier.VERIFIED` for a datum you
+  can re-check, `Tier.REPORTED` for self-report. That tier is what decides whether a ⊥ can be certified.
+- **`drive(events, positions, verb_sign, *, relevant=…, hypotheses=…, probes=…)`** — the lower-level
+  read over an already-positioned shadow (`positions`) against the prior web (`events`). `hypotheses`
+  lets the person propose an edge of the mechanism; it comes back confirmed / contradicted / standing —
+  a *tested* input, never ground truth.
+- **`render(read)`** — turns the `DriverRead` into the bounded, story-led report you relay (the
+  `THE READ … / CANDIDATE MECHANISMS / WHAT I CAN'T YET TELL` surface).
+
+`read_person` needs its substrate pre-loaded — the prior web (`events`), the GWAS `trait_index`, the
+marker `reference`, the diagnosis `vocab`. **The canonical worked example that assembles all of it from
+the real public data is [`scripts/gallery.py`](scripts/gallery.py) — `blind_recovery()`.** To run a
+real personalized read, adapt that function: keep its substrate assembly, swap in the person's
+diagnosis, their labs (as `Signal`s), their demographics. Load the substrate from the fetch shells the
+way gallery does — **never hand-fabricate it.**
+
+### The discipline you carry (non-negotiable)
+
+- **A hypothesis is a hypothesis.** Never say "you have X" or "the mechanism is Y." The output is a
+  bounded, testable candidate set — **not a diagnosis, not medical advice.** Say so, every time.
+- **An abstention or a ⊥ is a result, not a failure.** Relay "it resolved to nothing, with a proof" as
+  the finding it is. Do not reach for a statistic to fill the silence; do not soften a ⊥ into a "maybe."
+- **Never fabricate inputs.** Thin data → a thin read; surface that and relay the engine's counter-ask
+  (the measurement that would sharpen it). Inventing a lab value or a gene to make the read "land" is
+  the one move that destroys the tool.
+- **Do not impute purpose.** Calling a pathway a "comedy" names its *mechanics* (a compensation loop),
+  not a meaning. *Why* is the human's to decide — do not narrate intent the engine did not compute.
+- **It reads one person, zero-time.** It is not a population claim; never generalize a read to anyone else.
+
+---
+
+# Changing Homeostat — read before proposing any code change
+
+The rest of this file is for an agent sent to MODIFY Homeostat, not to run it. It carries the one law
+the project will not survive you breaking. (The maintainer's fuller dev-discipline lives in a local
+`CLAUDE.md` that is intentionally not tracked in the public repo.)
 
 ## ⛔ WHAT HOMEOSTAT IS — A MECHANISM-UNEARTHING ENGINE (and the law that protects it)
 
@@ -161,8 +270,8 @@ call, named as a bounded utility, never your default, never the method, never "t
   functions). Genomics reference machinery: `~/Projects/genomevault`. Coherence engine:
   Regenesis (`mcp__Regenesis__*`). The built coherence-instrument primary sources are in canon
   Appendix B (harmonizing, genomevault, Peitho, COEC) — read those, not a summary.
-- **Laws live in `docs/THEORY_OF_THE_CASE.md` Part IV** and in the always-loaded `CLAUDE.md`.
-  Check `decisions/` before architectural changes.
+- **Laws live in `docs/THEORY_OF_THE_CASE.md` Part IV** and in the maintainer's local `CLAUDE.md`
+  (not tracked in the public repo). Check `decisions/` before architectural changes.
 - `~/Projects/Predecessor_Study` is SUBSUMED — crosses only by re-derivation via
   `docs/SALVAGE_MANIFEST.md`, never by copy.
 

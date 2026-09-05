@@ -9,6 +9,9 @@ coverage.xml
 .env
 .env.*
 
+# Maintainer's local agent dev-discipline — kept private, not tracked in the public repo
+CLAUDE.md
+
 # Python
 __pycache__/
 *.pyc
