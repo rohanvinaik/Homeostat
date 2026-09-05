@@ -1,5 +1,15 @@
 # Homeostat
 
+[![CI](https://github.com/rohanvinaik/Homeostat/actions/workflows/ci.yml/badge.svg)](https://github.com/rohanvinaik/Homeostat/actions/workflows/ci.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=rohanvinaik_Homeostat&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=rohanvinaik_Homeostat)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rohanvinaik_Homeostat&metric=coverage)](https://sonarcloud.io/summary/new_code?id=rohanvinaik_Homeostat)
+[![Reliability](https://sonarcloud.io/api/project_badges/measure?project=rohanvinaik_Homeostat&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=rohanvinaik_Homeostat)
+
+<!-- Real badges only, each earned by an actual run — no static snapshots. The CI badge goes live on
+     the first push (.github/workflows/ci.yml: ruff + 500-test pytest + coverage). The SonarCloud
+     badges light up once the repo is imported on sonarcloud.io and a SONAR_TOKEN secret is set — see
+     the one-time steps in that workflow / the project notes. -->
+
 **A per-person engine that reads the single coupled *mechanism* underneath a set of symptoms — and
 says, just as carefully, when there is no mechanism it can honestly find.** Named for Ashby's
 homeostat, the machine that finds its own equilibrium, because the thing under study is regulation.
