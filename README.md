@@ -8,7 +8,7 @@
 [![Security](https://sonarcloud.io/api/project_badges/measure?project=rohanvinaik_Homeostat&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=rohanvinaik_Homeostat)
 
 <!-- Real badges only, each earned by an actual run — no static snapshots. CI (GitHub Actions:
-     ruff + 500-test pytest + coverage) is live on every push; the SonarCloud badges are fed by the
+     ruff + 508-test pytest + coverage) is live on every push; the SonarCloud badges are fed by the
      CI scan (quality gate, 99% coverage, A/A/A reliability·maintainability·security). -->
 
 **A per-person engine that reads the single coupled *mechanism* underneath a set of symptoms — and
@@ -96,17 +96,21 @@ to refuse. Four ways it survives the audit:
 - **It is deterministic and auditable.** There is no trained model — nothing to fit to the answer, no
   weights to hide a hallucination in. Every step traces back to the web, the eliminations, and the
   signals. You can read *why* each candidate is on the list.
-- **It recovers mechanisms it was not told.** Given the public inflammatory-bowel gene set as a search
-  space and a three-node inflammatory shadow — blind to the answer — it returns a bounded set of
-  legible candidate mechanisms with the known **LRRK2–NOD2–RIPK2** inflammatory bridge among them.
+- **It recovers mechanisms it was not told.** Given a public disease gene set as its search space and a
+  three-node inflammatory shadow — blind to any answer — it returns a bounded set of legible candidate
+  mechanisms and *groups genes into mechanisms it was never handed*: the retinoid-receptor family comes
+  back as a single candidate (RARA/RARB/RARG locked with their RXR partners), recovered from free data
+  as one coherent loop. Recovering a specific *named* multi-gene bridge whole — LRRK2–NOD2–RIPK2 as one
+  cluster — is the standing acceptance test the instrument is driven against, and the gallery reports
+  that result honestly, open or closed.
 
 The confabulation objection assumes a system that always answers. This one's defining move is knowing
 when *not* to.
 
 **Don't take the audit on faith — check it.** Every capacity claimed here is demonstrated with a
 runnable command and its real output, plus the structural reason it is *categorically* beyond counting
-medicine, in the **[proof packet](docs/PROOF_PACKET.md)** — ten proofs you can reproduce from a clean
-clone (`python scripts/gallery.py`).
+medicine, in the **[proof packet](docs/PROOF_PACKET.md)** — each one reproducible from a clean clone
+(`python scripts/gallery.py`).
 
 ## What it actually does, once you trust it that far
 
@@ -116,9 +120,9 @@ Four moves make the read possible, and no other tool combines them:
    invariant. Two different genes filling the same role, in two different people, are recognized as the
    same mechanism — which is how it sees through the "no shared gene" problem that defeats counting.
 2. **It triangulates across the geometries of biology.** No single free dataset shows a mechanism, so
-   it reads several — how genes relate by regulation, physical binding, evolution, metabolism,
-   co-expression — and trusts only what independent views *agree* on. Convergence is the signal; a
-   claim only one view supports is dropped.
+   it reads several — how genes relate by regulation, physical binding, evolution, and metabolism — and
+   trusts only what independent views *agree* on. Convergence is the signal; a claim only one view
+   supports is dropped.
 3. **It reasons in two signs.** It weighs not only what *could* explain the presentation but what is
    *ruled out*, and can return that certified "there is no mechanism here." Most systems have no way to
    say this at all.
@@ -138,6 +142,26 @@ The reasoning is **classical AI and data geometry — not statistics, and not a 
 There is nothing to train, and that is deliberate: the intelligence is in the correctness of the
 geometry, not the size of a network. It runs on the compute of a moderately-large potato.
 
+### The story engine, in full — Regenesis
+
+Move 4 is not a metaphor bolted onto a gene list; it is a general story-understanding engine turned
+onto biochemistry. **Regenesis** is that engine — a deterministic, provenance-carrying reconstruction
+of Patrick Winston's *Genesis*, in Python, extended through the GSE semantic substrate. Its unified
+`understand` path takes arbitrary event-text, lifts it into semantic contracts, and runs *guarded,
+censored forward inference* over it: it ranks each derivation by significance, keeps the full
+provenance of *why* it followed, carries defeasible presumptions and explanations, learns generalized
+causal rules from what it reads, and supports corpus-level promotion, demotion, specialization, and
+cross-story frames. It **abstains where nothing follows** — the same refusal the whole instrument is
+built on, one layer up. Presenting a regulatory mechanism to *that* machinery is what lets a fungible
+mechanism be recognized across different genes: the surviving structure is read as a *role in a story*,
+and the role is the invariant the genes only instantiate.
+
+Regenesis is optional **by design.** It is a private, pre-release research dependency; when it is
+absent, Homeostat's native deterministic genre readers remain the stable path and the read still runs —
+only the higher-order dramatic account degrades to the native genre reading. A private experimental
+engine can *deepen* the public one, but it can never make the public repository unusable. The two modes
+are deliberately visible in the gallery output.
+
 ## What a reading looks like
 
 Give it the deviation pattern; it returns one of four honest endings — never a label:
@@ -152,7 +176,7 @@ Give it the deviation pattern; it returns one of four honest endings — never a
 - **An honest abstention** — "I cannot separate these without a measurement you don't have."
 
 You can watch all four on real and illustrative inputs in **[`scripts/gallery.py`](scripts/gallery.py)**:
-the blind LRRK2 recovery above; *disambiguation* (one diagnostic label, two different lab panels → two
+the blind mechanism recovery above; *disambiguation* (one diagnostic label, two different lab panels → two
 different mechanistic stories — the flattening undone); a *certified ⊥*; and a *tested operator
 hypothesis* (you propose an edge of the mechanism; the shadow confirms one and falsifies the other out —
 your intuition enters as a **tested** input, never as ground truth). A companion tool,
@@ -174,22 +198,24 @@ Homeostat is not a heuristic; it is a working instance of a body of formal theor
 ## Where it actually is
 
 Plainly, because it matters: **every layer is built, pinned on real open-biology data, and threaded
-into a single read that runs end to end.** The engine, the per-person positioning, the six coupling
-banks (each fired on its real dump — SIGNOR, STRING, Ensembl/Compara, Reactome, GTEx, GWAS), the
-structural eliminator, the story layer, the resolve-narrow ranking, the σ_sem completeness read, the
-operator-hypothesis ledger, the mechanism-level discriminating question, the input assembly (diagnosis →
-subspace via a sourced disease-gene glossary; labs → shadow), and the story-led rendering that surfaces
-the read — all built and wired into the apex `drive`. Every *pure decision* is verified to a
-mutation-complete specification and covered by hand-written intent tests: **500 pass.** The gallery runs
-the whole matrix on real and constructed inputs.
+into a single read that runs end to end.** The engine, the per-person positioning, the four global
+coupling banks (each fired on its real dump — SIGNOR regulation, STRING binding, Ensembl/Compara
+homology, Reactome metabolism), with co-expression (GTEx) and trait-wiring (GWAS) entering as scoped
+signals at the driver and the input layer, the structural eliminator, the story layer, the
+resolve-narrow ranking, the σ_sem completeness read, the operator-hypothesis ledger, the
+mechanism-level discriminating question, the input assembly (diagnosis → subspace via a sourced
+disease-gene glossary; labs → shadow), and the story-led rendering that surfaces the read — all built
+and wired into the apex `drive`. Every *pure decision* is verified to a mutation-complete specification
+and covered by hand-written intent tests: **508 pass.** The gallery runs the whole matrix on real and
+constructed inputs.
 
 The honest remaining work is validation, not construction: a fully *blind* recovery of a known
-multi-gene mechanism as the standing acceptance test, and richer input modalities (notes →
-directionality, genotype). The deeper limit is not code — the data that would *settle* a read (one
-person's genes and symptoms together, watched over time as the mechanism moves) is gated behind
-institutions and money. Homeostat is built to work from the *free shadows* of that data, so its output
-is a **testable hypothesis, never a proven mechanism and never a diagnosis** — and it is built to keep
-telling you which is which.
+multi-gene mechanism as **one complete cluster** — the standing acceptance test, currently open — and
+richer input modalities (notes → directionality, genotype). The deeper limit is not code — the data
+that would *settle* a read (one person's genes and symptoms together, watched over time as the
+mechanism moves) is gated behind institutions and money. Homeostat is built to work from the *free
+shadows* of that data, so its output is a **testable hypothesis, never a proven mechanism and never a
+diagnosis** — and it is built to keep telling you which is which.
 
 ## The point
 
@@ -199,6 +225,40 @@ rigor that the counting apparatus wields *against* the individual becomes the in
 auditable, falsifiable mechanism you can take to a clinician and test — one no one can wave away as
 feelings, because every step of it is on the page. That is a redistribution of who gets to reason about
 a body. The honesty is not the caveat on the tool. It is the tool.
+
+## Run it
+
+The core is stdlib-only (`requires-python >= 3.10`, `dependencies = []`) — there is nothing to install
+to run a read. The `[dev]` extra adds the test and lint tooling.
+
+```bash
+git clone https://github.com/rohanvinaik/Homeostat.git
+cd Homeostat
+python3 -m venv .venv && source .venv/bin/activate
+python -m pip install -e ".[dev]"
+
+make check      # ruff (lint + format) + the full 508-test suite
+make demo       # the five self-contained demonstrations — no network
+make gallery    # add the real-data recovery probe (fetches public data on first run, into gitignored data/)
+```
+
+Downloads are written atomically with local SHA-256 receipts; the
+[reference manifest](docs/REFERENCE_MANIFEST.yaml) records the snapshots the system was developed
+against, and a changed upstream hash is a new data revision, not an equivalent rerun. `make help`
+lists the rest (`coverage`, `glossary`, `connect`, `prior-web`).
+
+The public Python surface is four names:
+
+```python
+from homeostat import DriverRead, drive, read_person, render
+```
+
+- `drive(...)` runs the composed read over already-positioned evidence and returns a `DriverRead` —
+  the machine's full epistemic state (verdict, surviving story, ranked candidate *mechanisms*, the next
+  discriminating measurement, the elimination trajectory and censor ledger, and the operator ledger).
+- `read_person(...)` assembles diagnosis-scoped relevance and laboratory signals, then delegates to
+  `drive`.
+- `render(...)` turns a `DriverRead` into the bounded, story-led report without changing its judgment.
 
 ## Read further
 
@@ -211,7 +271,10 @@ a body. The honesty is not the caveat on the tool. It is the tool.
   connect. Start here for the *what and how*.
 - [`docs/SYSTEM_DESIGN.md`](docs/SYSTEM_DESIGN.md) — the engineering design and the eleven laws that
   discipline it.
+- [`docs/STORY_LAYER.md`](docs/STORY_LAYER.md) — the Regenesis bridge and the narrative-form contract.
 - [`docs/REGULATORY_DEFICIT_PROGRAM.md`](docs/REGULATORY_DEFICIT_PROGRAM.md) — the founding canon.
 
 The formal substrate — specification complexity, negative specification, significance-weighting,
-orthogonal ternary projection — is the author's own work, referenced from the design docs.
+orthogonal ternary projection — is the author's own work, referenced from the design docs. Some
+referenced manuscripts, and Regenesis itself, remain private research dependencies; the public core and
+its fallback path do not require them to run.
