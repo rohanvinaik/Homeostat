@@ -268,9 +268,7 @@ def main() -> None:
     print(operator_hypothesis())
     print(_banner(5, "ROLES, NOT GENES — two genes, one recognized mechanism", "illustrative"))
     print(roles_not_genes())
-    print(
-        _banner(6, "THE STORY, AT FULL LOUDNESS — the dramatic account", "illustrative")
-    )
+    print(_banner(6, "THE STORY, AT FULL LOUDNESS — the dramatic account", "illustrative"))
     print(story_read())
 
 

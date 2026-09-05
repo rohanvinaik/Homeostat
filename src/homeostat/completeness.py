@@ -77,9 +77,7 @@ def top_band(scores: Sequence[float], band: float) -> list[int]:
     return [i for i, s in enumerate(scores) if s > 0 and s >= threshold]
 
 
-def read_completeness(
-    initial: int, survivors: int, i_solve: str | None = None
-) -> SpecCompleteness:
+def read_completeness(initial: int, survivors: int, i_solve: str | None = None) -> SpecCompleteness:
     """The completeness read from the candidate + surviving-plurality counts (the caller derives
     `survivors` via `top_band`, the near-tie the ranking could not separate) and the mechanism-level
     Jeeves node `i_solve` that would separate that plurality (None when structure resolved to one).
