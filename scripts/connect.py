@@ -56,6 +56,8 @@ def _web_adj():
 
 
 def connection_map(presentation: dict[str, str]) -> str:
+    if not GLOSSARY.exists():
+        raise SystemExit(f"glossary missing at {GLOSSARY} -- run: python scripts/build_glossary.py")
     glossary = json.loads(GLOSSARY.read_text())
     adj = _web_adj()
     nodes = set(adj)
