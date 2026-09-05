@@ -23,8 +23,8 @@ from xml.etree import ElementTree as ET
 
 DEFAULT_K = 2.0  # mean +/- k*sd -> the 95% reference band (the standard clinical convention)
 
-_MEAN_SD = re.compile(r"^\s*([0-9]+\.?[0-9]*)\s*\+/-\s*([0-9]+\.?[0-9]*)\s*$")
-_RANGE = re.compile(r"([0-9]+\.?[0-9]*)\s*-\s*([0-9]+\.?[0-9]*)")
+_MEAN_SD = re.compile(r"^\s*(\d+(?:\.\d*)?)\s*\+/-\s*(\d+(?:\.\d*)?)\s*$")
+_RANGE = re.compile(r"(\d+(?:\.\d*)?)\s*-\s*(\d+(?:\.\d*)?)")
 
 
 def parse_interval(value: str, k: float) -> tuple[float, float] | None:
