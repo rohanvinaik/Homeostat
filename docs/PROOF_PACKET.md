@@ -23,11 +23,14 @@ python -m pytest -q                                        # the full specificat
 
 - **Entries 2–6 of the gallery, and every synthetic demonstration below, are self-contained** — they
   build a small input geometry in memory and run instantly, no network, no data.
-- **The real-data demonstrations** (§1 recovery probe, §3 connection map) use SIGNOR, STRING,
-  Reactome/NCBI, GWAS Catalog, and the Jensen-lab DISEASES disease-gene database. Other implemented
-  banks are not silently counted as part of these two scripts. Fetch shells download external data
-  atomically and write local SHA-256 receipts; moving upstream artifacts are data revisions, not
-  byte-stable reruns. `scripts/build_glossary.py` builds the diagnosis→gene glossary from DISEASES.
+- **The real-data demonstrations** (§1 recovery probe, §3 connection map) assemble a three-bank slice
+  of the prior web — SIGNOR (regulatory), STRING (physical), Reactome/NCBI (metabolic) — and use the
+  GWAS Catalog for diagnosis-relevance scoping and the Jensen-lab DISEASES database for the glossary.
+  That is a subset of the full prior web (the README and ARCHITECTURE list four global banks plus two
+  scoped signals): homology and co-expression are not loaded by these two scripts, and no other bank is
+  silently counted. Fetch shells download external data atomically and write local SHA-256 receipts;
+  moving upstream artifacts are data revisions, not byte-stable reruns. `scripts/build_glossary.py`
+  builds the diagnosis→gene glossary from DISEASES.
 - **Regenesis** (the story-understanding engine, §9) is an *optional* dependency: absent, the dramatic
   account degrades gracefully to the native genre reading; the reads still run.
 
