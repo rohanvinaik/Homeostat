@@ -92,6 +92,11 @@ to refuse. Four ways it survives the audit:
 The confabulation objection assumes a system that always answers. This one's defining move is knowing
 when *not* to.
 
+**Don't take the audit on faith — check it.** Every capacity claimed here is demonstrated with a
+runnable command and its real output, plus the structural reason it is *categorically* beyond counting
+medicine, in the **[proof packet](docs/PROOF_PACKET.md)** — ten proofs you can reproduce from a clean
+clone (`python scripts/gallery.py`).
+
 ## What it actually does, once you trust it that far
 
 Four moves make the read possible, and no other tool combines them:
@@ -186,6 +191,9 @@ a body. The honesty is not the caveat on the tool. It is the tool.
 
 ## Read further
 
+- [`docs/PROOF_PACKET.md`](docs/PROOF_PACKET.md) — every capacity demonstrated with runnable output and
+  the categorical-difference argument. Start here to *check the claims* (and `scripts/gallery.py` to run
+  them).
 - [`docs/THESIS.md`](docs/THESIS.md) — the full theory: what understanding is, and why it comes home to
   biology. Start here for the *why*.
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) — the as-built wiring map: every layer, its state, how the pieces
