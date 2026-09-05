@@ -13,9 +13,13 @@ certified-⊥ with proof / honest abstention + the discriminating question).
   2. DISAMBIGUATION            (illustrative)       -- the label-flattening undone
   3. CERTIFIED ⊥               (illustrative)       -- "no mechanism, with proof"
   4. OPERATOR HYPOTHESIS        (illustrative)       -- fluid intelligence, tested
+  5. ROLES, NOT GENES          (illustrative)       -- two genes, one recognized role
+  6. THE STORY, AT FULL LOUDNESS (illustrative)     -- the dramatic account (pursuit + revenge)
 
-Run: `PYTHONPATH=src python scripts/gallery.py`  (entry 1 needs the SHA-pinned data dumps present;
-it self-skips with a note if they are absent -- the illustrative entries always run).
+Run: `PYTHONPATH=src python scripts/gallery.py`. Entries 2-6 are self-contained (no downloads) and
+always run. Entry 1 needs the SHA-pinned data dumps, which the fetch shells download on first run;
+it self-skips if they are absent and offline. Regenesis is optional -- absent, the dramatic account
+degrades gracefully to the native genres.
 """
 
 from __future__ import annotations
@@ -23,8 +27,11 @@ from __future__ import annotations
 from homeostat import render
 from homeostat.driver import drive
 from homeostat.event import Event
+from homeostat.fungibility import read_fungibility
+from homeostat.narrative import genre_triples, read_story
 from homeostat.person import read_person
 from homeostat.position import position
+from homeostat.render import dramatic_situation
 from homeostat.signal import Signal, Tier
 
 VS = {"amplifies": 1, "inhibits": -1}
@@ -136,6 +143,70 @@ def operator_hypothesis() -> str:
     return render(read)
 
 
+# ── 5. ROLES, NOT GENES — two different genes, one recognized mechanism ─────────────────────
+
+
+def roles_not_genes() -> str:
+    """GENE_A and GENE_B are fungible paralogs: they resemble each other AND converge on a shared
+    partner across two independent banks (regulatory + physical), so the engine earns the verdict
+    that they play ONE role. A GENE_A-variant patient and a GENE_B-variant patient present
+    identically and read as the SAME mechanism -- with NO shared gene, which gene-counting cannot
+    see. Synthetic geometry; the fungibility verdict is earned."""
+    global _BAND
+    events = [
+        Event("evolutionary", "resembles", "GENE_A", "GENE_B", 1, ""),  # the paralog seed
+        _reg("GENE_A", "MARKER"),
+        _reg("GENE_B", "MARKER"),  # regulatory bank: both drive MARKER
+        Event("physical", "binds", "GENE_A", "MARKER", 1),
+        Event("physical", "binds", "GENE_B", "MARKER", 1),  # physical bank: 2nd convergence
+    ]
+    trait = {"condition": {"GENE_A", "GENE_B"}}
+    vocab = {n: n for n in ("GENE_A", "GENE_B", "MARKER")}
+    _BAND = {n: (70.0, 100.0) for n in vocab}
+    out = ["ROLE-EQUIVALENCE, earned from the geometry (the fungibility read):"]
+    for f in read_fungibility(events):
+        out.append(f"  {f.a} ~ {f.b}: {f.verdict}  ({f.banks} independent banks converge)")
+    out += ["", "A variant in GENE_A and a variant in GENE_B read identically:", ""]
+    out.append(render(_person("condition", [_sig("MARKER", "130")], events, trait, vocab)))
+    out.append("")
+    out.append("  → GENE_A and GENE_B share no identity, yet the engine reads them as ONE role. A")
+    out.append("    count across the two finds no shared gene and sees nothing; the role-read sees")
+    out.append("    one mechanism.")
+    return "\n".join(out)
+
+
+# ── 6. THE STORY, AT FULL LOUDNESS — the genre reading + the dramatic account ───────────────
+
+
+def story_read() -> str:
+    """The story diction at full volume. A mechanism -- a vicious comedy (MYC<->CDK1) feeding a
+    doomed tragedy (TP53->BAX->apoptosis) -- read through the native genres and composed, through
+    the SAME engine that reads Shakespeare, into a dramatic account. A multi-system mechanism comes
+    back as pursuit + revenge. Winston's thesis (story understanding is one general capacity) made
+    tangible on biochemistry. Illustrative geometry; the reading is the engine's."""
+    events = [
+        _reg("MYC", "CDK1"),
+        _reg("CDK1", "MYC"),  # a vicious comedy
+        _reg("TP53", "BAX"),
+        _reg("BAX", "APOPTOSIS"),  # a doomed tragedy
+    ]
+    story = read_story(events, ["MYC", "CDK1", "TP53", "BAX", "APOPTOSIS"])
+    out = ["THE GENRE READING (every opinionated instance the dynamics fire):"]
+    for genre in ("tragedy", "comedy", "quest", "allegory"):
+        for inst in story.genres.get(genre, []):
+            out.append(f"  {genre:9} {inst}")
+    triples = genre_triples(story.genres)
+    out += ["", "THE DRAMATIC ACCOUNT — through the same engine that reads Shakespeare:"]
+    for s, v, o in triples:
+        out.append(f"  {s} --{v}--> {o}    ({dramatic_situation(v)})")
+    situations = " + ".join(dict.fromkeys(dramatic_situation(v) for _, v, _ in triples))
+    out += ["", f"  → the mechanism reads as: {situations}."]
+    if story.account is None:
+        out.append("    (Regenesis absent -> account degrades to the native genres; install it for")
+        out.append("     the full derivation-over-derivations.)")
+    return "\n".join(out)
+
+
 # ── 1. BLIND MECHANISM RECOVERY — the real-data proof ───────────────────────────────────────
 
 
@@ -195,6 +266,12 @@ def main() -> None:
     print(certified_bottom())
     print(_banner(4, "OPERATOR HYPOTHESIS — the person proposes, the code judges", "illustrative"))
     print(operator_hypothesis())
+    print(_banner(5, "ROLES, NOT GENES — two genes, one recognized mechanism", "illustrative"))
+    print(roles_not_genes())
+    print(
+        _banner(6, "THE STORY, AT FULL LOUDNESS — the dramatic account", "illustrative")
+    )
+    print(story_read())
 
 
 if __name__ == "__main__":
