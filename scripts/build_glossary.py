@@ -17,18 +17,56 @@ Cached under data/diseases/ (gitignored dumps). Writes data/glossary/diagnosis_g
 from __future__ import annotations
 
 import json
+import urllib.request
 from collections import defaultdict
 from pathlib import Path
 
 from homeostat import paths
+from homeostat.util import atomic_write_text, sha256
 
 DIS = Path(paths.DATA) / "diseases"
 OUT = Path(paths.DATA) / "glossary" / "diagnosis_genes.json"
+DISEASES_BASE_URL = "https://download.jensenlab.org"
+CHANNELS = ("knowledge", "experiments", "textmining")
+_CHUNK = 1024 * 1024
+_UA = "Homeostat/0.1 (+https://github.com/rohanvinaik/Homeostat)"
 TM_MIN = (
     1.5  # text-mining confidence floor: low enough to cover under-studied conditions (POTS ~1.5)
 )
 GENE, DISEASE = 1, 3  # column indices (gene_name, disease_name) -- shared across all three channels
 TM_CONF = 5  # text-mining confidence column
+
+
+def ensure_source(channel: str, directory: Path = DIS, base_url: str = DISEASES_BASE_URL) -> Path:
+    """Return a cached DISEASES channel, downloading it atomically when absent."""
+    if channel not in CHANNELS:
+        raise ValueError(f"unknown DISEASES channel: {channel}")
+    dest = directory / f"human_disease_{channel}_filtered.tsv"
+    receipt = dest.with_suffix(".sha256")
+    if dest.exists():
+        if not receipt.exists():
+            atomic_write_text(receipt, sha256(dest) + "\n")
+        return dest
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    part = dest.with_suffix(dest.suffix + ".part")
+    url = f"{base_url.rstrip('/')}/{dest.name}"
+    req = urllib.request.Request(url, headers={"User-Agent": _UA})
+    try:
+        with urllib.request.urlopen(req, timeout=120) as response, part.open("wb") as output:
+            while chunk := response.read(_CHUNK):
+                output.write(chunk)
+        part.replace(dest)
+    except Exception:
+        part.unlink(missing_ok=True)
+        raise
+    atomic_write_text(receipt, sha256(dest) + "\n")
+    return dest
+
+
+def ensure_sources() -> None:
+    """Cache every source required to build the glossary."""
+    for channel in CHANNELS:
+        ensure_source(channel)
 
 
 def _rows(channel: str):
@@ -66,13 +104,14 @@ def build() -> dict:
 
 
 def main() -> None:
+    ensure_sources()
     glossary = build()
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(glossary, sort_keys=True) + "\n")
     size_mb = OUT.stat().st_size / 1e6
     n_cur = sum(1 for e in glossary.values() if e["curated"])
     print(f"wrote {OUT}  ({len(glossary)} diseases, {n_cur} with curated genes, {size_mb:.1f} MB)")
-    for dx in ("Crohn disease", "Type 2 diabetes mellitus", "Parkinson's disease"):  # public
+    for dx in ("Crohn's disease", "Type 2 diabetes mellitus", "Parkinson's disease"):  # public
         e = glossary.get(dx, {"genes": [], "curated": []})
         tm = len(e["genes"]) - len(e["curated"])
         print(f"  {dx[:40]:42} {len(e['genes']):>4} genes ({len(e['curated'])} cur + {tm} tm)")

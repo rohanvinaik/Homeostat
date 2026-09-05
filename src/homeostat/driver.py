@@ -27,7 +27,7 @@ from __future__ import annotations
 from collections.abc import Collection, Iterable, Mapping
 from dataclasses import dataclass
 
-from homeostat.clinic import clinical_verdict, observed_symptoms
+from homeostat.clinic import clinical_verdict, is_certified, observed_symptoms, weakest_tier
 from homeostat.completeness import SpecCompleteness, read_completeness, top_band
 from homeostat.event import Event, active_censors, events_to_censors, events_to_web
 from homeostat.jeeves import Probe, select_probe
@@ -37,6 +37,7 @@ from homeostat.polarity import polarity_censors, signed_adjacency
 from homeostat.position import Position
 from homeostat.resolve import Cluster, cluster_discriminant, rank_clusters, story_clusters
 from homeostat.search import Trajectory, eliminate_two_sign
+from homeostat.signal import Tier
 from homeostat.topology import signed_adjacency as ternary_adjacency
 from homeostat.web import (
     RelationalWeb,
@@ -66,6 +67,9 @@ class DriverRead:
     σ-trajectory; `censored` is what each censor ruled out; `dropped` are observed deviations with
     no directed context; `operator` is the hypothesis ledger — which of the operator's proposed
     edges the shadow confirmed / stood / contradicted (a tested input, never ground truth).
+    `certified` and `certification_tier` preserve the weakest-link evidence boundary carried by the
+    clinical layer: a resolved/bottom-shaped result based on reported evidence is never presented as
+    a certificate.
     """
 
     verdict: str
@@ -77,6 +81,8 @@ class DriverRead:
     censored: dict[str, list[str]]
     dropped: list[str]
     operator: list[HypothesisOutcome]
+    certified: bool = False
+    certification_tier: Tier = Tier.REPORTED
 
 
 def drive(
@@ -133,6 +139,8 @@ def drive(
     stuck = not is_resolved and not traj.bottom
     probe = select_probe(traj.survivors_left, list(probes)) if stuck else None
     verdict = clinical_verdict(traj.bottom, is_resolved, traj.falsifiable, probe is not None)
+    weakest = weakest_tier([positions[node].tier.value for node in observed_scoped])
+    certified = is_certified(verdict, weakest)
     # PREFER: read ONLY the RESOLVED-RELEVANT subgraph -- the surviving mechanism, never the whole
     # cone. A story-understanding model reads the relevance the pipeline validated up to here;
     # excess context DEGRADES it (a neural net is the opposite). The mechanism is the survivors'
@@ -168,4 +176,16 @@ def drive(
     completeness = read_completeness(len(ranked), len(plurality), discriminant)
     # OPERATOR LEDGER: each hypothesis judged against the FULL observed shadow, then reported.
     ledger = operator_ledger(hyp, {o: positions[o].sign for o in observed}, verb_sign)
-    return DriverRead(verdict, story, ranked, completeness, probe, traj, censors, dropped, ledger)
+    return DriverRead(
+        verdict,
+        story,
+        ranked,
+        completeness,
+        probe,
+        traj,
+        censors,
+        dropped,
+        ledger,
+        certified,
+        Tier(weakest),
+    )

@@ -9,20 +9,22 @@ The matrix: INPUT PARADIGMS (how a person arrives -- diagnosis + labs, + operato
 crossed with OUTPUT POLES (recover a bounded hypothesis set / disambiguate what the label flattens /
 certified-⊥ with proof / honest abstention + the discriminating question).
 
-  1. BLIND MECHANISM RECOVERY  (real public data)  -- the instrument, validated
+  1. BLIND RECOVERY PROBE      (real public data)  -- strict acceptance target, reported honestly
   2. DISAMBIGUATION            (illustrative)       -- the label-flattening undone
   3. CERTIFIED ⊥               (illustrative)       -- "no mechanism, with proof"
   4. OPERATOR HYPOTHESIS        (illustrative)       -- fluid intelligence, tested
   5. ROLES, NOT GENES          (illustrative)       -- two genes, one recognized role
   6. THE STORY, AT FULL LOUDNESS (illustrative)     -- the dramatic account (pursuit + revenge)
 
-Run: `PYTHONPATH=src python scripts/gallery.py`. Entries 2-6 are self-contained (no downloads) and
-always run. Entry 1 needs the SHA-pinned data dumps, which the fetch shells download on first run;
-it self-skips if they are absent and offline. Regenesis is optional -- absent, the dramatic account
-degrades gracefully to the native genres.
+Run: `PYTHONPATH=src python scripts/gallery.py`. Pass `--synthetic-only` for the five self-contained
+demonstrations with no downloads. Entry 1 needs the external data dumps, which the fetch shells
+download on first run; it self-skips if they are absent and offline. Regenesis is optional --
+absent, the dramatic account degrades gracefully to the native genres.
 """
 
 from __future__ import annotations
+
+import argparse
 
 from homeostat import render
 from homeostat.driver import drive
@@ -32,6 +34,7 @@ from homeostat.narrative import genre_triples, read_story
 from homeostat.person import read_person
 from homeostat.position import position
 from homeostat.render import dramatic_situation
+from homeostat.resolve import complete_target_rank
 from homeostat.signal import Signal, Tier
 
 VS = {"amplifies": 1, "inhibits": -1}
@@ -211,10 +214,10 @@ def story_read() -> str:
 
 
 def blind_recovery() -> str:
-    """The instrument, validated on REAL public data. A Crohn's diagnosis scopes (via the GWAS
+    """The strict acceptance probe on REAL public data. A Crohn's diagnosis scopes (via the GWAS
     catalog) to a subspace that genuinely contains LRRK2/NOD2/RIPK2; the labs are the observed
-    inflammatory readout; blind to the LRRK2 label, the engine returns a bounded hypothesis set with
-    the LRRK2-NOD2-RIPK2 inflammatory bridge among the candidates. Needs the data dumps present."""
+    inflammatory readout. Passing requires LRRK2, NOD2, and RIPK2 to occur in one scored candidate;
+    surfacing any one member is not a recovery. Needs the data dumps present."""
     try:
         from homeostat import (
             metabolic,
@@ -247,19 +250,31 @@ def blind_recovery() -> str:
     shadow = {g: position(g, 1.0, 0.0, 0.0) for g in ("IRF5", "IKBKG", "TRAF6")}
     read = drive(events, shadow, VS, min_weight=2.0, relevant=crohn)
     axis = {"LRRK2", "NOD2", "RIPK2"}
-    hit = [i + 1 for i, (cl, _s) in enumerate(read.ranked) if cl.entities & axis and _s > 0]
+    hit = complete_target_rank(read.ranked, axis)
+    surfaced = sorted(
+        {gene for cl, score in read.ranked if score > 0 for gene in cl.entities if gene in axis}
+    )
     note = (
-        f"  (the LRRK2-NOD2-RIPK2 axis is candidate #{hit[0]} of the bounded set — recovered blind)"
-        if hit
-        else "  (axis not among the scored candidates)"
+        f"  [PASS] the complete LRRK2-NOD2-RIPK2 axis is candidate #{hit} — recovered blind"
+        if hit is not None
+        else "  [OPEN] the complete LRRK2-NOD2-RIPK2 axis was not recovered as one candidate"
+        + (f"; surfaced individually: {', '.join(surfaced)}" if surfaced else "")
     )
     return render(read) + "\n" + note
 
 
-def main() -> None:
+def main(argv: list[str] | None = None) -> None:
+    parser = argparse.ArgumentParser(description="Run Homeostat's computed demonstration gallery.")
+    parser.add_argument(
+        "--synthetic-only",
+        action="store_true",
+        help="skip the external-data recovery probe and run only self-contained demonstrations",
+    )
+    args = parser.parse_args(argv)
     print((__doc__ or "").split("\n\n")[0])
-    print(_banner(1, "BLIND MECHANISM RECOVERY — LRRK2–NOD2–RIPK2, blind", "real public data"))
-    print(blind_recovery())
+    if not args.synthetic_only:
+        print(_banner(1, "BLIND RECOVERY PROBE — LRRK2–NOD2–RIPK2", "real public data"))
+        print(blind_recovery())
     print(_banner(2, "DISAMBIGUATION — same label, two mechanisms", "illustrative"))
     print(disambiguation())
     print(_banner(3, "CERTIFIED ⊥ — no mechanism explains this, with proof", "illustrative"))

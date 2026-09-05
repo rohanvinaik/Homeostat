@@ -1,72 +1,43 @@
-PY := PYTHONPATH=src python3
+PYTHON ?= python3
+RUN := PYTHONPATH=src $(PYTHON)
 
-.PHONY: run status lint test enrich
+.DEFAULT_GOAL := help
 
-run:      ## run/resume the §13.1 pipeline (idempotent; safe after any crash)
-	$(PY) -m homeostat.pipeline
+.PHONY: help install-dev check lint format test coverage demo gallery glossary connect prior-web
 
-enrich:   ## run the §13.2 selection-signature enrichment (idempotent)
-	$(PY) -m homeostat.enrich
+help: ## show the supported development and demonstration commands
+	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z0-9_-]+:.*## / {printf "  %-14s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-bridge:   ## run the §13.3 blind bridge recovery + preregistered LRRK2 control
-	$(PY) -m homeostat.bridge
+install-dev: ## install Homeostat and its development tools in the active environment
+	$(PYTHON) -m pip install -e ".[dev]"
 
-gwas-extract: ## (re)build the §13.4 trait gene sets from the GWAS bulk file
-	$(PY) -m homeostat.gwas_extract data/network/gwas-catalog-download-associations-alt-full.tsv
+check: lint test ## run the complete local quality gate
 
-ensemble: ## run the §13.4 oracle-ensemble calibration (structure-derived slice)
-	$(PY) -m homeostat.ensemble
+lint: ## check lint and formatting without modifying files
+	ruff check .
+	ruff format --check .
 
-sigsearch: ## run the Phase-2 deterministic verifier baseline (structural bridges)
-	$(PY) -m homeostat.sigsearch
+format: ## apply Ruff's safe fixes and formatter
+	ruff check --fix .
+	ruff format .
 
-propose-verify: ## verify the frozen LLM proposal flood (firewall + selection-lift)
-	$(PY) -m homeostat.propose_verify
+test: ## run the complete test suite
+	$(RUN) -m pytest -q
 
-eir-pile: ## build the cohort-scale E/I/R PBS pile from Pan-UKBB allele frequencies (§7)
-	$(PY) -m homeostat.eir_cohort
+coverage: ## run the test suite with branch-aware coverage
+	$(RUN) -m pytest -q --cov=src/homeostat --cov-branch --cov-report=term-missing
 
-gnomad-pile: ## build the E/I/R PBS pile from gnomAD v2.1.1 SAS exomes (run with HOMEOSTAT_TAG=_gnomad)
-	$(PY) -m homeostat.gnomad_pile
+demo: ## run the five self-contained demonstrations (no downloads)
+	$(RUN) scripts/gallery.py --synthetic-only
 
-eir-enrich: ## selection-signature enrichment on the PBS pile, MAF-matched (§8.4)
-	$(PY) -m homeostat.eir_enrich
+gallery: ## run the complete gallery, including the external-data acceptance probe
+	$(RUN) scripts/gallery.py
 
-eir-enrich-block: ## §8.4 LD-block-corrected re-test (1Mb block bootstrap, preregistered)
-	$(PY) -m homeostat.eir_enrich_block
+glossary: ## build the sourced diagnosis-to-gene glossary
+	$(RUN) scripts/build_glossary.py
 
-eir-enrich-thin: ## §8.4 LD-thinned re-test (1 variant/1Mb window, preregistered)
-	$(PY) -m homeostat.eir_enrich_ldthin
+connect: ## map the diagnoses supplied in ARGS over the prior web
+	$(RUN) scripts/connect.py $(ARGS)
 
-lrrk2-gate: ## §13.3 LRRK2 bridge recovery on the PBS pile, function-blind (Law 3)
-	$(PY) -m homeostat.lrrk2_gate
-
-bridge-discovery: ## §3.3 annotation-blind candidate-bridge discovery (hypotheses)
-	$(PY) -m homeostat.bridge_discovery
-
-annotation-recovery: ## §3.2 annotation-recovery validator (pleiotropy on the 628, preregistered)
-	$(PY) -m homeostat.annotation_recovery
-
-annotation-recovery-studybias: ## §3.2 study-bias control (add pubmed-tertile matching, preregistered)
-	$(PY) -m homeostat.annotation_recovery_studybias
-
-pbs-restricted: ## §7 PBS-restricted candidate set sweep (run per cohort; HOMEOSTAT_TAG=_gnomad for gnomAD)
-	$(PY) -m homeostat.pbs_restricted
-
-pbs-restricted-compare: ## cross-cohort comparison — is PBS now load-bearing?
-	$(PY) -m homeostat.pbs_restricted_compare
-
-sig-descent: ## §III selection-weighted κ (PBS as §10.3 prior); run per cohort (HOMEOSTAT_TAG=_gnomad)
-	$(PY) -m homeostat.sig_descent
-
-sig-descent-compare: ## §III cross-cohort coherence test (does the lift replicate?)
-	$(PY) -m homeostat.sig_descent_compare
-
-status:   ## pull progress (add JSON=1 for machine-readable)
-	$(PY) -m homeostat.status $(if $(JSON),--json,)
-
-lint:
-	ruff check src tests && ruff format --check src tests
-
-test:
-	$(PY) -m pytest -q tests
+prior-web: ## fetch source data as needed and assemble the prior web
+	$(RUN) -m homeostat.prior_web

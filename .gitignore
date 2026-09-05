@@ -5,11 +5,17 @@ data/
 coverage.xml
 .coverage
 
+# Secrets / local environment — never commit credentials
+.env
+.env.*
+
 # Python
 __pycache__/
 *.pyc
 .venv/
 *.egg-info/
+build/
+dist/
 .ruff_cache/
 .pytest_cache/
 
@@ -23,3 +29,6 @@ __pycache__/
 
 # Serena language-server project cache (build artifact)
 .serena/
+
+# Prism setup-health state cache (build artifact)
+.prism/

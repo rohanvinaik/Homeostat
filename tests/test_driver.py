@@ -5,6 +5,7 @@ from homeostat.driver import drive
 from homeostat.event import Event
 from homeostat.operator import HypothesisOutcome
 from homeostat.position import position
+from homeostat.signal import Tier
 
 VS = {"amplifies": 1, "inhibits": -1}
 
@@ -28,8 +29,28 @@ def test_drive_recovers_the_unique_source_and_reads_it_as_a_story():
     pos = {"A": position("A", 1.0, 0.0, 0.0), "B": position("B", 1.0, 0.0, 0.0)}
     read = drive(ev, pos, VS)
     assert read.verdict == "resolved"
+    assert read.certified is True
+    assert read.certification_tier is Tier.VERIFIED
     assert read.trajectory.survivors_left == ["source"]  # REQUIRE recovers the source
     assert any(q.hero == "source" and q.verdict == "resolving" for q in read.story.genres["quest"])
+
+
+def test_drive_preserves_the_weakest_evidence_tier_on_its_public_result():
+    ev = [
+        _reg("amplifies", "source", "A"),
+        _reg("amplifies", "source", "B"),
+        _reg("amplifies", "decoy", "A"),
+    ]
+    pos = {
+        "A": position("A", 1.0, 0.0, 0.0, Tier.REPORTED),
+        "B": position("B", 1.0, 0.0, 0.0),
+    }
+
+    read = drive(ev, pos, VS)
+
+    assert read.verdict == "resolved"
+    assert read.certified is False
+    assert read.certification_tier is Tier.REPORTED
 
 
 def test_drive_closes_the_story_narrow_into_ranked_mechanisms():

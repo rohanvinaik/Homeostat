@@ -1,13 +1,15 @@
 # Homeostat — Architecture (as-built wiring map)
 
-**Status:** Canonical engineering map, traced from source at `1c007f4` (2026-09-05). Companion to
+**Status:** Canonical engineering map, source-traced and refreshed 2026-09-05. Companion to
 `docs/THESIS.md` and `docs/SYSTEM_DESIGN.md` (the *why*; this is the *what and how*). Every claim below
 was traced with the language server — `get_symbols_overview` for the inventory, `find_referencing_symbols`
 for the call graph — not from memory. **It is the definition of the live system: anything not reachable
 from an apex read here is, by construction, parked or archived residue (see §9–§10).** Re-traced in full
 at `1c007f4`: the **OUTPUT LAYER** `render.py` (§2 L8, §4d) is now built and exported — the machine's CALL,
 the missing half of the call-and-response — and `__init__` now exports `drive`/`read_person`/`render`/
-`DriverRead` (the read is reachable outside tests). `drive`'s PREFER was corrected to read the RESOLVED
+`DriverRead` (the read is reachable outside tests). `DriverRead` now preserves the clinical layer's
+weakest-link certification tier through rendering, so reported evidence cannot be printed as a proof.
+`drive`'s PREFER was corrected to read the RESOLVED
 mechanism (the survivors' forward cascade), not the whole cone, and coverage/meter now credit REACHING the
 shadow (§4d, §5) — the deltas since the `2ed5038` input-layer trace.
 
@@ -28,9 +30,9 @@ the meter and reported, never ground truth. It reads a FROZEN world and adds not
 its significance is κ (coverage of the shadow), never a statistic (Law 1). The answer is a **story
 resolved to ranked mechanisms, never a ranked gene** (the subject-fallacy, cut `5c30e65`).
 
-**Scale (counts primary-sourced, not remembered):** 49 modules · 46 `tests/test_*.py` · **483 tests**, of
-which **101 are Detective-generated** across 53 `tests/detective/*` synth files (after the gene-ranking-path
-tidy, §10). Clean tree, `main`. A runnable demonstration + glossary surface lives in `scripts/` (§4e).
+**Scale:** 49 source modules plus a broad hand-authored and Detective-generated specification suite.
+Exact test and coverage counts are intentionally left to CI rather than frozen into this document. A
+runnable demonstration + glossary surface lives in `scripts/` (§4e).
 
 ---
 
@@ -108,7 +110,8 @@ L5/L6 consume it through the typed `Event` / `StoryRead` / `DriverRead` contract
 - **Gate PASSED:** `couple_verdict`/`events_to_web`/`events_to_censors`/`active_censors` pinned (`test_event`).
 
 ### L2 BANKS — ✅ 4 global edge · 🅿️ 2 scoped. The three-tier bright line (Law 9)
-Each bank = a pure renderer (`X.py`) + an IO shell (`X_fetch.py`; data gitignored + SHA-pinned via `paths`).
+Each bank = a pure renderer (`X.py`) + an IO shell (`X_fetch.py`; data gitignored, atomically cached,
+and SHA-receipted locally; reference snapshot hashes live in `docs/REFERENCE_MANIFEST.yaml`).
 
 | Bank | Tier (Law 9) | Renderer | Fetch shell | Renders |
 |---|---|---|---|---|
@@ -395,11 +398,12 @@ The bounded, story-led hypothesis set — the half of the call-and-response the 
 used by `scripts/gallery.py` and `test_render`.
 
 **(e) `scripts/` — the demonstration + glossary surface (runnable, not library).**
-- **`scripts/gallery.py`** — the **validation suite**: the input-paradigm × output-pole matrix, every read
-  COMPUTED by the real pipeline (never authored). Six entries — blind LRRK2 recovery (real public data,
-  auto-fetch), disambiguation, certified-⊥, operator hypothesis, roles-not-genes (the earned fungibility
-  verdict), and the story at full loudness (the Polti dramatic account). The greenfield-workflow
-  demonstration (§7.6). Run: `PYTHONPATH=src python scripts/gallery.py`.
+- **`scripts/gallery.py`** — the input-paradigm × output-pole demonstration matrix, every read
+  COMPUTED by the real pipeline (never authored). Five entries are self-contained: disambiguation,
+  certified-⊥, operator hypothesis, roles-not-genes (the earned fungibility verdict), and the story at
+  full loudness (the Polti dramatic account). A sixth, real-data entry is the strict LRRK2–NOD2–RIPK2
+  acceptance probe and reports OPEN unless all three occur in one scored candidate. Run the fast surface
+  with `PYTHONPATH=src python scripts/gallery.py --synthetic-only`; omit the flag for the real-data probe.
 - **`scripts/build_glossary.py`** — the **sourced diagnosis→gene glossary** (run once): pulls the Jensen-lab
   DISEASES database (knowledge + experiments + textmining channels), tiers curated-vs-textmined so
   provenance stays visible, writes `data/glossary/diagnosis_genes.json` (5957 diseases). This is the
@@ -564,11 +568,12 @@ structurally cannot emit this read.
    story-led hypothesis set, `3c60d47`/`1a74e41`); ✅ `scripts/gallery.py`, the validation suite (the
    input-paradigm × output-pole matrix, every read computed); ✅ the sourced diagnosis→gene glossary
    (`scripts/build_glossary.py`) + connection map (`scripts/connect.py`); ✅ `docs/PROOF_PACKET.md` (each
-   capacity, its demo, why it is categorical). ⬜ Remaining: a CLI binary and a standing blind-acceptance
-   oracle (the gallery demonstrates, it does not yet gate).
-7. 🔧 **The blind LRRK2 control** — the gallery's entry 1 already recovers the LRRK2–NOD2–RIPK2 bridge BLIND
-   (a Crohn's GWAS subspace + a 3-node inflammatory shadow → a bounded 18-candidate set with the axis among
-   it) on real public data; ⬜ what remains is promoting it from a demonstration to a standing acceptance test.
+   capacity, its demo, and the exact claim it supports). ⬜ Remaining: a CLI binary and automation of the
+   real-data acceptance oracle.
+7. 🔧 **The blind LRRK2 control** — the gallery's entry 1 is now a strict acceptance probe: all three
+   members must occur in one positive-scoring candidate. On the current cached corpus it returns a bounded
+   set and surfaces LRRK2, but does **not** recover the full LRRK2–NOD2–RIPK2 bridge as one mechanism. The
+   acceptance test remains open; partial intersection is explicitly rejected.
 
 ---
 
@@ -602,7 +607,7 @@ structurally cannot emit this read.
 | **L7 input — relevance filter** (`relevance.py`) | ✅ **LIVE** | `trait_gene_index`/`relevant_subspace`/`fungible_map` Detective-COMPLETE; `test_relevance` |
 | **L7 input — `person.read_person`** (the interface turn) | ✅ **LIVE** | assembly wired to `drive(relevant=)`; integration-tested `test_person` |
 | **L8 render — `render.render`** (the machine's CALL) | ✅ **LIVE** | 8 phrase-decisions Detective-COMPLETE; validated through real `drive`; `test_render`; exported |
-| **`scripts/gallery.py`** (the validation suite) | ✅ | 6 entries, every read computed by the real pipeline; blind LRRK2 recovery on real data |
+| **`scripts/gallery.py`** (demonstration + acceptance probe) | 🔧 | 5 self-contained computed reads; real-data LRRK2 probe is strict and currently open |
 | **`scripts/build_glossary.py` + `connect.py`** (sourced glossary + connection map) | ✅ | DISEASES-sourced diagnosis→gene (5957); connection map over the interactome |
 | resolve incr.3c GWAS seeding | ⬜ | deferred to the input layer (generate-wide home) |
 | input layer incr.3 (notes) / incr.4 (cassette) / greenfield baseline / CLI-render | ⬜ | designed, not built |
@@ -615,9 +620,9 @@ structurally cannot emit this read.
 Traced with the language server: `get_symbols_overview` for the inventory, `find_referencing_symbols` for
 the call graph, from the entry points (`person.read_person` → `driver.drive` → `render.render`;
 `clinic.read_from_events`) + `prior_web._main` (assemble the web) + `ground.ground` (front door) + the
-`scripts/` surface (gallery/build_glossary/connect). 46 `tests/test_*.py` (**483 tests**) cover every live
-module; every pure decision on the live input + elimination + story + resolve + completeness + operator +
-render path is Detective-pinned under `tests/detective/` (**53 synth files, 101 tests**) — the incr.2
+`scripts/` surface (gallery/build_glossary/connect). The hand-authored and Detective-generated suites cover
+every live module; every pure decision on the live input + elimination + story + resolve + completeness +
+operator + render path is Detective-pinned under `tests/detective/` — the incr.2
 `cluster_coherence` debt is closed (`801448b`), and each incr.3 + render pin caught real killables
 Detective's search had mis-filed as candidate-equivalent (the residual-reading discipline,
 `0f7473a`/`300aff5`/`1a74e41`).
@@ -651,7 +656,8 @@ re-founding:
 - **the gene-ranking PREFER path** (⛔, this trace) — `driver.rank_candidates` + `driver.proximity_coherence`
   + `web.node_convergence` (the subject-fallacy ranker), plus their intent tests + 2 Detective synths. Fully
   superseded by `resolve.rank_clusters` / `cluster_coherence` (the mechanism ranker over story-clusters);
-  re-verified zero production callers before removal. `ruff`/`ty` clean, 483 tests green after.
+  re-verified zero production callers before removal. `ruff`/`ty` and the then-current test suite were
+  green after the removal.
 
 **Archived earlier** (`docs/archive/`, 2026-09-04) — the RIPPED statistical genus (EIR cohort, gnomAD/
 panUKBB, phase-2 proposer/verifier, sig-descent) + the pre-refounding orphaning audit; the engine they

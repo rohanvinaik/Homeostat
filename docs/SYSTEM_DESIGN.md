@@ -241,7 +241,12 @@ never a wrong category).
 So the data blocker is downgraded from "binding on the program" to "a public-bioinformatics pipeline for the
 web + the person's own history for the dynamics," with population validation the only genuinely gated piece.
 
-## 12. Build state — what is built, what is next
+## 12. Build state — historical implementation snapshot
+
+> [!NOTE]
+> This section records the implementation state on 2026-09-02. It is preserved because this file
+> governs the design, but it is not the live build inventory. See the top-level `ARCHITECTURE.md` for
+> the source-traced current state.
 
 **Built and pinned (2026-09-02, 149 tests green; every pure decision Detective-complete):**
 - **The engine (resolve-narrow):** `search.eliminate_two_sign` + `constraint_disposition` (two-sign

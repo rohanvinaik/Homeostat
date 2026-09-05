@@ -1,46 +1,48 @@
 # Homeostat — Proof Packet
 
-Each capacity claimed in the [README](../README.md), paired with a **runnable demonstration** — a
-command and its *actual, unedited output* — and an argument for why it is **categorically** different
-from what medicine currently offers, not merely better at the same thing. Every read below is
-*computed by the pipeline*, not authored; you can reproduce all of it.
+Each implemented capacity described in the [README](../README.md), paired with a **runnable
+demonstration** — a command and its *actual, unedited output* — and the precise claim that output can
+support. Every read below is *computed by the pipeline*, not authored. An acceptance target that does
+not pass is reported as open rather than promoted into evidence.
 
 > These are hypotheses to interrogate, not diagnoses, and nothing here is medical advice. That
 > discipline is itself one of the proofs (§4–§5).
 
 ## How to run this (from a fresh clone)
 
-The core is **stdlib-only** (`requires-python >= 3.10`, `dependencies = []`) — there is nothing to
-`pip install`. From the repository root:
+The core is **stdlib-only** (`requires-python >= 3.10`, `dependencies = []`). From the repository root:
 
 ```bash
-python scripts/gallery.py                                  # §1–§9: six demonstrations, end to end
+python -m pip install -e ".[dev]"                          # development and verification tools
+python scripts/gallery.py --synthetic-only                 # five self-contained demonstrations
+python scripts/gallery.py                                  # add the real-data acceptance probe
 python scripts/build_glossary.py                           # build the glossary (once; needed by §3)
 python scripts/connect.py "Crohn's disease" "Ulcerative colitis"   # §3: the connection map
-python -m pytest -q                                        # the full specification: 500 tests
+python -m pytest -q                                        # the full specification
 ```
 
 - **Entries 2–6 of the gallery, and every synthetic demonstration below, are self-contained** — they
   build a small input geometry in memory and run instantly, no network, no data.
-- **The real-data demonstrations** (§1 blind recovery, §3 connection map) read six open-biology
-  databases (SIGNOR, STRING, Ensembl/Compara, Reactome, GTEx, GWAS) and the Jensen-lab DISEASES
-  disease-gene database. The fetch shells **download and SHA-pin these on first run** (a few hundred
-  MB, one time); after that they are cached. `scripts/build_glossary.py` builds the diagnosis→gene
-  glossary from DISEASES.
+- **The real-data demonstrations** (§1 recovery probe, §3 connection map) use SIGNOR, STRING,
+  Reactome/NCBI, GWAS Catalog, and the Jensen-lab DISEASES disease-gene database. Other implemented
+  banks are not silently counted as part of these two scripts. Fetch shells download external data
+  atomically and write local SHA-256 receipts; moving upstream artifacts are data revisions, not
+  byte-stable reruns. `scripts/build_glossary.py` builds the diagnosis→gene glossary from DISEASES.
 - **Regenesis** (the story-understanding engine, §9) is an *optional* dependency: absent, the dramatic
   account degrades gracefully to the native genre reading; the reads still run.
 
-Determinism note: there is no trained model and no randomness in the read — the same input produces
-byte-identical output every time. That is what makes "auditable" (§10) a literal claim.
+Determinism note: there is no trained model and no randomness in the core read. Byte-identical input
+artifacts produce byte-identical output; a changed moving upstream artifact is a different input.
 
 ---
 
 # I. Seeing what single-tool inspection cannot
 
-## §1 — Recover the mechanism from the shadow
+## §1 — Strict blind-recovery probe
 
-**The claim.** From a sparse deviation pattern it recovers a bounded set of candidate *mechanisms* —
-including, blind, a known one.
+**The acceptance claim.** From a sparse deviation pattern, recover the complete known
+LRRK2–NOD2–RIPK2 bridge as one scored candidate without using those names in generation. A candidate
+containing only one member does not pass.
 
 **What medicine does, and the wall.** A clinical workup reads a presentation by projecting it onto
 named diagnostic axes and testing each against a population threshold. A pattern that is *sub-threshold
@@ -48,7 +50,7 @@ on every axis alone* but coherent as a joint displacement — a *shadow* — is 
 signal lives in the correlations the projection flattens. This is not a power problem: adding patients
 does not recover a signal the projection has already thrown away.
 
-**Demonstration** (`python scripts/gallery.py`, §1 — real public data):
+**Current demonstration** (`python scripts/gallery.py`, §1 — real public data):
 
 ```
 THE READ  —  18 candidate mechanisms fit; none yet separable.
@@ -61,17 +63,18 @@ CANDIDATE MECHANISMS  (ranked by how much of the presentation each explains)
 
 WHAT I CAN'T YET TELL  —  and the measurement that would
   Measure DCC; it separates the leading candidates.
-  (the LRRK2-NOD2-RIPK2 axis is candidate #11 of the bounded set — recovered blind)
+  [OPEN] the complete LRRK2-NOD2-RIPK2 axis was not recovered as one candidate;
+  surfaced individually: LRRK2
 ```
 
-Given the public inflammatory-bowel gene set as a search space and a three-node inflammatory shadow —
-**blind to the answer** — it returns a *dozen* legible candidate mechanisms with the known
-**LRRK2–NOD2–RIPK2** inflammatory bridge among them.
+Given the public Crohn's gene set as a search space and a three-node inflammatory shadow, the current
+data snapshot returns a bounded set and surfaces LRRK2, but it does **not** recover the complete
+LRRK2–NOD2–RIPK2 bridge as one mechanism. The strict positive control therefore remains open.
 
-**The categorical difference.** The input is three generic nodes over a fifteen-thousand-node
-interactome. A counting method sees nothing; a large model would confabulate one confident answer.
-This returns a *small, legible, falsifiable* set and names the measurement that narrows it. It reads
-the object — the joint displacement — that projection structurally cannot represent.
+**What this run currently establishes.** The real-data path executes over the public corpus, returns a
+bounded and inspectable hypothesis set, and names a discriminating measurement. It does not yet
+establish the stronger biological recovery claim. Keeping the failed acceptance condition visible is
+part of the instrument's claim discipline.
 
 ## §2 — Roles, not genes
 
@@ -320,8 +323,9 @@ with confidence. A clinician's intuition is not reproducible and dies with the c
 
 **Demonstration.** There is nothing to train: `pyproject.toml` declares `dependencies = []`. The same
 input produces byte-identical output every run (no weights, no randomness). Every candidate on every
-list traces back to the coupling web, the eliminations, and the signals that produced it —
-`python -m pytest -q` verifies **500** intent-and-mutation-pinned tests over the pure decisions.
+list traces back to the coupling web, the eliminations, and the signals that produced it. The complete
+`python -m pytest -q` suite verifies those decisions, including mutation-generated characterizations
+of the critical acceptance and rendering boundaries.
 
 **The categorical difference.** This is the only point that is *simultaneously* mechanistic (unlike a
 correlation), auditable (unlike a trained model), reproducible (unlike intuition), and honest about

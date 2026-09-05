@@ -87,27 +87,19 @@ differentiation statistic"; "the mechanism is the network hub"; "we need a signi
 Every one is the drift. When a result plateaus, the first hypothesis is **"the coherence object
 / the constraint graph is wrong,"** never "add a better statistic."
 
-## SYMPTOM READ — the runnable front door (when someone drops symptoms)
+## RUNNABLE SURFACES — use the live architecture, not retired validation code
 
-When a person arrives with a set of symptoms and some version of *"there's SOMETHING up and no doctor
-believes me,"* this is the intended entry point. It is an **epistemic interface, not a print box** — run
-it, read what it MEANS, honor its Jeeves nudges, then put on the lab coat:
+The old `validation/read.py` symptom CLI belonged to the pre-2026-09-01 architecture and no longer
+exists. Do not cite or reconstruct it as the public front door. The live surfaces are:
 
-    PYTHONPATH=src python3 validation/read.py "<symptom>, <symptom>, <symptom>, ..."
-    # optional n=1 sharpening from a personal genotype (PERSONAL — output stays LOCAL, NEVER committed):
-    PYTHONPATH=src python3 validation/read.py "<symptoms>" --genotype <promethease.json>
+    make demo       # five self-contained reads; no downloads
+    make gallery    # adds the strict real-data LRRK2–NOD2–RIPK2 acceptance probe
+    make connect ARGS='"Disease One" "Disease Two"'
 
-The CLI pulls each symptom's genes from the open corpus, censors the generic hubs (a gene that touches
-everything explains nothing), reports how much to trust the convergence against a fair degree-matched
-null, and — **Jeeves mode** — reads the SHAPE of its own output to pre-empt the next query: it re-homes a
-data-desert phenotype to where its genes actually live, and names the pair whose overlap most exceeds
-chance for its size. It reports meaning; it will **not** impute the mechanism's *purpose* — that boundary
-is deliberate (a machine ranks and connects; it does not decide *why*).
-
-Then YOU put on the lab coat: group the bridge genes into functional modules and narrate the most
-coherent CAUSAL HYPOTHESIS they support — cite the genes, connect the symptoms, name where the data
-stops. A hypothesis to validate or reject, **NEVER a diagnosis, NEVER medical advice.** Building the *why*
-is the human's job — that is the point, not a limitation.
+The public Python path is `read_person` / `drive` → `render`. It reports a bounded mechanistic
+hypothesis, the evidence tier that warrants it, or the next discriminating question. It will **not**
+impute the mechanism's *purpose*: the machine ranks and connects; it does not decide *why*. Every
+output remains a hypothesis to validate or reject, **never a diagnosis and never medical advice**.
 
 ## The two misreadings that also kill this project
 

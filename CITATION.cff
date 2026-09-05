@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use Homeostat in research, please cite the software using this metadata."
+type: software
+title: "Homeostat"
+abstract: >-
+  An experimental per-person research engine for two-sign mechanism resolution over a fixed prior
+  biological web, with explicit abstention, evidence-tiered certification, and narrative structure.
+authors:
+  - family-names: "Vinaik"
+    given-names: "Rohan"
+repository-code: "https://github.com/rohanvinaik/Homeostat"
+url: "https://github.com/rohanvinaik/Homeostat"
+license: MIT
+version: 0.1.0

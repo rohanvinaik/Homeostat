@@ -104,17 +104,22 @@ def outcome_clause(subject: str, verb: str, target: str, outcome: str) -> str:
     return f"Your hypothesis that {edge} — untestable on this shadow (it stands, unjudged)."
 
 
-def verdict_clause(verdict: str, candidates: int) -> str:
+def verdict_clause(verdict: str, candidates: int, certified: bool = True) -> str:
     """The one-line read headline for a clinical verdict (the clinic CODE values, LOWERCASE).
     RESOLVED (one mechanism), BOTTOM (certified ⊥, a proof of non-membership), DEGENERATE (self-
     confirming, σ_sem=0), ASK (a plurality a measurement separates), else ABSTAIN (a plurality, none
-    yet separable). `candidates` = the count of shadow-explaining mechanisms. Pure over str/int.
+    yet separable). `candidates` = the count of shadow-explaining mechanisms. `certified` prevents
+    certificate-shaped verdicts resting on reported evidence from being rendered as proofs. Pure.
     """
     plural = "s" if candidates != 1 else ""
     if verdict == RESOLVED:
-        return "resolved to a single mechanism."
+        if certified:
+            return "resolved to a single mechanism."
+        return "provisionally resolved to one mechanism; the evidence does not certify it."
     if verdict == BOTTOM:
-        return "certified ⊥ — nothing in scope explains the presentation (a proof)."
+        if certified:
+            return "certified ⊥ — nothing in scope explains the presentation (a proof)."
+        return "uncertified ⊥ — nothing in scope fits, but the evidence cannot certify absence."
     if verdict == DEGENERATE:
         return "degenerate — self-confirming; nothing was falsified."
     if verdict == ASK:
@@ -148,7 +153,7 @@ def render(read: DriverRead) -> str:
     """
     lines: list[str] = []
     candidates = [(cl, sc) for cl, sc in read.ranked if sc > 0.0]
-    lines.append(f"THE READ  —  {verdict_clause(read.verdict, len(candidates))}")
+    lines.append(f"THE READ  —  {verdict_clause(read.verdict, len(candidates), read.certified)}")
 
     if candidates:
         lines.append("")

@@ -15,6 +15,7 @@ from homeostat.render import (
     tragedy_clause,
     verdict_clause,
 )
+from homeostat.signal import Tier
 
 VS = {"amplifies": 1, "inhibits": -1}
 
@@ -81,6 +82,22 @@ def test_verdict_clause_branches():
     assert "self-confirming" in verdict_clause("degenerate", 1)
     assert "3 candidate mechanisms" in verdict_clause("ask", 3)
     assert "separable" in verdict_clause("abstain", 2)
+    assert "provisionally resolved" in verdict_clause("resolved", 1, certified=False)
+    assert "uncertified ⊥" in verdict_clause("bottom", 0, certified=False)
+    assert "a proof" not in verdict_clause("bottom", 0, certified=False)
+
+
+def test_render_does_not_certify_a_bottom_resting_on_reported_evidence():
+    events = [_reg("amplifies", "source", "A"), _reg("amplifies", "source", "B")]
+    positions = {
+        "A": position("A", 1.0, 0.0, 0.0, Tier.REPORTED),
+        "B": position("B", -1.0, 0.0, 0.0),
+    }
+
+    out = render(drive(events, positions, VS))
+
+    assert "uncertified ⊥" in out
+    assert "a proof" not in out
 
 
 # ---- render, end-to-end over a REAL DriverRead ----

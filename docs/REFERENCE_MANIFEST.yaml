@@ -1,6 +1,7 @@
 # The canonical reference corpus for Homeostat, machine-checkable.
-# External files live in sibling projects (not bundled here); the sha256 pins the
-# version this design was derived against. Re-hash to detect drift:
+# External files live in sibling projects (not bundled here); each sha256 records the
+# version this design was derived against. Fetchers write local receipts but do not
+# automatically enforce this ledger. Re-hash and compare explicitly to detect drift:
 #   shasum -a 256 <path>   (compare to the value below)
 # Roles map each source to the checkpoint (§) or theory-doc part it grounds.
 

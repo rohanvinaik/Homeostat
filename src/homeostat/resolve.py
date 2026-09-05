@@ -20,7 +20,7 @@ Jeeves DO-THIS on a surviving plurality, and the GWAS relevance-seeding.
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Collection, Iterable, Mapping
 from dataclasses import dataclass
 
 from homeostat.jeeves import expected_information_gain
@@ -37,6 +37,24 @@ class Cluster:
 
     entities: frozenset[str]
     members: tuple[tuple[str, object], ...]
+
+
+def complete_target_rank(
+    ranked: Iterable[tuple[Cluster, float]], target: Collection[str]
+) -> int | None:
+    """Return the 1-based rank of a positive-scoring candidate containing the complete target.
+
+    This is the acceptance-test primitive: partial intersection is explicitly not recovery.
+    """
+    required = frozenset(target)
+    return next(
+        (
+            rank
+            for rank, (cluster, score) in enumerate(ranked, 1)
+            if score > 0 and required <= cluster.entities
+        ),
+        None,
+    )
 
 
 def connected_components(sets: list[frozenset[str]]) -> list[frozenset[str]]:

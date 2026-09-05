@@ -1,11 +1,15 @@
-# Proof Points — what it would take to earn "generalizable mechanistic advance"
+# Proof Points — historical validation ledger for the retired pre-2026-09-01 architecture
 
-The LRRK2–NOD2–RIPK2 recovery is one green cell in the table below. It proves the
-*instrument runs and recovers a known mechanism from free data with no gene names told
-to it*. It does **not**, on its own, earn the headline claim. This document enumerates the
-full set of stress tests, negative controls, benchmarks, and demonstrations that would —
-each tied to the specific sub-claim it discharges, with an explicit pass bar and an honest
-status. Nothing here is "done" except where marked.
+> [!WARNING]
+> This file is retained as a design-history artifact. Its `validation/` programs and the architecture
+> they exercised were removed during the 2026-09-01 refounding; the recorded PASS states below are
+> **not evidence for the current engine**. For live claims and runnable commands, use
+> [`PROOF_PACKET.md`](PROOF_PACKET.md) and the top-level [`ARCHITECTURE.md`](../ARCHITECTURE.md).
+
+In this retired ledger, LRRK2–NOD2–RIPK2 recovery was recorded as one green cell and was taken to show
+that architecture recovering a known mechanism from free data without answer-gene seeding. It does
+**not** describe the current engine's result. The table preserves the original stress tests, negative
+controls, benchmarks, and demonstrations, each tied to its original sub-claim and pass bar.
 
 The intent is that a skeptic (a geneticist, a methods reviewer, the author six months from
 now) can read one row, run it, and see for themselves whether the cell goes green. If a row
