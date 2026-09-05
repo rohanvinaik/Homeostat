@@ -161,7 +161,9 @@ def render(read: DriverRead) -> str:
         if extra > 0:
             lines.append(f"  … and {extra} more that partially explain the presentation.")
         triples = genre_triples(read.story.genres)
-        if triples and read.story.account is not None:
+        # the Regenesis tier-2 account line: `account` is None whenever Regenesis is absent (the
+        # greenfield default), so this branch is unreachable in a no-Regenesis test/CI env.
+        if triples and read.story.account is not None:  # pragma: no cover
             sits = " + ".join(dict.fromkeys(dramatic_situation(v) for _, v, _ in triples))
             lines.append(f"  (read through the same engine that reads Macbeth: {sits})")
 

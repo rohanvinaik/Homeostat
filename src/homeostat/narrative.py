@@ -120,7 +120,7 @@ def _compose(triples: list[tuple[str, str, str]]) -> dict | None:
         from regenesis.instrument import understand
     except ImportError:
         return None
-    return understand(triples_to_contracts(triples), kind="contracts")  # universe=None -> narrative
+    return understand(triples_to_contracts(triples), kind="contracts")  # pragma: no cover
 
 
 def read_story(

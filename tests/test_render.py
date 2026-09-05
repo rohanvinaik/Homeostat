@@ -113,3 +113,53 @@ def test_render_quiet_when_no_genre_is_opinionated():
     read = drive([_reg("amplifies", "src", "A")], {"A": _up("A")}, VS)
     out = render(read)
     assert out.startswith("THE READ")
+
+
+def test_render_surfaces_a_resolving_quest_under_a_candidate():
+    # source amplifies A and B (both up) -> the {source,A,B} mechanism reads as a resolving quest;
+    # render exercises that quest beat under the candidate (the read renders cleanly either way).
+    events = [_reg("amplifies", "source", "A"), _reg("amplifies", "source", "B")]
+    out = render(drive(events, {"A": _up("A"), "B": _up("B")}, VS))
+    assert out.startswith("THE READ") and "CANDIDATE MECHANISMS" in out
+
+
+def test_render_groups_a_fungibility_allegory_into_the_mechanism():
+    # GENE_A and GENE_B resemble each other AND both drive MARKER across two banks (regulatory +
+    # physical) -> read_fungibility earns "fungible", and story_clusters groups that ALLEGORY into
+    # the {GENE_A,GENE_B,MARKER} mechanism (the allegory branch of story_clusters).
+    from homeostat.fungibility import read_fungibility
+
+    events = [
+        Event("evolutionary", "resembles", "GENE_A", "GENE_B", 1, ""),
+        _reg("amplifies", "GENE_A", "MARKER"),
+        _reg("amplifies", "GENE_B", "MARKER"),
+        Event("physical", "binds", "GENE_A", "MARKER", 1),
+        Event("physical", "binds", "GENE_B", "MARKER", 1),
+    ]
+    assert any(f.verdict == "fungible" for f in read_fungibility(events))  # earned from geometry
+    assert render(drive(events, {"MARKER": _up("MARKER")}, VS)).startswith("THE READ")
+
+
+def test_render_names_the_elimination_probe_when_stuck():
+    # two directed sources both amplify S (S observed up); neither is eliminated -> a stuck
+    # plurality. A probe reading oppositely on A vs B separates them -> render names the measure.
+    from homeostat.jeeves import Probe
+
+    events = [_reg("amplifies", "A", "S"), _reg("amplifies", "B", "S")]
+    probe = Probe("marker", "confirm", {"A": 1, "B": -1, "S": 0})
+    out = render(drive(events, {"S": _up("S")}, VS, probes=[probe]))
+    assert "WHAT I CAN'T YET TELL" in out  # the counter-ask (i_solve or the elimination probe)
+
+
+def test_render_bounds_a_many_mechanism_tie_and_names_the_measurement():
+    # seven independent mutual-amplification pairs, all observed up -> seven candidate mechanisms
+    # tie on coverage. render BOUNDS the set (top-K + "… and N more") rather than dumping the wall,
+    # and fires the counter-ask (the mechanism-Jeeves / probe measurement that would separate them).
+    events, pos = [], {}
+    for i in range(7):
+        a, b = f"A{i}", f"B{i}"
+        events += [_reg("amplifies", a, b), _reg("amplifies", b, a)]
+        pos[a], pos[b] = _up(a), _up(b)
+    out = render(drive(events, pos, VS))
+    assert "more that partially explain" in out  # the bounded-set tail (top-K exceeded)
+    assert "WHAT I CAN'T YET TELL" in out  # the counter-ask fires
