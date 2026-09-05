@@ -23,7 +23,8 @@ def test_parse_genes_splits_multi_and_intergenic_but_keeps_internal_hyphens():
     assert parse_genes("TRAF6") == ["TRAF6"]
     assert parse_genes("MIR9-2HG, TMEM161B-DT") == ["MIR9-2HG", "TMEM161B-DT"]  # ", " split
     assert parse_genes("RPL21P80 - UNC5D") == ["RPL21P80", "UNC5D"]  # intergenic " - " split
-    assert parse_genes("NR") == [] and parse_genes("") == []  # not-reported / empty drop
+    assert parse_genes("NR") == []
+    assert parse_genes("") == []
 
 
 def test_parse_traits_splits_efo_labels():

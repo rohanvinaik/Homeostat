@@ -17,7 +17,10 @@ def test_reachable_and_coverage_directed():
     adj = {"A": {"B", "D"}, "B": {"C"}}
     assert reachable(adj, "A") == {"B", "C", "D"}
     cov = coverage(adj)
-    assert cov["A"] == 3 and cov["B"] == 1 and cov["C"] == 0 and cov["D"] == 0
+    assert cov["A"] == 3
+    assert cov["B"] == 1
+    assert cov["C"] == 0
+    assert cov["D"] == 0
 
 
 def test_marginal_coverage_subtracts_selected():

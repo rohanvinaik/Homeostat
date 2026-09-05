@@ -33,9 +33,12 @@ def test_web_adjacency_honours_ternary_direction():
         )
     )
     adj = web_adjacency(web)
-    assert adj["a"] == ["b"] and adj["b"] == []  # directed forward
-    assert adj["d"] == ["c"] and adj["c"] == []  # directed backward
-    assert adj["e"] == ["f"] and adj["f"] == ["e"]  # undirected → both legs
+    assert adj["a"] == ["b"]
+    assert adj["b"] == []
+    assert adj["d"] == ["c"]
+    assert adj["c"] == []
+    assert adj["e"] == ["f"]
+    assert adj["f"] == ["e"]
 
 
 def test_web_adjacency_min_weight_floors_weak_couplings():
@@ -96,7 +99,8 @@ def test_undirected_web_stays_plural_where_directed_would_collapse():
     )
     cands, cons = kill_matrix(web, ["A", "B"])
     traj = eliminate_two_sign(cands, cons, {})
-    assert traj.sigma is None and traj.bottom is False  # plural, not resolved, not ⊥
+    assert traj.sigma is None
+    assert traj.bottom is False
     assert len(traj.survivors_left) > 1  # undirected can't pin which node is the source
 
 
@@ -114,8 +118,10 @@ def test_single_symptom_is_degenerate():
 def test_reverse_adjacency_flips_each_carrying_edge():
     web = RelationalWeb((Coupling("a", "b", 1.0, +1), Coupling("c", "d", 1.0, 0)))
     radj = reverse_adjacency(web)
-    assert radj["b"] == ["a"] and radj["a"] == []  # b's upstream is a; a has none
-    assert radj["c"] == ["d"] and radj["d"] == ["c"]  # undirected -> both upstream
+    assert radj["b"] == ["a"]
+    assert radj["a"] == []
+    assert radj["c"] == ["d"]
+    assert radj["d"] == ["c"]
 
 
 def test_reachers_is_the_ancestor_cone_including_self():
@@ -158,7 +164,8 @@ def test_scoping_to_the_cone_preserves_the_survivor():
     cands, cons = kill_matrix(sub, ["A", "B"])
     traj = eliminate_two_sign(cands, cons, {})
     assert traj.survivors_left == ["source"]  # same survivor as the full-web read
-    assert "unrelated" not in cands and "X" not in cands  # the irrelevant never entered
+    assert "unrelated" not in cands
+    assert "X" not in cands
 
 
 def test_distances_to_is_shortest_reverse_bfs():

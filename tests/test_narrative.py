@@ -30,7 +30,8 @@ def test_genre_triples_maps_each_genre_to_its_polti_situation():
     tr = genre_triples(genres)
     assert ("A", "harm", "B") in tr
     assert ("C", "betray", "D") in tr
-    assert ("H", "seize", "X") in tr and ("H", "seize", "Y") in tr
+    assert ("H", "seize", "X") in tr
+    assert ("H", "seize", "Y") in tr
     assert all(subj != "E" for subj, _, _ in tr)  # allegory emits NO dramatic fact
 
 

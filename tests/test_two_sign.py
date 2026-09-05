@@ -35,8 +35,10 @@ def test_positive_only_resolves_like_the_one_sign_engine():
     cands = ["A", "B", "C"]
     cons = {"c1": ["B"], "c2": ["C"]}
     traj = eliminate_two_sign(cands, cons, {})
-    assert traj.survivors_left == ["A"] and traj.sigma == 2
-    assert traj.bottom is False and traj.falsifiable is True
+    assert traj.survivors_left == ["A"]
+    assert traj.sigma == 2
+    assert traj.bottom is False
+    assert traj.falsifiable is True
 
 
 def test_censor_certifies_bottom_when_it_rules_out_all_survivors():
@@ -54,7 +56,8 @@ def test_censor_rules_out_the_sole_survivor_is_bottom_not_resolved():
     cands = ["A", "B", "C"]
     cons = {"c1": ["B"], "c2": ["C"]}
     traj = eliminate_two_sign(cands, cons, {"forbid_A": ["A"]})
-    assert traj.bottom is True and traj.survivors_left == []
+    assert traj.bottom is True
+    assert traj.survivors_left == []
 
 
 def test_treatment_response_censor_collapses_plurality_to_the_mechanism():
@@ -64,8 +67,10 @@ def test_treatment_response_censor_collapses_plurality_to_the_mechanism():
     cons = {"explains:S": ["other"]}  # positive: `other` cannot explain symptom S
     censors = {"tx_response": ["decoy"]}  # negative: `decoy` ruled out by the treatment response
     traj = eliminate_two_sign(cands, cons, censors)
-    assert traj.survivors_left == ["drugX"] and traj.sigma == 2
-    assert traj.bottom is False and traj.falsifiable is True  # plurality + steps killed rivals
+    assert traj.survivors_left == ["drugX"]
+    assert traj.sigma == 2
+    assert traj.bottom is False
+    assert traj.falsifiable is True
 
 
 def test_stuck_plurality_when_no_admissible_constraint_separates():
@@ -73,7 +78,8 @@ def test_stuck_plurality_when_no_admissible_constraint_separates():
     # discrimination selector's cue to add a new dimension), not ⊥ and not resolved.
     cands = ["A", "B"]
     traj = eliminate_two_sign(cands, {}, {})
-    assert traj.sigma is None and traj.survivors_left == ["A", "B"]
+    assert traj.sigma is None
+    assert traj.survivors_left == ["A", "B"]
     assert traj.bottom is False  # a plural residual is not a certified ⊥
 
 
@@ -84,7 +90,9 @@ def test_censor_as_partial_eliminator_competes_in_the_greedy_step():
     cons = {"pos": ["C"]}
     censors = {"neg": ["B"]}
     traj = eliminate_two_sign(cands, cons, censors)
-    assert traj.survivors_left == ["A"] and traj.bottom is False and traj.sigma == 2
+    assert traj.survivors_left == ["A"]
+    assert traj.bottom is False
+    assert traj.sigma == 2
 
 
 # ---- positive-path behaviors (migrated from the retired eliminate_to_survivor) ---
@@ -93,14 +101,16 @@ def test_censor_as_partial_eliminator_competes_in_the_greedy_step():
 def test_positive_bulk_then_tail_kappa_pattern():
     traj = eliminate_two_sign(["a", "b", "c", "d"], {"k1": ["b", "c"], "k2": ["d"]}, {})
     assert traj.sigma == 2
-    assert traj.survivors_left == ["a"] and traj.bottom is False  # 'a' covers both constraints
+    assert traj.survivors_left == ["a"]
+    assert traj.bottom is False
     assert [s.kappa for s in traj.steps] == [2, 1]  # bulk (kills a cluster) then tail
 
 
 def test_positive_never_empties_the_set():
     # A positive constraint that would kill ALL survivors is inadmissible -> STUCK, never ⊥.
     traj = eliminate_two_sign(["a", "b"], {"k1": ["a", "b"]}, {})
-    assert traj.sigma is None and traj.survivors_left == ["a", "b"]
+    assert traj.sigma is None
+    assert traj.survivors_left == ["a", "b"]
     assert traj.bottom is False  # only a censor can certify ⊥
 
 
@@ -121,11 +131,14 @@ def test_no_common_cover_yields_candidates_not_a_spurious_resolution():
 def test_kappa_zero_constraint_leaves_a_plural_residual():
     # A κ=0 constraint (kills no live survivor) resolves nothing -> STUCK plural (σ_sem>0).
     traj = eliminate_two_sign(["a", "b"], {"k1": ["x"]}, {})
-    assert traj.sigma is None and traj.survivors_left == ["a", "b"]
+    assert traj.sigma is None
+    assert traj.survivors_left == ["a", "b"]
 
 
 def test_single_candidate_is_not_falsifiable():
     traj = eliminate_two_sign(["a"], {}, {})
-    assert traj.sigma == 0 and traj.steps == []  # trivially resolved in zero steps
-    assert traj.survivors_left == ["a"] and traj.bottom is False  # the lone candidate survives
+    assert traj.sigma == 0
+    assert traj.steps == []
+    assert traj.survivors_left == ["a"]
+    assert traj.bottom is False
     assert traj.falsifiable is False  # no plurality to resolve -> not a real finding

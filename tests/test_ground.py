@@ -56,14 +56,16 @@ def test_exact_acronym_grounds():
 def test_ordinary_typo_grounds_only_when_guarded():
     # a real misspelling of a symptom, with the validity guard supplied
     r = ground("narcolepsyy", VOCAB, valid_words={"the", "dog"})
-    assert r.node == "NARC" and "typo" in r.reason
+    assert r.node == "NARC"
+    assert "typo" in r.reason
 
 
 def test_acronym_typo_is_offered_never_committed():
     # "PTOS" is a transposition of "POTS" but an acronym shape → offered, never auto-rewritten
     r = ground("PTOS", VOCAB, valid_words={"the"})
     assert r.node is None
-    assert r.offered == ("POTS",) and "offered" in r.reason
+    assert r.offered == ("POTS",)
+    assert "offered" in r.reason
 
 
 def test_ambiguous_typo_abstains_with_offers():
@@ -75,4 +77,6 @@ def test_ambiguous_typo_abstains_with_offers():
 def test_unknown_symptom_abstains_cleanly():
     r = ground("zzzzz", VOCAB, valid_words={"the"})
     assert isinstance(r, Resolution)
-    assert r.node is None and r.offered == () and "node-birth" in r.reason
+    assert r.node is None
+    assert r.offered == ()
+    assert "node-birth" in r.reason

@@ -45,7 +45,8 @@ def test_read_person_resolves_when_the_diagnosis_scopes_to_the_source():
     # diagnosis "adhd" -> {source, decoy} (a genuine plurality); labs show A,B up. drive falsifies
     # decoy (reaches A only) and resolves to source (reaches both) -- a FALSIFIABLE resolution.
     read = _read("adhd", {"adhd": {"source", "decoy"}})
-    assert read.verdict == "resolved" and read.trajectory.survivors_left == ["source"]
+    assert read.verdict == "resolved"
+    assert read.trajectory.survivors_left == ["source"]
 
 
 def test_read_person_single_gene_subspace_is_degenerate_not_resolved():

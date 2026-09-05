@@ -28,7 +28,8 @@ def test_load_rows_yields_tab_split_fields(tmp_path):
     rows = list(signor_fetch.load_rows(p))
     assert len(rows) == 2
     assert all(len(r) == 29 for r in rows)
-    assert rows[0][0] == "RIPK2" and rows[0][4] == "TRAF6"
+    assert rows[0][0] == "RIPK2"
+    assert rows[0][4] == "TRAF6"
 
 
 def test_load_rows_feeds_the_renderer_end_to_end(tmp_path):
@@ -67,7 +68,8 @@ def test_ensure_fetches_and_pins_when_absent(tmp_path, monkeypatch):
 
     monkeypatch.setattr(signor_fetch, "fetch", _fake_fetch)
     out = signor_fetch.ensure(dest=dest)
-    assert out == dest and dest.exists()
+    assert out == dest
+    assert dest.exists()
     assert sha_sidecar.read_text().strip() == signor_fetch.sha256(dest)
 
 

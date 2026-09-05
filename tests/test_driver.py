@@ -80,7 +80,8 @@ def test_drive_relevant_including_the_source_still_resolves():
     ]
     pos = {"A": position("A", 1.0, 0.0, 0.0), "B": position("B", 1.0, 0.0, 0.0)}
     read = drive(ev, pos, VS, relevant={"source", "A", "B"})
-    assert read.verdict == "resolved" and read.trajectory.survivors_left == ["source"]
+    assert read.verdict == "resolved"
+    assert read.trajectory.survivors_left == ["source"]
 
 
 def test_drive_relevant_excluding_the_source_lets_the_label_fall_out():
@@ -105,4 +106,5 @@ def test_drive_polarity_censor_certifies_bottom_on_a_contradictory_pattern():
     pos = {"A": position("A", 1.0, 0.0, 0.0), "B": position("B", -1.0, 0.0, 0.0)}
     read = drive(ev, pos, VS)
     assert "source" in read.censored["polarity"]  # ruled out by mechanistic contradiction
-    assert read.verdict == "bottom" and read.trajectory.bottom is True
+    assert read.verdict == "bottom"
+    assert read.trajectory.bottom is True

@@ -30,7 +30,8 @@ def test_load_rows_tab_splits_and_drops_header(tmp_path):
     )
     rows = list(homology_fetch.load_rows(p))
     assert len(rows) == 1  # header dropped
-    assert rows[0][1] == "ENSP_A" and rows[0][4] == "within_species_paralog"
+    assert rows[0][1] == "ENSP_A"
+    assert rows[0][4] == "within_species_paralog"
 
 
 def test_load_rows_feeds_the_renderer_end_to_end(tmp_path):

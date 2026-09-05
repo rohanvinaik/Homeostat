@@ -63,14 +63,16 @@ def _positions(*deviated):
 
 def test_resolved_recovers_the_unique_source():
     r = read_presentation(_dir_web(), _positions("A", "B"), censors={}, probes=[])
-    assert r.verdict == RESOLVED and r.mechanism == "source"
+    assert r.verdict == RESOLVED
+    assert r.mechanism == "source"
 
 
 def test_treatment_response_censor_can_certify_bottom():
     # The positive search narrows to `source`; a treatment-response censor rules `source` out ->
     # certified ⊥ (no lawful mechanism), never a false RESOLVED.
     r = read_presentation(_dir_web(), _positions("A", "B"), censors={"tx": ["source"]}, probes=[])
-    assert r.verdict == BOTTOM and r.mechanism is None
+    assert r.verdict == BOTTOM
+    assert r.mechanism is None
     assert r.trajectory.survivors_left == []
 
 
@@ -90,7 +92,8 @@ def test_plural_residual_becomes_the_jeeves_question():
     r = read_presentation(
         _undirected_two_source_web(), _plural_positions(), censors={}, probes=[splitter]
     )
-    assert r.verdict == ASK and r.probe is splitter
+    assert r.verdict == ASK
+    assert r.probe is splitter
 
 
 def test_plural_residual_abstains_when_no_probe_discriminates():
@@ -98,7 +101,8 @@ def test_plural_residual_abstains_when_no_probe_discriminates():
     r = read_presentation(
         _undirected_two_source_web(), _plural_positions(), censors={}, probes=[useless]
     )
-    assert r.verdict == ABSTAIN and r.probe is None
+    assert r.verdict == ABSTAIN
+    assert r.probe is None
 
 
 # ---- end-to-end from a multi-network event stream --------------------------------
@@ -121,7 +125,8 @@ def test_read_from_events_resolves_from_a_directed_event_web():
         probes=[],
         directed_networks={"regulatory"},
     )
-    assert r.verdict == RESOLVED and r.mechanism == "source"
+    assert r.verdict == RESOLVED
+    assert r.mechanism == "source"
 
 
 def test_read_from_events_active_role_censor_certifies_bottom():
@@ -134,4 +139,5 @@ def test_read_from_events_active_role_censor_certifies_bottom():
         probes=[],
         directed_networks={"regulatory"},
     )
-    assert r.verdict == BOTTOM and r.mechanism is None
+    assert r.verdict == BOTTOM
+    assert r.mechanism is None

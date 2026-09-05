@@ -79,4 +79,6 @@ def test_read_tragedy_declines_a_cycle_with_no_origin():
 
 def test_sources_and_is_sink():
     reach = {"A": {"B"}, "B": {"C"}}
-    assert sources(reach) == {"A"} and is_sink(reach, "C") and not is_sink(reach, "B")
+    assert sources(reach) == {"A"}
+    assert is_sink(reach, "C")
+    assert not is_sink(reach, "B")

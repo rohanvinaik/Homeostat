@@ -73,10 +73,14 @@ def test_top_band_only_strictly_positive_scores_survive_even_at_a_full_band():
 def test_read_completeness_single_survivor_is_resolved_no_measurement():
     # 4 candidates, ranking resolved to 1 -> complete, nothing to measure.
     sc = read_completeness(4, 1, None)
-    assert sc.resolved == 1.0 and sc.h_residual == 0.0 and sc.i_solve is None
+    assert sc.resolved == 1.0
+    assert sc.h_residual == 0.0
+    assert sc.i_solve is None
 
 
 def test_read_completeness_plurality_carries_the_jeeves_node():
     # 2 of 4 survive as a near-tie -> half resolved, and the node to measure is carried.
     sc = read_completeness(4, 2, "TP53")
-    assert sc.h_residual == 1.0 and sc.resolved == 0.5 and sc.i_solve == "TP53"
+    assert sc.h_residual == 1.0
+    assert sc.resolved == 0.5
+    assert sc.i_solve == "TP53"

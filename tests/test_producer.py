@@ -23,11 +23,14 @@ def test_place_sign_and_kind_agree_by_construction():
     # reference interval [70, 100] -> center 85, spread 15; k=1 -> the band is exactly [70, 100].
     c, s = reference_center_spread(70.0, 100.0)
     hi = place("glucose", 120.0, c, s, k=1.0)  # above the band
-    assert hi.sign == SUPPORT and hi.differential.kind == ELEVATED
+    assert hi.sign == SUPPORT
+    assert hi.differential.kind == ELEVATED
     lo = place("glucose", 50.0, c, s, k=1.0)  # below the band
-    assert lo.sign == OPPOSE and lo.differential.kind == DEPLETED
+    assert lo.sign == OPPOSE
+    assert lo.differential.kind == DEPLETED
     mid = place("glucose", 85.0, c, s, k=1.0)  # inside the band -> informational zero
-    assert mid.sign == ORTHOGONAL and mid.differential.kind == NONE
+    assert mid.sign == ORTHOGONAL
+    assert mid.differential.kind == NONE
 
 
 def test_place_carries_the_tier_and_the_surprise():
@@ -40,9 +43,12 @@ def test_place_carries_the_tier_and_the_surprise():
 def test_place_degenerate_reference_is_the_informational_zero():
     # a zero-spread (or None) reference cannot calibrate surprise -> abstain on BOTH channels.
     z = place("marker", 100.0, 50.0, 0.0, k=1.0)
-    assert z.sign == ORTHOGONAL and z.differential.kind == NONE and z.differential.surprise == 0.0
+    assert z.sign == ORTHOGONAL
+    assert z.differential.kind == NONE
+    assert z.differential.surprise == 0.0
     n = place("marker", 100.0, None, None, k=1.0)
-    assert n.sign == ORTHOGONAL and n.differential.kind == NONE
+    assert n.sign == ORTHOGONAL
+    assert n.differential.kind == NONE
 
 
 # ---- the state parse -------------------------------------------------------------
@@ -90,7 +96,8 @@ def test_producer_builds_structured_positions():
         [Signal("A", "130", Tier.VERIFIED)], {"age": "40"}, _reference, _VOCAB
     )
     p = positions["A"]
-    assert p.sign == SUPPORT and p.differential.kind == ELEVATED
+    assert p.sign == SUPPORT
+    assert p.differential.kind == ELEVATED
     assert p.differential.surprise == 3.0  # (130-85)/15
     assert p.tier is Tier.VERIFIED
 
@@ -103,8 +110,10 @@ def test_producer_full_flow_certified_on_verified_markers():
         Signal("decoy", "1", Tier.VERIFIED),
     ]
     r = _read(signals_to_positions(signals, {"age": "40"}, _reference, _VOCAB))
-    assert r.verdict == RESOLVED and r.mechanism == "source"
-    assert r.certified is True and r.certification_tier is Tier.VERIFIED
+    assert r.verdict == RESOLVED
+    assert r.mechanism == "source"
+    assert r.certified is True
+    assert r.certification_tier is Tier.VERIFIED
 
 
 def test_producer_full_flow_uncertified_on_a_reported_marker():
@@ -115,8 +124,10 @@ def test_producer_full_flow_uncertified_on_a_reported_marker():
         Signal("decoy", "1", Tier.VERIFIED),
     ]
     r = _read(signals_to_positions(signals, {"age": "40"}, _reference, _VOCAB))
-    assert r.verdict == RESOLVED and r.mechanism == "source"  # TAG, not collapse
-    assert r.certified is False and r.certification_tier is Tier.REPORTED
+    assert r.verdict == RESOLVED
+    assert r.mechanism == "source"
+    assert r.certified is False
+    assert r.certification_tier is Tier.REPORTED
 
 
 def test_producer_drops_the_unplaceable():

@@ -173,7 +173,8 @@ def test_rank_clusters_orders_by_the_three_factor_blend():
         {"A": {"B": 1}, "X": {"Y": 1}, "Y": {"X": 1}},  # ternary — internal coherence
         {"A": [("B", 1)], "X": [("Y", 1)], "Y": [("X", 1)]},  # polar — predictive meter
     )
-    assert ranked[0][0].entities == frozenset({"A", "B"}) and ranked[0][1] > 0.0
+    assert ranked[0][0].entities == frozenset({"A", "B"})
+    assert ranked[0][1] > 0.0
     assert ranked[-1][1] == 0.0  # the uncovered cluster ranks last
 
 
@@ -186,7 +187,8 @@ def test_rank_clusters_from_the_real_producers_end_to_end():
     ranked = rank_clusters(
         clusters, {"B": 1}, ternary_adjacency(events), polar_adjacency(events, verb_sign)
     )
-    assert ranked[0][0].entities == frozenset({"A", "B"}) and ranked[0][1] > 0.0
+    assert ranked[0][0].entities == frozenset({"A", "B"})
+    assert ranked[0][1] > 0.0
 
 
 # ---- cluster_discriminant: the mechanism-level Jeeves (incr.3b) -----------------------

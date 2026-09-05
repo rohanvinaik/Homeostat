@@ -8,7 +8,8 @@ from homeostat.prior_web import DIRECTED_NETWORKS, build_prior_web
 
 
 def test_only_regulatory_is_directed():
-    assert "regulatory" in DIRECTED_NETWORKS and len(DIRECTED_NETWORKS) == 1
+    assert "regulatory" in DIRECTED_NETWORKS
+    assert len(DIRECTED_NETWORKS) == 1
 
 
 def test_regulatory_supporter_earns_direction_others_do_not():
@@ -20,11 +21,11 @@ def test_regulatory_supporter_earns_direction_others_do_not():
     web = build_prior_web(events)
     by_pair = {(c.a, c.b): c for c in web.couplings}
     ab = by_pair[("A", "B")]
-    assert (
-        ab.weight == 2 and ab.direction == 1
-    )  # two networks converge; regulatory → direction earned
+    assert ab.weight == 2
+    assert ab.direction == 1
     cd = by_pair[("C", "D")]
-    assert cd.weight == 1 and cd.direction == 0  # undirected vote only → no arrow
+    assert cd.weight == 1
+    assert cd.direction == 0
 
 
 def test_undirected_convergence_without_regulatory_stays_undirected():
@@ -34,4 +35,5 @@ def test_undirected_convergence_without_regulatory_stays_undirected():
     ]
     web = build_prior_web(events)
     xy = next(c for c in web.couplings if (c.a, c.b) == ("X", "Y"))
-    assert xy.weight == 2 and xy.direction == 0  # convergent but no directed network → undirected
+    assert xy.weight == 2
+    assert xy.direction == 0

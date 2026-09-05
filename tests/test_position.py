@@ -60,9 +60,11 @@ def test_position_projects_signed_ternary_off_the_mined_zero():
 
 def test_position_abstains_with_no_reading_or_no_baseline():
     p = position("hr", None, 60.0, tol=5.0)
-    assert p.sign == ORTHOGONAL and p.depth == 0.0  # no reading -> informational zero, zero depth
+    assert p.sign == ORTHOGONAL
+    assert p.depth == 0.0
     q = position("hr", 90.0, None, tol=5.0)
-    assert q.sign == ORTHOGONAL and q.depth == 0.0  # no baseline -> informational zero
+    assert q.sign == ORTHOGONAL
+    assert q.depth == 0.0
 
 
 def test_signature_is_signs_in_sorted_dimension_order():

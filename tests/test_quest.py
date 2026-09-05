@@ -21,13 +21,15 @@ def _inh(u, v):
 
 def test_part_vector_support_is_in_phase():
     x, y = part_vector(SUPPORT, 0, 0)
-    assert x == pytest.approx(1.0) and y == pytest.approx(0.0)
+    assert x == pytest.approx(1.0)
+    assert y == pytest.approx(0.0)
 
 
 def test_part_vector_oppose_is_antiphase():
     # inhibition -> angle pi -> the real -1 axis (so support + oppose destructively cancel).
     x, y = part_vector(OPPOSE, 0, 0)
-    assert x == pytest.approx(-1.0) and y == pytest.approx(0.0)
+    assert x == pytest.approx(-1.0)
+    assert y == pytest.approx(0.0)
 
 
 def test_part_vector_orthogonal_is_the_zero_vector():
@@ -39,7 +41,8 @@ def test_part_vector_orthogonal_is_the_zero_vector():
 def test_part_vector_depth_rotates_on_the_ordered_ring():
     # same sign, half the ring away (depth = max_depth/2) -> antiphase (the ring is ordered).
     x, y = part_vector(SUPPORT, 1, 2)  # rotation 2*pi*1/2 = pi
-    assert x == pytest.approx(-1.0) and y == pytest.approx(0.0, abs=1e-9)
+    assert x == pytest.approx(-1.0)
+    assert y == pytest.approx(0.0, abs=1e-9)
 
 
 # ---- order_parameter: the Kuramoto coherence, transported -------------------------
@@ -94,14 +97,17 @@ def test_read_quest_a_distant_bridge_that_coheres_is_resolving():
     quests = read_quest([_amp("H", "A"), _amp("H", "B")], observed=["A", "B"])
     assert len(quests) == 1
     q = quests[0]
-    assert q.hero == "H" and q.joined == ("A", "B") and q.verdict == "resolving"
+    assert q.hero == "H"
+    assert q.joined == ("A", "B")
+    assert q.verdict == "resolving"
     assert q.coherence == pytest.approx(1.0)
 
 
 def test_read_quest_a_bridge_with_opposing_signs_is_entangling():
     # H amplifies A but inhibits B -> antiphase -> destructive -> couples but does not resolve.
     quests = read_quest([_amp("H", "A"), _inh("H", "B")], observed=["A", "B"])
-    assert len(quests) == 1 and quests[0].verdict == "entangling"
+    assert len(quests) == 1
+    assert quests[0].verdict == "entangling"
 
 
 def test_read_quest_declines_a_hero_reaching_fewer_than_two_observed():

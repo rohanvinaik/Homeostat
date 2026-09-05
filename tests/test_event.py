@@ -42,7 +42,8 @@ def test_convergent_support_draws_a_weighted_coupling():
     web = events_to_web([_reg("A", "B"), _evo("A", "B")], DIRECTED)
     assert len(web.couplings) == 1
     c = web.couplings[0]
-    assert (c.a, c.b) == ("A", "B") and c.weight == 2.0  # weight = convergence count
+    assert (c.a, c.b) == ("A", "B")
+    assert c.weight == 2.0
 
 
 def test_direction_is_earned_only_from_a_directed_network():

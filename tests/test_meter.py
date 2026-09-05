@@ -90,5 +90,7 @@ def test_source_outcomes_contradicted_iff_polarity_censored():
     adj = {"A": [("B", 1), ("C", 1)]}
     censored = source_outcomes(adj, "A", {"B": 1, "C": -1})  # conflicting -> (1, 1, 0)
     clean = source_outcomes(adj, "A", {"B": 1, "C": 1})  # agreeing -> (2, 0, 0)
-    assert censored[1] >= 1 and "A" in polarity_censors(adj, ["A"], {"B": 1, "C": -1})
-    assert clean[1] == 0 and "A" not in polarity_censors(adj, ["A"], {"B": 1, "C": 1})
+    assert censored[1] >= 1
+    assert "A" in polarity_censors(adj, ["A"], {"B": 1, "C": -1})
+    assert clean[1] == 0
+    assert "A" not in polarity_censors(adj, ["A"], {"B": 1, "C": 1})

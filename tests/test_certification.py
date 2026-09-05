@@ -75,8 +75,10 @@ def test_resolved_on_verified_evidence_is_certified():
     r = read_from_events(
         _reg_events(), _positions(), active_roles=set(), probes=[], directed_networks={"regulatory"}
     )
-    assert r.verdict == RESOLVED and r.mechanism == "source"
-    assert r.certified is True and r.certification_tier is Tier.VERIFIED
+    assert r.verdict == RESOLVED
+    assert r.mechanism == "source"
+    assert r.certified is True
+    assert r.certification_tier is Tier.VERIFIED
 
 
 def test_resolved_on_reported_evidence_is_tagged_uncertified_not_collapsed():
@@ -89,8 +91,10 @@ def test_resolved_on_reported_evidence_is_tagged_uncertified_not_collapsed():
         probes=[],
         directed_networks={"regulatory"},
     )
-    assert r.verdict == RESOLVED and r.mechanism == "source"  # TAG, not collapse
-    assert r.certified is False and r.certification_tier is Tier.REPORTED
+    assert r.verdict == RESOLVED
+    assert r.mechanism == "source"
+    assert r.certified is False
+    assert r.certification_tier is Tier.REPORTED
 
 
 def test_bottom_on_reported_evidence_is_an_uncertified_bottom():
@@ -103,5 +107,7 @@ def test_bottom_on_reported_evidence_is_an_uncertified_bottom():
         probes=[],
         directed_networks={"regulatory"},
     )
-    assert r.verdict == BOTTOM and r.mechanism is None
-    assert r.certified is False and r.certification_tier is Tier.REPORTED
+    assert r.verdict == BOTTOM
+    assert r.mechanism is None
+    assert r.certified is False
+    assert r.certification_tier is Tier.REPORTED

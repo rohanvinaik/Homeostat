@@ -65,7 +65,9 @@ def test_structural_compatibility_bars_only_confident_conflicts():
 
 def test_composition_is_a_frequency_vector():
     comp = composition("AACD")  # A=2/4, C=1/4, D=1/4
-    assert comp[0] == 0.5 and comp[1] == 0.25 and comp[2] == 0.25  # A, C, D in AA_ORDER
+    assert comp[0] == 0.5
+    assert comp[1] == 0.25
+    assert comp[2] == 0.25
     assert abs(sum(comp) - 1.0) < 1e-9
     assert composition("") == tuple(0.0 for _ in range(20))  # empty -> zeros, not a crash
 
@@ -78,7 +80,8 @@ def test_composition_distance_is_zero_for_equal_and_grows_apart():
 def test_scalar_features():
     assert gravy("IIII") == 4.5  # isoleucine hydropathy
     assert gravy("DDDD") == -3.5  # aspartate
-    assert net_charge("KKKK") == 1.0 and net_charge("DDDD") == -1.0
+    assert net_charge("KKKK") == 1.0
+    assert net_charge("DDDD") == -1.0
     assert net_charge("KKDD") == 0.0  # balanced
     assert aromaticity("FWYA") == 0.75  # 3 of 4 aromatic
 

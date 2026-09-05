@@ -60,7 +60,8 @@ def test_experimental_edge_becomes_an_undirected_physical_vote():
 def test_database_edge_emits_too():
     row = _row("9606.ENSP_NOD2", "9606.ENSP_RIPK2", experimental=0, database=500)
     e = row_to_event(row, ALIAS)
-    assert e is not None and (e.subject, e.target, e.sign) == ("NOD2", "RIPK2", 1)
+    assert e is not None
+    assert (e.subject, e.target, e.sign) == ("NOD2", "RIPK2", 1)
 
 
 def test_textmining_only_edge_is_skipped():

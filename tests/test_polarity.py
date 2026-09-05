@@ -55,7 +55,9 @@ def test_net_polarities_omits_the_sign_ambiguous_node():
     # D reachable A->B->D (+*+ = +) and A->C->D (+*- = -) -> sign-ambiguous -> omitted
     adj = {"A": [("B", 1), ("C", 1)], "B": [("D", 1)], "C": [("D", -1)]}
     pols = net_polarities(adj, "A")
-    assert pols["A"] == 1 and pols["B"] == 1 and pols["C"] == 1
+    assert pols["A"] == 1
+    assert pols["B"] == 1
+    assert pols["C"] == 1
     assert "D" not in pols  # conflicting net sign -> never guessed
 
 
@@ -72,7 +74,8 @@ def test_net_polarities_ambiguity_propagates_transitively():
     }
     pols = net_polarities(adj, "A")
     assert pols == {"A": 1, "B": 1, "C": 1, "X": 1}  # only the sign-definite nodes
-    assert "D" not in pols and "E" not in pols  # ambiguity propagates transitively to E
+    assert "D" not in pols
+    assert "E" not in pols
 
 
 def test_net_polarities_terminates_on_a_positive_feedback_loop():
