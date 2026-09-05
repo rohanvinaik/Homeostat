@@ -209,19 +209,3 @@ def distances_to(reverse_adj: dict[str, list[str]], target: str) -> dict[str, in
                 dist[m] = dist[n] + 1
                 queue.append(m)
     return dist
-
-
-def node_convergence(web: RelationalWeb) -> dict[str, float]:
-    """Per-node CONVERGENCE: the mean coupling weight (network-support count) over each node's edges
-    in the full multi-network web. The PREFER tie-breaker — among candidates that equally cover the
-    shadow, one whose couplings are backed by MORE independent networks is more credible (Law 9:
-    convergence, not any single score, is the signal). MEAN not sum, so a hub is not favored for
-    being a hub. One pass; a node with no edges is absent. Pure over `RelationalWeb`.
-    """
-    total: dict[str, float] = {}
-    count: dict[str, int] = {}
-    for c in web.couplings:
-        for n in (c.a, c.b):
-            total[n] = total.get(n, 0.0) + c.weight
-            count[n] = count.get(n, 0) + 1
-    return {n: total[n] / count[n] for n in total}

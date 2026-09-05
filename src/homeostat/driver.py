@@ -35,14 +35,12 @@ from homeostat.narrative import StoryRead, read_story
 from homeostat.operator import HypothesisOutcome, operator_ledger
 from homeostat.polarity import polarity_censors, signed_adjacency
 from homeostat.position import Position
-from homeostat.recommend import score_candidate
 from homeostat.resolve import Cluster, cluster_discriminant, rank_clusters, story_clusters
-from homeostat.search import Trajectory, coverage, eliminate_two_sign
+from homeostat.search import Trajectory, eliminate_two_sign
 from homeostat.topology import signed_adjacency as ternary_adjacency
 from homeostat.web import (
     RelationalWeb,
     ancestor_cone,
-    distances_to,
     induced_subweb,
     kill_matrix,
     nodes,
@@ -54,50 +52,6 @@ from homeostat.web import (
 DIRECTED_NETWORKS = frozenset(
     {"regulatory"}
 )  # the one directed-mechanism tier (Law 5); shared w/ prior_web
-
-
-def rank_candidates(
-    survivors: list[str],
-    positive_kill_sets: list[list[str]],
-    n_observed: int,
-    convergence: Mapping[str, float] | None = None,
-    coherence: Mapping[str, float] | None = None,
-) -> list[tuple[str, float]]:
-    """Rank surviving candidates into the recommendation: each scored by its kappa-coverage
-    alignment (`coverage / n_observed`, in [0, 1]), optionally TIMES a COHERENCE alignment factor (a
-    candidate that coheres as a mechanism for the shadow is boosted, one that does not is demoted),
-    TIMES the PREFER soft blend. CONVERGENCE (normalized by its max) is the soft tie-breaker.
-    Descending; ties keep input order. Absent coherence/convergence for a candidate -> that factor
-    is neutral. `n_observed <= 0` -> alignment 0 -> every score 0.0. Pure.
-    """
-    conv = convergence or {}
-    coh = coherence or {}
-    max_conv = max(conv.values(), default=0.0)
-
-    def _score(s: str) -> float:
-        align = [coverage(s, positive_kill_sets) / n_observed if n_observed > 0 else 0.0]
-        if s in coh:
-            align.append(coh[s])
-        soft = [conv[s] / max_conv] if s in conv and max_conv > 0 else []
-        return score_candidate(align, soft)
-
-    return sorted(((s, _score(s)) for s in survivors), key=lambda t: t[1], reverse=True)
-
-
-def proximity_coherence(observed: list[str], reverse_adj: dict[str, list[str]]) -> dict[str, float]:
-    """Local STRUCTURAL coherence -- the self-contained default (a Regenesis-native SEMANTIC
-    coherence can be supplied to `drive` to override it). A candidate regulating the shadow through
-    SHORT/direct paths tells a more parsimonious mechanism than a distant, entangled one:
-    coherence(C) = mean over the observed C reaches of `1 / (1 + dist(C, O))`, in (0, 1]. One
-    reverse-BFS per observed; a candidate reaching no observed is absent. Pure.
-    """
-    total: dict[str, float] = {}
-    count: dict[str, int] = {}
-    for o in observed:
-        for c, d in distances_to(reverse_adj, o).items():
-            total[c] = total.get(c, 0.0) + 1.0 / (1 + d)
-            count[c] = count.get(c, 0) + 1
-    return {c: total[c] / count[c] for c in total}
 
 
 @dataclass(frozen=True)

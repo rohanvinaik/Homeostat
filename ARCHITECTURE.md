@@ -28,9 +28,9 @@ the meter and reported, never ground truth. It reads a FROZEN world and adds not
 its significance is κ (coverage of the shadow), never a statistic (Law 1). The answer is a **story
 resolved to ranked mechanisms, never a ranked gene** (the subject-fallacy, cut `5c30e65`).
 
-**Scale (counts primary-sourced, not remembered):** 49 modules · 46 `tests/test_*.py` · **500 tests**, of
-which **104 are Detective-generated** across 55 `tests/detective/*` synth files. Clean tree, `main`,
-0 unpushed (pushed to `origin`). A runnable demonstration + glossary surface lives in `scripts/` (§4e).
+**Scale (counts primary-sourced, not remembered):** 49 modules · 46 `tests/test_*.py` · **483 tests**, of
+which **101 are Detective-generated** across 53 `tests/detective/*` synth files (after the gene-ranking-path
+tidy, §10). Clean tree, `main`. A runnable demonstration + glossary surface lives in `scripts/` (§4e).
 
 ---
 
@@ -85,8 +85,7 @@ L5/L6 consume it through the typed `Event` / `StoryRead` / `DriverRead` contract
 - **`web.py`** — `Coupling(a,b,weight,direction)`, `RelationalWeb`, `kill_matrix(web, observed)`
   (candidates = the whole bounded node set; `explains:S` kills every source that CANNOT reach `S`);
   `nodes`/`web_adjacency`/`reaches`/`reverse_adjacency`/`reachers`; **`ancestor_cone`/`induced_subweb`**
-  (the directed-reachability relevance scope the driver uses); `distances_to` (reverse-BFS);
-  `node_convergence` (🅿️ mean coupling weight — the old tie-breaker, parked).
+  (the directed-reachability relevance scope the driver uses); `distances_to` (reverse-BFS).
 - **`kappa.py`** — `reachable`/`coverage`/`marginal_coverage`/`weak_components`/`is_bridge`/
   `components_joined`/`chain_significance` (κ = marginal coverage; the significance object, Law 4).
 - **`signal.py`** ✅ — `Signal(ident, state, tier)` + `Tier` (VERIFIED/REPORTED/ABSENT). **WIRED (full-C):**
@@ -486,8 +485,8 @@ MECHANISMS (connected story-clusters — NOT genes) by THREE orthogonal signals,
   all-zero product also broke `completeness`/`top_band`). Both `cluster_coverage` and `cluster_meter` take
   the optional `reach` map (each observed node → its ancestor cone) and credit REACHING the shadow, not
   containing it (fix `2e4889c`); `reach=None` → membership (self-only), so every prior pin is unchanged. The
-  `max(0,·)` is a directional-gate guard. `recommend.score_candidate` is LIVE via `rank_clusters`; the parked
-  `driver.rank_candidates` also consumes it.
+  `max(0,·)` is a directional-gate guard. `recommend.score_candidate` is LIVE via `rank_clusters` — its only
+  consumer now that the parked gene-ranker (`driver.rank_candidates`) was removed (§10).
 - **incr.3a — the operator-injected hypothesis (`operator.py`, ✅ LIVE `0f7473a`):** fluid intelligence
   as a TESTED input. The person proposes hypothesis EDGES; `drive`'s `hypotheses` param threads them into
   the PREFER read ONLY (story + resolve), NEVER the elimination — so they can help but never fabricate a
@@ -616,20 +615,16 @@ structurally cannot emit this read.
 Traced with the language server: `get_symbols_overview` for the inventory, `find_referencing_symbols` for
 the call graph, from the entry points (`person.read_person` → `driver.drive` → `render.render`;
 `clinic.read_from_events`) + `prior_web._main` (assemble the web) + `ground.ground` (front door) + the
-`scripts/` surface (gallery/build_glossary/connect). 46 `tests/test_*.py` (**500 tests**) cover every live
+`scripts/` surface (gallery/build_glossary/connect). 46 `tests/test_*.py` (**483 tests**) cover every live
 module; every pure decision on the live input + elimination + story + resolve + completeness + operator +
-render path is Detective-pinned under `tests/detective/` (**55 synth files, 104 tests**) — the incr.2
+render path is Detective-pinned under `tests/detective/` (**53 synth files, 101 tests**) — the incr.2
 `cluster_coherence` debt is closed (`801448b`), and each incr.3 + render pin caught real killables
 Detective's search had mis-filed as candidate-equivalent (the residual-reading discipline,
 `0f7473a`/`300aff5`/`1a74e41`).
 
 **PARKED (🅿️ — built + pinned, but reachable ONLY from tests; no live consumer):** these are apex leaves
-awaiting the wiring in §7.5–§7.6, NOT dead code:
-- `driver.rank_candidates`, `driver.proximity_coherence`, `web.node_convergence` — the **old gene-ranking
-  PREFER path** (the subject-fallacy). Superseded by the story-read + resolve-narrow; kept as scaffolding.
-  **The one clear tidy target** now that `resolve` is live (the mechanism ranker fully replaced the gene
-  ranker). *(Re-verified tests-only at `1c007f4`: each of `rank_candidates`/`proximity_coherence`/
-  `node_convergence` has zero production callers — only `test_driver`/`test_web` + 2 Detective synths.)*
+awaiting the wiring in §7.5–§7.6, NOT dead code (the superseded gene-ranking path, once listed here, was
+removed this pass — §10):
 - `consequence.py`/`biophysics.py` (genotype pole), `coexpression.read_coexpression`, and
   `trait_wiring.trait_wiring` (the pleiotropy node-weight — note its PARSERS are now LIVE via §L7 relevance) —
   the still-unwired input paths.
@@ -653,6 +648,10 @@ re-founding:
   (used the domain-general reasoner for a single-gene ranking) and the subject-fallacy.
 - **`universes/mechanism/`** (⛔ `5c30e65`) — the project-local Regenesis universe for the dumped coherence
   path; the tier-2 account now fires Regenesis's own native narrative universe.
+- **the gene-ranking PREFER path** (⛔, this trace) — `driver.rank_candidates` + `driver.proximity_coherence`
+  + `web.node_convergence` (the subject-fallacy ranker), plus their intent tests + 2 Detective synths. Fully
+  superseded by `resolve.rank_clusters` / `cluster_coherence` (the mechanism ranker over story-clusters);
+  re-verified zero production callers before removal. `ruff`/`ty` clean, 483 tests green after.
 
 **Archived earlier** (`docs/archive/`, 2026-09-04) — the RIPPED statistical genus (EIR cohort, gnomAD/
 panUKBB, phase-2 proposer/verifier, sig-descent) + the pre-refounding orphaning audit; the engine they

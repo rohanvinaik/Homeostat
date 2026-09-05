@@ -9,7 +9,6 @@ from homeostat.web import (
     distances_to,
     induced_subweb,
     kill_matrix,
-    node_convergence,
     nodes,
     reachers,
     reaches,
@@ -160,14 +159,6 @@ def test_scoping_to_the_cone_preserves_the_survivor():
     traj = eliminate_two_sign(cands, cons, {})
     assert traj.survivors_left == ["source"]  # same survivor as the full-web read
     assert "unrelated" not in cands and "X" not in cands  # the irrelevant never entered
-
-
-def test_node_convergence_is_mean_coupling_weight():
-    web = RelationalWeb(
-        (Coupling("A", "B", 3.0, 1), Coupling("A", "C", 1.0, 1), Coupling("B", "C", 2.0, 0))
-    )
-    # A: (A,B)=3,(A,C)=1 -> 2.0 ; B: (A,B)=3,(B,C)=2 -> 2.5 ; C: (A,C)=1,(B,C)=2 -> 1.5  (mean)
-    assert node_convergence(web) == {"A": 2.0, "B": 2.5, "C": 1.5}
 
 
 def test_distances_to_is_shortest_reverse_bfs():
