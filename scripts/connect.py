@@ -37,7 +37,7 @@ DIFFUSE = 200  # a gene set larger than this bridges non-specifically; flag its 
 
 # a neutral PUBLIC demo set. Pass your own diagnosis names as CLI args instead -- the presentation
 # is always caller-supplied, so no personal cluster is ever hard-coded into the repo.
-DEMO = ["Crohn disease", "Ulcerative colitis", "Ankylosing spondylitis"]
+DEMO = ["Crohn's disease", "Ulcerative colitis", "Ankylosing spondylitis"]
 
 
 def _web_adj():
