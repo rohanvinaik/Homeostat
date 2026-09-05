@@ -71,7 +71,8 @@ def test_structural_load_proteins_bulk_keeps_longest_cds_per_gene_and_translates
     p = _write_gz(tmp_path / "cds_all.fa.gz", fasta)
     out = structural_fetch.load_proteins_bulk(["GENEA", "GENEB"], p)
     assert set(out) == {"GENEA", "GENEB"}
-    assert out["GENEA"].startswith("M") and len(out["GENEA"]) >= 3  # longest CDS translated
+    assert out["GENEA"].startswith("M")  # longest CDS translated (M K K)
+    assert len(out["GENEA"]) >= 3
     assert out["GENEB"].startswith("M")
 
 

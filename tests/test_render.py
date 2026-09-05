@@ -120,7 +120,8 @@ def test_render_surfaces_a_resolving_quest_under_a_candidate():
     # render exercises that quest beat under the candidate (the read renders cleanly either way).
     events = [_reg("amplifies", "source", "A"), _reg("amplifies", "source", "B")]
     out = render(drive(events, {"A": _up("A"), "B": _up("B")}, VS))
-    assert out.startswith("THE READ") and "CANDIDATE MECHANISMS" in out
+    assert out.startswith("THE READ")
+    assert "CANDIDATE MECHANISMS" in out
 
 
 def test_render_groups_a_fungibility_allegory_into_the_mechanism():
